@@ -429,7 +429,7 @@ void ble_hrs_sensor_contact_detected_update(ble_hrs_t * p_hrs, bool is_sensor_co
     p_hrs->is_sensor_contact_detected = is_sensor_contact_detected;
 }
 
-
+/*
 uint32_t ble_hrs_body_sensor_location_set(ble_hrs_t * p_hrs, uint8_t body_sensor_location)
 {
     ble_gatts_value_t gatts_value;
@@ -443,3 +443,4 @@ uint32_t ble_hrs_body_sensor_location_set(ble_hrs_t * p_hrs, uint8_t body_sensor
 
     return sd_ble_gatts_value_set(p_hrs->conn_handle, p_hrs->bsl_handles.value_handle, &gatts_value);
 }
+*/

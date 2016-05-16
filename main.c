@@ -119,10 +119,10 @@ STATIC_ASSERT(IS_SRVC_CHANGED_CHARACT_PRESENT);                                 
 static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 static ble_hrs_t                         m_hrs;                                     /**< Structure used to identify the heart rate service. */
 static bool                              m_rr_interval_enabled = true;              /**< Flag for enabling and disabling the registration of new RR interval measurements (the purpose of disabling this is just to test sending HRM without RR interval data. */
-static sensorsim_cfg_t                   m_heart_rate_sim_cfg;                      /**< Heart Rate sensor simulator configuration. */
-static sensorsim_state_t                 m_heart_rate_sim_state;                    /**< Heart Rate sensor simulator state. */
-static sensorsim_cfg_t                   m_rr_interval_sim_cfg;                     /**< RR Interval sensor simulator configuration. */
-static sensorsim_state_t                 m_rr_interval_sim_state;                   /**< RR Interval sensor simulator state. */
+//static sensorsim_cfg_t                   m_heart_rate_sim_cfg;                      /**< Heart Rate sensor simulator configuration. */
+//static sensorsim_state_t                 m_heart_rate_sim_state;                    /**< Heart Rate sensor simulator state. */
+//static sensorsim_cfg_t                   m_rr_interval_sim_cfg;                     /**< RR Interval sensor simulator configuration. */
+//static sensorsim_state_t                 m_rr_interval_sim_state;                   /**< RR Interval sensor simulator state. */
 
 APP_TIMER_DEF(m_heart_rate_timer_id);                                               /**< Heart rate measurement timer. */
 APP_TIMER_DEF(m_rr_interval_timer_id);                                              /**< RR interval timer. */                 /**< RR interval timer. */
@@ -246,6 +246,7 @@ static void heart_rate_meas_timeout_handler(void * p_context)
  * @param[in] p_context  Pointer used for passing some arbitrary information (context) from the
  *                       app_start_timer() call to the timeout handler.
  */
+/*
 static void rr_interval_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context); 
@@ -259,7 +260,7 @@ static void rr_interval_timeout_handler(void * p_context)
         ble_hrs_rr_interval_add(&m_hrs, rr_interval);
     }
 }
-
+*/
 
 /**@brief Function for handling the Sensor Contact Detected timer timeout.
  *
@@ -302,10 +303,10 @@ static void timers_init(void)
                                 heart_rate_meas_timeout_handler);
     APP_ERROR_CHECK(err_code);
 
-    err_code = app_timer_create(&m_rr_interval_timer_id,
-                                APP_TIMER_MODE_REPEATED,
-                                rr_interval_timeout_handler);
-    APP_ERROR_CHECK(err_code);
+ //   err_code = app_timer_create(&m_rr_interval_timer_id,
+ //                               APP_TIMER_MODE_REPEATED,
+ //                               rr_interval_timeout_handler);
+ //   APP_ERROR_CHECK(err_code);
 
  /*   err_code = app_timer_create(&m_sensor_contact_timer_id,
                                 APP_TIMER_MODE_REPEATED,
@@ -564,8 +565,8 @@ static void application_timers_start(void)
     err_code = app_timer_start(m_heart_rate_timer_id, HEART_RATE_MEAS_INTERVAL, NULL);  //timerÊ±¼äÉèÖÃ
     APP_ERROR_CHECK(err_code);
 
-    err_code = app_timer_start(m_rr_interval_timer_id, RR_INTERVAL_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code);
+  //  err_code = app_timer_start(m_rr_interval_timer_id, RR_INTERVAL_INTERVAL, NULL);
+ //   APP_ERROR_CHECK(err_code);
 
    // err_code = app_timer_start(m_sensor_contact_timer_id, SENSOR_CONTACT_DETECTED_INTERVAL, NULL);
    // APP_ERROR_CHECK(err_code);
@@ -712,6 +713,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 
     ble_conn_params_on_ble_evt(p_ble_evt);
     bsp_btn_ble_on_ble_evt(p_ble_evt);
+	
 #ifdef BLE_DFU_APP_SUPPORT
     /** @snippet [Propagating BLE Stack events to DFU Service] */
     ble_dfu_on_ble_evt(&m_dfus, p_ble_evt);
