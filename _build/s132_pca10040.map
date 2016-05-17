@@ -143,9 +143,76 @@ Section Cross References
     bsp_btn_ble.o(i.bsp_btn_ble_on_ble_evt) refers to bsp.o(i.bsp_event_to_button_action_assign) for bsp_event_to_button_action_assign
     bsp_btn_ble.o(i.bsp_btn_ble_on_ble_evt) refers to bsp_btn_ble.o(.data) for .data
     bsp_btn_ble.o(i.bsp_btn_ble_sleep_mode_prepare) refers to bsp.o(i.bsp_wakeup_buttons_set) for bsp_wakeup_buttons_set
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.le_role_encode) for le_role_encode
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.ble_device_addr_encode) for ble_device_addr_encode
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.uuid_list_encode) for uuid_list_encode
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.conn_int_encode) for conn_int_encode
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.manuf_specific_data_encode) for manuf_specific_data_encode
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.service_data_encode) for service_data_encode
+    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.name_encode) for name_encode
+    ble_advdata.o(i.ble_advdata_set) refers to ble_advdata.o(i.adv_data_encode) for adv_data_encode
+    ble_advdata.o(i.conn_int_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
+    ble_advdata.o(i.manuf_specific_data_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
+    ble_advdata.o(i.manuf_specific_data_encode) refers to memmovea.o(.text) for __aeabi_memcpy
+    ble_advdata.o(i.service_data_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
+    ble_advdata.o(i.service_data_encode) refers to memmovea.o(.text) for __aeabi_memcpy
+    ble_advdata.o(i.uuid_list_encode) refers to ble_advdata.o(i.uuid_list_sized_encode) for uuid_list_sized_encode
+    ble_advertising.o(i.ble_advertising_init) refers to memmovea.o(.text) for __aeabi_memcpy4
+    ble_advertising.o(i.ble_advertising_init) refers to ble_advertising.o(i.ble_advertising_peer_address_clear) for ble_advertising_peer_address_clear
+    ble_advertising.o(i.ble_advertising_init) refers to memseta.o(.text) for __aeabi_memclr4
+    ble_advertising.o(i.ble_advertising_init) refers to ble_advdata.o(i.ble_advdata_set) for ble_advdata_set
+    ble_advertising.o(i.ble_advertising_init) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_init) refers to ble_advertising.o(.bss) for .bss
+    ble_advertising.o(i.ble_advertising_on_ble_evt) refers to ble_advertising.o(i.ble_advertising_start) for ble_advertising_start
+    ble_advertising.o(i.ble_advertising_on_ble_evt) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_on_sys_evt) refers to ble_advertising.o(i.ble_advertising_start) for ble_advertising_start
+    ble_advertising.o(i.ble_advertising_on_sys_evt) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_peer_addr_reply) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_peer_address_clear) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advdata.o(i.ble_advdata_set) for ble_advdata_set
+    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advertising.o(i.ble_advertising_start) for ble_advertising_start
+    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advertising.o(.bss) for .bss
+    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_start) refers to pstorage.o(i.pstorage_access_status_get) for pstorage_access_status_get
+    ble_advertising.o(i.ble_advertising_start) refers to fstorage.o(i.fs_queued_op_count_get) for fs_queued_op_count_get
+    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(i.ble_advertising_peer_address_clear) for ble_advertising_peer_address_clear
+    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(i.peer_address_exists) for peer_address_exists
+    ble_advertising.o(i.ble_advertising_start) refers to memseta.o(.text) for __aeabi_memclr4
+    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(i.whitelist_has_entries) for whitelist_has_entries
+    ble_advertising.o(i.ble_advertising_start) refers to ble_advdata.o(i.ble_advdata_set) for ble_advdata_set
+    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(.bss) for .bss
+    ble_advertising.o(i.ble_advertising_whitelist_reply) refers to ble_advertising.o(.data) for .data
+    ble_advertising.o(i.ble_advertising_whitelist_reply) refers to ble_advertising.o(.bss) for .bss
     ble_bas.o(i.battery_level_char_add) refers to memseta.o(.text) for __aeabi_memclr4
     ble_bas.o(i.battery_level_char_add) refers to ble_srv_common.o(i.ble_srv_report_ref_encode) for ble_srv_report_ref_encode
     ble_bas.o(i.ble_bas_init) refers to ble_bas.o(i.battery_level_char_add) for battery_level_char_add
+    ble_conn_params.o(i.ble_conn_params_change_conn_params) refers to ble_conn_params.o(i.is_conn_params_ok) for is_conn_params_ok
+    ble_conn_params.o(i.ble_conn_params_change_conn_params) refers to ble_conn_params.o(.data) for .data
+    ble_conn_params.o(i.ble_conn_params_change_conn_params) refers to ble_conn_params.o(.bss) for .bss
+    ble_conn_params.o(i.ble_conn_params_init) refers to memmovea.o(.text) for __aeabi_memcpy4
+    ble_conn_params.o(i.ble_conn_params_init) refers to app_timer.o(i.app_timer_create) for app_timer_create
+    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(.bss) for .bss
+    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(.data) for .data
+    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(i.update_timeout_handler) for update_timeout_handler
+    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(.constdata) for .constdata
+    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(i.conn_params_negotiation) for conn_params_negotiation
+    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to app_timer.o(i.app_timer_stop) for app_timer_stop
+    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(.data) for .data
+    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(.bss) for .bss
+    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(.constdata) for .constdata
+    ble_conn_params.o(i.ble_conn_params_stop) refers to app_timer.o(i.app_timer_stop) for app_timer_stop
+    ble_conn_params.o(i.ble_conn_params_stop) refers to ble_conn_params.o(.constdata) for .constdata
+    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(i.is_conn_params_ok) for is_conn_params_ok
+    ble_conn_params.o(i.conn_params_negotiation) refers to app_timer.o(i.app_timer_start) for app_timer_start
+    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(.data) for .data
+    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(.bss) for .bss
+    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(.constdata) for .constdata
+    ble_conn_params.o(i.is_conn_params_ok) refers to ble_conn_params.o(.data) for .data
+    ble_conn_params.o(i.update_timeout_handler) refers to ble_conn_params.o(.data) for .data
+    ble_conn_params.o(i.update_timeout_handler) refers to ble_conn_params.o(.bss) for .bss
+    ble_conn_params.o(.constdata) refers to ble_conn_params.o(.bss) for m_conn_params_timer_id_data
     ble_dfu.o(i.ble_dfu_bytes_rcvd_report) refers to ble_dfu.o(i.uint32_encode) for uint32_encode
     ble_dfu.o(i.ble_dfu_bytes_rcvd_report) refers to ble_dfu.o(.data) for .data
     ble_dfu.o(i.ble_dfu_init) refers to ble_dfu.o(i.dfu_pkt_char_add) for dfu_pkt_char_add
@@ -176,6 +243,11 @@ Section Cross References
     ble_hrs.o(i.heart_rate_measurement_char_add) refers to memseta.o(.text) for __aeabi_memclr4
     ble_hrs.o(i.heart_rate_measurement_char_add) refers to ble_hrs.o(i.hrm_encode) for hrm_encode
     ble_hrs.o(i.hrm_encode) refers to memmovea.o(.text) for __aeabi_memmove
+    ble_srv_common.o(i.ble_srv_ascii_to_utf8) refers to strlen.o(.text) for strlen
+    ble_srv_common.o(i.characteristic_add) refers to ble_srv_common.o(i.set_security_req) for set_security_req
+    ble_srv_common.o(i.characteristic_add) refers to memseta.o(.text) for __aeabi_memclr4
+    ble_srv_common.o(i.descriptor_add) refers to memseta.o(.text) for __aeabi_memclr4
+    ble_srv_common.o(i.descriptor_add) refers to ble_srv_common.o(i.set_security_req) for set_security_req
     device_manager_peripheral.o(i.app_evt_notify) refers to device_manager_peripheral.o(.bss) for .bss
     device_manager_peripheral.o(i.bond_data_load) refers to pstorage.o(i.pstorage_block_identifier_get) for pstorage_block_identifier_get
     device_manager_peripheral.o(i.bond_data_load) refers to pstorage.o(i.pstorage_load) for pstorage_load
@@ -312,78 +384,6 @@ Section Cross References
     device_manager_peripheral.o(.constdata) refers to device_manager_peripheral.o(i.gatts_context_apply) for gatts_context_apply
     device_manager_peripheral.o(.constdata) refers to device_manager_peripheral.o(i.gattc_context_apply) for gattc_context_apply
     device_manager_peripheral.o(.constdata) refers to device_manager_peripheral.o(i.gattsc_context_apply) for gattsc_context_apply
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.le_role_encode) for le_role_encode
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.ble_device_addr_encode) for ble_device_addr_encode
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.uuid_list_encode) for uuid_list_encode
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.conn_int_encode) for conn_int_encode
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.manuf_specific_data_encode) for manuf_specific_data_encode
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.service_data_encode) for service_data_encode
-    ble_advdata.o(i.adv_data_encode) refers to ble_advdata.o(i.name_encode) for name_encode
-    ble_advdata.o(i.ble_advdata_set) refers to ble_advdata.o(i.adv_data_encode) for adv_data_encode
-    ble_advdata.o(i.conn_int_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
-    ble_advdata.o(i.manuf_specific_data_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
-    ble_advdata.o(i.manuf_specific_data_encode) refers to memmovea.o(.text) for __aeabi_memcpy
-    ble_advdata.o(i.service_data_encode) refers to ble_advdata.o(i.uint16_encode) for uint16_encode
-    ble_advdata.o(i.service_data_encode) refers to memmovea.o(.text) for __aeabi_memcpy
-    ble_advdata.o(i.uuid_list_encode) refers to ble_advdata.o(i.uuid_list_sized_encode) for uuid_list_sized_encode
-    ble_conn_params.o(i.ble_conn_params_change_conn_params) refers to ble_conn_params.o(i.is_conn_params_ok) for is_conn_params_ok
-    ble_conn_params.o(i.ble_conn_params_change_conn_params) refers to ble_conn_params.o(.data) for .data
-    ble_conn_params.o(i.ble_conn_params_change_conn_params) refers to ble_conn_params.o(.bss) for .bss
-    ble_conn_params.o(i.ble_conn_params_init) refers to memmovea.o(.text) for __aeabi_memcpy4
-    ble_conn_params.o(i.ble_conn_params_init) refers to app_timer.o(i.app_timer_create) for app_timer_create
-    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(.bss) for .bss
-    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(.data) for .data
-    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(i.update_timeout_handler) for update_timeout_handler
-    ble_conn_params.o(i.ble_conn_params_init) refers to ble_conn_params.o(.constdata) for .constdata
-    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(i.conn_params_negotiation) for conn_params_negotiation
-    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to app_timer.o(i.app_timer_stop) for app_timer_stop
-    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(.data) for .data
-    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(.bss) for .bss
-    ble_conn_params.o(i.ble_conn_params_on_ble_evt) refers to ble_conn_params.o(.constdata) for .constdata
-    ble_conn_params.o(i.ble_conn_params_stop) refers to app_timer.o(i.app_timer_stop) for app_timer_stop
-    ble_conn_params.o(i.ble_conn_params_stop) refers to ble_conn_params.o(.constdata) for .constdata
-    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(i.is_conn_params_ok) for is_conn_params_ok
-    ble_conn_params.o(i.conn_params_negotiation) refers to app_timer.o(i.app_timer_start) for app_timer_start
-    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(.data) for .data
-    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(.bss) for .bss
-    ble_conn_params.o(i.conn_params_negotiation) refers to ble_conn_params.o(.constdata) for .constdata
-    ble_conn_params.o(i.is_conn_params_ok) refers to ble_conn_params.o(.data) for .data
-    ble_conn_params.o(i.update_timeout_handler) refers to ble_conn_params.o(.data) for .data
-    ble_conn_params.o(i.update_timeout_handler) refers to ble_conn_params.o(.bss) for .bss
-    ble_conn_params.o(.constdata) refers to ble_conn_params.o(.bss) for m_conn_params_timer_id_data
-    ble_srv_common.o(i.ble_srv_ascii_to_utf8) refers to strlen.o(.text) for strlen
-    ble_srv_common.o(i.characteristic_add) refers to ble_srv_common.o(i.set_security_req) for set_security_req
-    ble_srv_common.o(i.characteristic_add) refers to memseta.o(.text) for __aeabi_memclr4
-    ble_srv_common.o(i.descriptor_add) refers to memseta.o(.text) for __aeabi_memclr4
-    ble_srv_common.o(i.descriptor_add) refers to ble_srv_common.o(i.set_security_req) for set_security_req
-    ble_advertising.o(i.ble_advertising_init) refers to memmovea.o(.text) for __aeabi_memcpy4
-    ble_advertising.o(i.ble_advertising_init) refers to ble_advertising.o(i.ble_advertising_peer_address_clear) for ble_advertising_peer_address_clear
-    ble_advertising.o(i.ble_advertising_init) refers to memseta.o(.text) for __aeabi_memclr4
-    ble_advertising.o(i.ble_advertising_init) refers to ble_advdata.o(i.ble_advdata_set) for ble_advdata_set
-    ble_advertising.o(i.ble_advertising_init) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_init) refers to ble_advertising.o(.bss) for .bss
-    ble_advertising.o(i.ble_advertising_on_ble_evt) refers to ble_advertising.o(i.ble_advertising_start) for ble_advertising_start
-    ble_advertising.o(i.ble_advertising_on_ble_evt) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_on_sys_evt) refers to ble_advertising.o(i.ble_advertising_start) for ble_advertising_start
-    ble_advertising.o(i.ble_advertising_on_sys_evt) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_peer_addr_reply) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_peer_address_clear) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advdata.o(i.ble_advdata_set) for ble_advdata_set
-    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advertising.o(i.ble_advertising_start) for ble_advertising_start
-    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advertising.o(.bss) for .bss
-    ble_advertising.o(i.ble_advertising_restart_without_whitelist) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_start) refers to pstorage.o(i.pstorage_access_status_get) for pstorage_access_status_get
-    ble_advertising.o(i.ble_advertising_start) refers to fstorage.o(i.fs_queued_op_count_get) for fs_queued_op_count_get
-    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(i.ble_advertising_peer_address_clear) for ble_advertising_peer_address_clear
-    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(i.peer_address_exists) for peer_address_exists
-    ble_advertising.o(i.ble_advertising_start) refers to memseta.o(.text) for __aeabi_memclr4
-    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(i.whitelist_has_entries) for whitelist_has_entries
-    ble_advertising.o(i.ble_advertising_start) refers to ble_advdata.o(i.ble_advdata_set) for ble_advdata_set
-    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_start) refers to ble_advertising.o(.bss) for .bss
-    ble_advertising.o(i.ble_advertising_whitelist_reply) refers to ble_advertising.o(.data) for .data
-    ble_advertising.o(i.ble_advertising_whitelist_reply) refers to ble_advertising.o(.bss) for .bss
     app_uart_fifo.o(i.app_uart_close) refers to nrf_drv_uart.o(i.nrf_drv_uart_uninit) for nrf_drv_uart_uninit
     app_uart_fifo.o(i.app_uart_flush) refers to app_fifo.o(i.app_fifo_flush) for app_fifo_flush
     app_uart_fifo.o(i.app_uart_flush) refers to app_uart_fifo.o(.bss) for .bss
@@ -1169,6 +1169,14 @@ Removing Unused input sections from the image.
     Removing bsp_btn_ble.o(.rev16_text), (4 bytes).
     Removing bsp_btn_ble.o(.revsh_text), (4 bytes).
     Removing bsp_btn_ble.o(.rrx_text), (6 bytes).
+    Removing ble_advdata.o(.rev16_text), (4 bytes).
+    Removing ble_advdata.o(.revsh_text), (4 bytes).
+    Removing ble_advdata.o(.rrx_text), (6 bytes).
+    Removing ble_advertising.o(.rev16_text), (4 bytes).
+    Removing ble_advertising.o(.revsh_text), (4 bytes).
+    Removing ble_advertising.o(.rrx_text), (6 bytes).
+    Removing ble_advertising.o(i.ble_advertising_peer_addr_reply), (48 bytes).
+    Removing ble_advertising.o(i.ble_advertising_whitelist_reply), (84 bytes).
     Removing ble_bas.o(.rev16_text), (4 bytes).
     Removing ble_bas.o(.revsh_text), (4 bytes).
     Removing ble_bas.o(.rrx_text), (6 bytes).
@@ -1176,6 +1184,10 @@ Removing Unused input sections from the image.
     Removing ble_bas.o(i.ble_bas_battery_level_update), (122 bytes).
     Removing ble_bas.o(i.ble_bas_init), (68 bytes).
     Removing ble_bas.o(i.ble_bas_on_ble_evt), (88 bytes).
+    Removing ble_conn_params.o(.rev16_text), (4 bytes).
+    Removing ble_conn_params.o(.revsh_text), (4 bytes).
+    Removing ble_conn_params.o(.rrx_text), (6 bytes).
+    Removing ble_conn_params.o(i.ble_conn_params_change_conn_params), (76 bytes).
     Removing ble_dfu.o(.rev16_text), (4 bytes).
     Removing ble_dfu.o(.revsh_text), (4 bytes).
     Removing ble_dfu.o(.rrx_text), (6 bytes).
@@ -1192,6 +1204,13 @@ Removing Unused input sections from the image.
     Removing ble_hrs.o(i.ble_hrs_rr_interval_buffer_is_full), (16 bytes).
     Removing ble_hrs.o(i.ble_hrs_sensor_contact_detected_update), (4 bytes).
     Removing ble_hrs.o(i.ble_hrs_sensor_contact_supported_set), (20 bytes).
+    Removing ble_srv_common.o(.rev16_text), (4 bytes).
+    Removing ble_srv_common.o(.revsh_text), (4 bytes).
+    Removing ble_srv_common.o(.rrx_text), (6 bytes).
+    Removing ble_srv_common.o(i.ble_srv_report_ref_encode), (12 bytes).
+    Removing ble_srv_common.o(i.characteristic_add), (394 bytes).
+    Removing ble_srv_common.o(i.descriptor_add), (170 bytes).
+    Removing ble_srv_common.o(i.set_security_req), (48 bytes).
     Removing device_manager_peripheral.o(.rev16_text), (4 bytes).
     Removing device_manager_peripheral.o(.revsh_text), (4 bytes).
     Removing device_manager_peripheral.o(.rrx_text), (6 bytes).
@@ -1205,25 +1224,6 @@ Removing Unused input sections from the image.
     Removing device_manager_peripheral.o(i.dm_service_context_get), (212 bytes).
     Removing device_manager_peripheral.o(i.dm_service_context_set), (156 bytes).
     Removing device_manager_peripheral.o(i.dm_whitelist_create), (160 bytes).
-    Removing ble_advdata.o(.rev16_text), (4 bytes).
-    Removing ble_advdata.o(.revsh_text), (4 bytes).
-    Removing ble_advdata.o(.rrx_text), (6 bytes).
-    Removing ble_conn_params.o(.rev16_text), (4 bytes).
-    Removing ble_conn_params.o(.revsh_text), (4 bytes).
-    Removing ble_conn_params.o(.rrx_text), (6 bytes).
-    Removing ble_conn_params.o(i.ble_conn_params_change_conn_params), (76 bytes).
-    Removing ble_srv_common.o(.rev16_text), (4 bytes).
-    Removing ble_srv_common.o(.revsh_text), (4 bytes).
-    Removing ble_srv_common.o(.rrx_text), (6 bytes).
-    Removing ble_srv_common.o(i.ble_srv_report_ref_encode), (12 bytes).
-    Removing ble_srv_common.o(i.characteristic_add), (394 bytes).
-    Removing ble_srv_common.o(i.descriptor_add), (170 bytes).
-    Removing ble_srv_common.o(i.set_security_req), (48 bytes).
-    Removing ble_advertising.o(.rev16_text), (4 bytes).
-    Removing ble_advertising.o(.revsh_text), (4 bytes).
-    Removing ble_advertising.o(.rrx_text), (6 bytes).
-    Removing ble_advertising.o(i.ble_advertising_peer_addr_reply), (48 bytes).
-    Removing ble_advertising.o(i.ble_advertising_whitelist_reply), (84 bytes).
     Removing app_uart_fifo.o(.rev16_text), (4 bytes).
     Removing app_uart_fifo.o(.revsh_text), (4 bytes).
     Removing app_uart_fifo.o(.rrx_text), (6 bytes).
@@ -1423,41 +1423,41 @@ Image Symbol Table
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
     ../clib/../cmprslib/zerorunl.c           0x00000000   Number         0  __dczerorl.o ABSOLUTE
-    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uidiv.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
+    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
-    ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
+    ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
     ../clib/microlib/printf/stubs.s          0x00000000   Number         0  stubs.o ABSOLUTE
     ../clib/microlib/string/memcmp.c         0x00000000   Number         0  memcmp.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmovea.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmoveb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
     ../clib/microlib/string/strcpy.c         0x00000000   Number         0  strcpy.o ABSOLUTE
     ../clib/microlib/string/strlen.c         0x00000000   Number         0  strlen.o ABSOLUTE
@@ -1957,10 +1957,10 @@ Image Symbol Table
     m_button_timer_id                        0x00022438   Data           4  bsp.o(.constdata)
     m_buttons_list                           0x0002243c   Data          16  bsp.o(.constdata)
     app_buttons                              0x0002244c   Data          32  bsp.o(.constdata)
-    .constdata                               0x0002246c   Section       16  ble_dfu.o(.constdata)
-    .constdata                               0x0002247c   Section       52  device_manager_peripheral.o(.constdata)
-    .constdata                               0x000224b0   Section        4  ble_conn_params.o(.constdata)
-    m_conn_params_timer_id                   0x000224b0   Data           4  ble_conn_params.o(.constdata)
+    .constdata                               0x0002246c   Section        4  ble_conn_params.o(.constdata)
+    m_conn_params_timer_id                   0x0002246c   Data           4  ble_conn_params.o(.constdata)
+    .constdata                               0x00022470   Section       16  ble_dfu.o(.constdata)
+    .constdata                               0x00022480   Section       52  device_manager_peripheral.o(.constdata)
     .constdata                               0x000224b4   Section       40  pstorage.o(.constdata)
     swap_sub_state_sm_lut                    0x000224b4   Data          20  pstorage.o(.constdata)
     swap_sub_state_sm_lut                    0x000224c8   Data          20  pstorage.o(.constdata)
@@ -1986,44 +1986,44 @@ Image Symbol Table
     .data                                    0x200020c0   Section        8  bsp_btn_ble.o(.data)
     m_error_handler                          0x200020c0   Data           4  bsp_btn_ble.o(.data)
     m_num_connections                        0x200020c4   Data           4  bsp_btn_ble.o(.data)
-    .data                                    0x200020c8   Section        8  ble_dfu.o(.data)
-    m_is_dfu_service_initialized             0x200020c8   Data           1  ble_dfu.o(.data)
-    m_notif_buffer                           0x200020c9   Data           7  ble_dfu.o(.data)
-    .data                                    0x200020d0   Section       74  ble_dis.o(.data)
-    service_handle                           0x200020d0   Data           2  ble_dis.o(.data)
-    manufact_name_handles                    0x200020d2   Data           8  ble_dis.o(.data)
-    model_num_handles                        0x200020da   Data           8  ble_dis.o(.data)
-    serial_num_handles                       0x200020e2   Data           8  ble_dis.o(.data)
-    hw_rev_handles                           0x200020ea   Data           8  ble_dis.o(.data)
-    fw_rev_handles                           0x200020f2   Data           8  ble_dis.o(.data)
-    sw_rev_handles                           0x200020fa   Data           8  ble_dis.o(.data)
-    sys_id_handles                           0x20002102   Data           8  ble_dis.o(.data)
-    reg_cert_data_list_handles               0x2000210a   Data           8  ble_dis.o(.data)
-    pnp_id_handles                           0x20002112   Data           8  ble_dis.o(.data)
-    .data                                    0x2000211c   Section       24  device_manager_peripheral.o(.data)
-    m_module_initialized                     0x2000211c   Data           1  device_manager_peripheral.o(.data)
-    m_peer_addr_update                       0x20002120   Data           4  device_manager_peripheral.o(.data)
-    m_irk_index_table                        0x20002124   Data           7  device_manager_peripheral.o(.data)
-    m_storage_handle                         0x2000212c   Data           8  device_manager_peripheral.o(.data)
-    .data                                    0x20002134   Section       20  ble_conn_params.o(.data)
-    m_change_param                           0x20002134   Data           1  ble_conn_params.o(.data)
-    m_update_count                           0x20002135   Data           1  ble_conn_params.o(.data)
-    m_conn_handle                            0x20002136   Data           2  ble_conn_params.o(.data)
-    m_preferred_conn_params                  0x20002138   Data           8  ble_conn_params.o(.data)
-    m_current_conn_params                    0x20002140   Data           8  ble_conn_params.o(.data)
-    .data                                    0x20002148   Section       31  ble_advertising.o(.data)
-    m_advertising_start_pending              0x20002148   Data           1  ble_advertising.o(.data)
-    m_whitelist_temporarily_disabled         0x20002149   Data           1  ble_advertising.o(.data)
-    m_whitelist_reply_expected               0x2000214a   Data           1  ble_advertising.o(.data)
-    m_peer_addr_reply_expected               0x2000214b   Data           1  ble_advertising.o(.data)
-    m_adv_evt                                0x2000214c   Data           1  ble_advertising.o(.data)
-    m_adv_mode_current                       0x2000214d   Data           1  ble_advertising.o(.data)
-    m_tx_power_level                         0x2000214e   Data           1  ble_advertising.o(.data)
-    current_slave_link_conn_handle           0x20002150   Data           2  ble_advertising.o(.data)
-    m_evt_handler                            0x20002154   Data           4  ble_advertising.o(.data)
-    m_error_handler                          0x20002158   Data           4  ble_advertising.o(.data)
-    m_slave_conn_int                         0x2000215c   Data           4  ble_advertising.o(.data)
-    m_peer_address                           0x20002160   Data           7  ble_advertising.o(.data)
+    .data                                    0x200020c8   Section       31  ble_advertising.o(.data)
+    m_advertising_start_pending              0x200020c8   Data           1  ble_advertising.o(.data)
+    m_whitelist_temporarily_disabled         0x200020c9   Data           1  ble_advertising.o(.data)
+    m_whitelist_reply_expected               0x200020ca   Data           1  ble_advertising.o(.data)
+    m_peer_addr_reply_expected               0x200020cb   Data           1  ble_advertising.o(.data)
+    m_adv_evt                                0x200020cc   Data           1  ble_advertising.o(.data)
+    m_adv_mode_current                       0x200020cd   Data           1  ble_advertising.o(.data)
+    m_tx_power_level                         0x200020ce   Data           1  ble_advertising.o(.data)
+    current_slave_link_conn_handle           0x200020d0   Data           2  ble_advertising.o(.data)
+    m_evt_handler                            0x200020d4   Data           4  ble_advertising.o(.data)
+    m_error_handler                          0x200020d8   Data           4  ble_advertising.o(.data)
+    m_slave_conn_int                         0x200020dc   Data           4  ble_advertising.o(.data)
+    m_peer_address                           0x200020e0   Data           7  ble_advertising.o(.data)
+    .data                                    0x200020e8   Section       20  ble_conn_params.o(.data)
+    m_change_param                           0x200020e8   Data           1  ble_conn_params.o(.data)
+    m_update_count                           0x200020e9   Data           1  ble_conn_params.o(.data)
+    m_conn_handle                            0x200020ea   Data           2  ble_conn_params.o(.data)
+    m_preferred_conn_params                  0x200020ec   Data           8  ble_conn_params.o(.data)
+    m_current_conn_params                    0x200020f4   Data           8  ble_conn_params.o(.data)
+    .data                                    0x200020fc   Section        8  ble_dfu.o(.data)
+    m_is_dfu_service_initialized             0x200020fc   Data           1  ble_dfu.o(.data)
+    m_notif_buffer                           0x200020fd   Data           7  ble_dfu.o(.data)
+    .data                                    0x20002104   Section       74  ble_dis.o(.data)
+    service_handle                           0x20002104   Data           2  ble_dis.o(.data)
+    manufact_name_handles                    0x20002106   Data           8  ble_dis.o(.data)
+    model_num_handles                        0x2000210e   Data           8  ble_dis.o(.data)
+    serial_num_handles                       0x20002116   Data           8  ble_dis.o(.data)
+    hw_rev_handles                           0x2000211e   Data           8  ble_dis.o(.data)
+    fw_rev_handles                           0x20002126   Data           8  ble_dis.o(.data)
+    sw_rev_handles                           0x2000212e   Data           8  ble_dis.o(.data)
+    sys_id_handles                           0x20002136   Data           8  ble_dis.o(.data)
+    reg_cert_data_list_handles               0x2000213e   Data           8  ble_dis.o(.data)
+    pnp_id_handles                           0x20002146   Data           8  ble_dis.o(.data)
+    .data                                    0x20002150   Section       24  device_manager_peripheral.o(.data)
+    m_module_initialized                     0x20002150   Data           1  device_manager_peripheral.o(.data)
+    m_peer_addr_update                       0x20002154   Data           4  device_manager_peripheral.o(.data)
+    m_irk_index_table                        0x20002158   Data           7  device_manager_peripheral.o(.data)
+    m_storage_handle                         0x20002160   Data           8  device_manager_peripheral.o(.data)
     .data                                    0x20002168   Section       36  pstorage.o(.data)
     m_state                                  0x20002168   Data           1  pstorage.o(.data)
     m_swap_sub_state                         0x20002169   Data           1  pstorage.o(.data)
@@ -2082,28 +2082,28 @@ Image Symbol Table
     m_events_list                            0x2000252c   Data          12  bsp.o(.bss)
     .bss                                     0x20002538   Section       32  bsp.o(.bss)
     m_button_timer_id_data                   0x20002538   Data          32  bsp.o(.bss)
-    .bss                                     0x20002558   Section      335  device_manager_peripheral.o(.bss)
-    m_app_context_table                      0x20002558   Data          28  device_manager_peripheral.o(.bss)
-    m_peer_table                             0x20002574   Data         196  device_manager_peripheral.o(.bss)
-    m_bond_table                             0x20002638   Data          28  device_manager_peripheral.o(.bss)
-    m_gatts_table                            0x20002654   Data          36  device_manager_peripheral.o(.bss)
-    m_connection_table                       0x20002678   Data          12  device_manager_peripheral.o(.bss)
-    m_application_table                      0x20002684   Data          12  device_manager_peripheral.o(.bss)
-    m_local_id_info                          0x20002690   Data          23  device_manager_peripheral.o(.bss)
-    .bss                                     0x200026a8   Section       32  ble_conn_params.o(.bss)
-    m_conn_params_timer_id_data              0x200026a8   Data          32  ble_conn_params.o(.bss)
-    .bss                                     0x200026c8   Section       28  ble_conn_params.o(.bss)
-    m_conn_params_config                     0x200026c8   Data          28  ble_conn_params.o(.bss)
-    .bss                                     0x200026e4   Section      259  ble_advertising.o(.bss)
-    m_advdata                                0x200026e4   Data          56  ble_advertising.o(.bss)
-    m_adv_modes_config                       0x2000271c   Data          36  ble_advertising.o(.bss)
-    m_whitelist                              0x20002740   Data          16  ble_advertising.o(.bss)
-    mp_whitelist_addr                        0x20002750   Data          32  ble_advertising.o(.bss)
-    mp_whitelist_irk                         0x20002770   Data          32  ble_advertising.o(.bss)
-    m_manuf_specific_data                    0x20002790   Data          12  ble_advertising.o(.bss)
-    m_manuf_data_array                       0x2000279c   Data          31  ble_advertising.o(.bss)
-    m_service_data                           0x200027bc   Data          12  ble_advertising.o(.bss)
-    m_service_data_array                     0x200027c8   Data          31  ble_advertising.o(.bss)
+    .bss                                     0x20002558   Section      259  ble_advertising.o(.bss)
+    m_advdata                                0x20002558   Data          56  ble_advertising.o(.bss)
+    m_adv_modes_config                       0x20002590   Data          36  ble_advertising.o(.bss)
+    m_whitelist                              0x200025b4   Data          16  ble_advertising.o(.bss)
+    mp_whitelist_addr                        0x200025c4   Data          32  ble_advertising.o(.bss)
+    mp_whitelist_irk                         0x200025e4   Data          32  ble_advertising.o(.bss)
+    m_manuf_specific_data                    0x20002604   Data          12  ble_advertising.o(.bss)
+    m_manuf_data_array                       0x20002610   Data          31  ble_advertising.o(.bss)
+    m_service_data                           0x20002630   Data          12  ble_advertising.o(.bss)
+    m_service_data_array                     0x2000263c   Data          31  ble_advertising.o(.bss)
+    .bss                                     0x2000265c   Section       32  ble_conn_params.o(.bss)
+    m_conn_params_timer_id_data              0x2000265c   Data          32  ble_conn_params.o(.bss)
+    .bss                                     0x2000267c   Section       28  ble_conn_params.o(.bss)
+    m_conn_params_config                     0x2000267c   Data          28  ble_conn_params.o(.bss)
+    .bss                                     0x20002698   Section      335  device_manager_peripheral.o(.bss)
+    m_app_context_table                      0x20002698   Data          28  device_manager_peripheral.o(.bss)
+    m_peer_table                             0x200026b4   Data         196  device_manager_peripheral.o(.bss)
+    m_bond_table                             0x20002778   Data          28  device_manager_peripheral.o(.bss)
+    m_gatts_table                            0x20002794   Data          36  device_manager_peripheral.o(.bss)
+    m_connection_table                       0x200027b8   Data          12  device_manager_peripheral.o(.bss)
+    m_application_table                      0x200027c4   Data          12  device_manager_peripheral.o(.bss)
+    m_local_id_info                          0x200027d0   Data          23  device_manager_peripheral.o(.bss)
     .bss                                     0x200027e8   Section       88  nrf_drv_gpiote.o(.bss)
     m_cb                                     0x200027e8   Data          88  nrf_drv_gpiote.o(.bss)
     .bss                                     0x20002840   Section       32  nrf_drv_uart.o(.bss)
@@ -2359,10 +2359,10 @@ Image Symbol Table
     softdevice_fault_handler                 0x00021c5b   Thumb Code     4  softdevice_handler.o(i.softdevice_fault_handler)
     softdevice_handler_init                  0x00021c61   Thumb Code    42  softdevice_handler.o(i.softdevice_handler_init)
     softdevice_sys_evt_handler_set           0x00021c95   Thumb Code    14  softdevice_handler.o(i.softdevice_sys_evt_handler_set)
-    m_context_init_len                       0x0002247c   Data           4  device_manager_peripheral.o(.constdata)
-    m_service_context_store                  0x00022480   Data          16  device_manager_peripheral.o(.constdata)
-    m_service_context_load                   0x00022490   Data          16  device_manager_peripheral.o(.constdata)
-    m_service_context_apply                  0x000224a0   Data          16  device_manager_peripheral.o(.constdata)
+    m_context_init_len                       0x00022480   Data           4  device_manager_peripheral.o(.constdata)
+    m_service_context_store                  0x00022484   Data          16  device_manager_peripheral.o(.constdata)
+    m_service_context_load                   0x00022494   Data          16  device_manager_peripheral.o(.constdata)
+    m_service_context_apply                  0x000224a4   Data          16  device_manager_peripheral.o(.constdata)
     Region$$Table$$Base                      0x000224e4   Number         0  anon$$obj.o(Region$$Table)
     Region$$Table$$Limit                     0x00022504   Number         0  anon$$obj.o(Region$$Table)
     Image$$RW_IRAM1$$Base                    0x20002080   Number         0  anon$$obj.o ABSOLUTE
@@ -2442,7 +2442,7 @@ Memory Map of the image
     0x0001d864   0x00000024   Code   RO         3537    i._printf_post_padding  mc_w.l(printfa.o)
     0x0001d888   0x0000002e   Code   RO         3538    i._printf_pre_padding  mc_w.l(printfa.o)
     0x0001d8b6   0x0000000a   Code   RO         3540    i._sputc            mc_w.l(printfa.o)
-    0x0001d8c0   0x00000202   Code   RO         1052    i.adv_data_encode   ble_advdata.o
+    0x0001d8c0   0x00000202   Code   RO          514    i.adv_data_encode   ble_advdata.o
     0x0001dac2   0x00000036   Code   RO          468    i.advertising_buttons_configure  bsp_btn_ble.o
     0x0001daf8   0x00000020   Code   RO          342    i.alert_timer_handler  bsp.o
     0x0001db18   0x00000024   Code   RO         2152    i.app_button_enable  app_button.o
@@ -2451,37 +2451,37 @@ Memory Map of the image
     0x0001dc18   0x00000024   Code   RO         2268    i.app_error_fault_handler  app_error_weak.o
     0x0001dc3c   0x00000016   Code   RO         2217    i.app_error_handler_bare  app_error.o
     0x0001dc52   0x00000002   PAD
-    0x0001dc54   0x0000000c   Code   RO          784    i.app_evt_notify    device_manager_peripheral.o
+    0x0001dc54   0x0000000c   Code   RO         1067    i.app_evt_notify    device_manager_peripheral.o
     0x0001dc60   0x0000002c   Code   RO         1905    i.app_notify        pstorage.o
     0x0001dc8c   0x00000024   Code   RO         1906    i.app_notify_error_state_transit  pstorage.o
     0x0001dcb0   0x00000024   Code   RO         2381    i.app_timer_create  app_timer.o
     0x0001dcd4   0x00000090   Code   RO         2382    i.app_timer_init    app_timer.o
     0x0001dd64   0x00000080   Code   RO         2383    i.app_timer_start   app_timer.o
     0x0001dde4   0x00000050   Code   RO         2384    i.app_timer_stop    app_timer.o
-    0x0001de34   0x00000068   Code   RO         1053    i.ble_advdata_set   ble_advdata.o
-    0x0001de9c   0x0000011c   Code   RO         1248    i.ble_advertising_init  ble_advertising.o
-    0x0001dfb8   0x00000080   Code   RO         1249    i.ble_advertising_on_ble_evt  ble_advertising.o
-    0x0001e038   0x00000034   Code   RO         1250    i.ble_advertising_on_sys_evt  ble_advertising.o
-    0x0001e06c   0x00000010   Code   RO         1252    i.ble_advertising_peer_address_clear  ble_advertising.o
-    0x0001e07c   0x00000050   Code   RO         1253    i.ble_advertising_restart_without_whitelist  ble_advertising.o
-    0x0001e0cc   0x000001e0   Code   RO         1254    i.ble_advertising_start  ble_advertising.o
-    0x0001e2ac   0x00000058   Code   RO         1134    i.ble_conn_params_init  ble_conn_params.o
-    0x0001e304   0x00000084   Code   RO         1135    i.ble_conn_params_on_ble_evt  ble_conn_params.o
-    0x0001e388   0x0000000c   Code   RO         1136    i.ble_conn_params_stop  ble_conn_params.o
-    0x0001e394   0x0000005e   Code   RO         1054    i.ble_device_addr_encode  ble_advdata.o
+    0x0001de34   0x00000068   Code   RO          515    i.ble_advdata_set   ble_advdata.o
+    0x0001de9c   0x0000011c   Code   RO          602    i.ble_advertising_init  ble_advertising.o
+    0x0001dfb8   0x00000080   Code   RO          603    i.ble_advertising_on_ble_evt  ble_advertising.o
+    0x0001e038   0x00000034   Code   RO          604    i.ble_advertising_on_sys_evt  ble_advertising.o
+    0x0001e06c   0x00000010   Code   RO          606    i.ble_advertising_peer_address_clear  ble_advertising.o
+    0x0001e07c   0x00000050   Code   RO          607    i.ble_advertising_restart_without_whitelist  ble_advertising.o
+    0x0001e0cc   0x000001e0   Code   RO          608    i.ble_advertising_start  ble_advertising.o
+    0x0001e2ac   0x00000058   Code   RO          737    i.ble_conn_params_init  ble_conn_params.o
+    0x0001e304   0x00000084   Code   RO          738    i.ble_conn_params_on_ble_evt  ble_conn_params.o
+    0x0001e388   0x0000000c   Code   RO          739    i.ble_conn_params_stop  ble_conn_params.o
+    0x0001e394   0x0000005e   Code   RO          516    i.ble_device_addr_encode  ble_advdata.o
     0x0001e3f2   0x00000002   PAD
-    0x0001e3f4   0x0000008c   Code   RO          565    i.ble_dfu_init      ble_dfu.o
-    0x0001e480   0x0000008a   Code   RO          566    i.ble_dfu_on_ble_evt  ble_dfu.o
+    0x0001e3f4   0x0000008c   Code   RO          812    i.ble_dfu_init      ble_dfu.o
+    0x0001e480   0x0000008a   Code   RO          813    i.ble_dfu_on_ble_evt  ble_dfu.o
     0x0001e50a   0x00000002   PAD
-    0x0001e50c   0x00000060   Code   RO          568    i.ble_dfu_response_send  ble_dfu.o
-    0x0001e56c   0x0000012c   Code   RO          653    i.ble_dis_init      ble_dis.o
+    0x0001e50c   0x00000060   Code   RO          815    i.ble_dfu_response_send  ble_dfu.o
+    0x0001e56c   0x0000012c   Code   RO          900    i.ble_dis_init      ble_dis.o
     0x0001e698   0x0000005c   Code   RO            7    i.ble_evt_dispatch  main.o
-    0x0001e6f4   0x0000005c   Code   RO          711    i.ble_hrs_heart_rate_measurement_send  ble_hrs.o
-    0x0001e750   0x00000040   Code   RO          712    i.ble_hrs_init      ble_hrs.o
-    0x0001e790   0x0000004a   Code   RO          713    i.ble_hrs_on_ble_evt  ble_hrs.o
-    0x0001e7da   0x00000012   Code   RO         1201    i.ble_srv_ascii_to_utf8  ble_srv_common.o
+    0x0001e6f4   0x0000005c   Code   RO          947    i.ble_hrs_heart_rate_measurement_send  ble_hrs.o
+    0x0001e750   0x00000040   Code   RO          948    i.ble_hrs_init      ble_hrs.o
+    0x0001e790   0x0000004a   Code   RO          949    i.ble_hrs_on_ble_evt  ble_hrs.o
+    0x0001e7da   0x00000012   Code   RO         1020    i.ble_srv_ascii_to_utf8  ble_srv_common.o
     0x0001e7ec   0x0000007c   Code   RO            8    i.ble_stack_init    main.o
-    0x0001e868   0x00000048   Code   RO          785    i.bond_data_load    device_manager_peripheral.o
+    0x0001e868   0x00000048   Code   RO         1068    i.bond_data_load    device_manager_peripheral.o
     0x0001e8b0   0x00000088   Code   RO         2622    i.bootloader_start  dfu_app_handler.o
     0x0001e938   0x00000004   Code   RO         2597    i.bootloader_util_app_start  bootloader_util.o
     0x0001e93c   0x0000004c   Code   RO          469    i.bsp_btn_ble_init  bsp_btn_ble.o
@@ -2501,7 +2501,7 @@ Memory Map of the image
     0x0001ef00   0x0000001c   Code   RO         1503    i.channel_free      nrf_drv_gpiote.o
     0x0001ef1c   0x00000048   Code   RO         1504    i.channel_port_alloc  nrf_drv_gpiote.o
     0x0001ef64   0x00000010   Code   RO         1505    i.channel_port_get  nrf_drv_gpiote.o
-    0x0001ef74   0x000000a0   Code   RO          654    i.char_add          ble_dis.o
+    0x0001ef74   0x000000a0   Code   RO          901    i.char_add          ble_dis.o
     0x0001f014   0x000000fc   Code   RO         1907    i.clear_operation_execute  pstorage.o
     0x0001f110   0x00000020   Code   RO         1908    i.clear_post_processing_run  pstorage.o
     0x0001f130   0x00000034   Code   RO         1909    i.cmd_process       pstorage.o
@@ -2509,17 +2509,17 @@ Memory Map of the image
     0x0001f184   0x00000054   Code   RO         1911    i.cmd_queue_enqueue  pstorage.o
     0x0001f1d8   0x00000040   Code   RO         1912    i.command_end_procedure_run  pstorage.o
     0x0001f218   0x000000ac   Code   RO         2386    i.compare_reg_update  app_timer.o
-    0x0001f2c4   0x00000088   Code   RO         1055    i.conn_int_encode   ble_advdata.o
+    0x0001f2c4   0x00000088   Code   RO          517    i.conn_int_encode   ble_advdata.o
     0x0001f34c   0x00000004   Code   RO           11    i.conn_params_error_handler  main.o
-    0x0001f350   0x0000005c   Code   RO         1137    i.conn_params_negotiation  ble_conn_params.o
-    0x0001f3ac   0x0000002c   Code   RO          786    i.connection_instance_find  device_manager_peripheral.o
-    0x0001f3d8   0x00000028   Code   RO          787    i.connection_instance_init  device_manager_peripheral.o
+    0x0001f350   0x0000005c   Code   RO          740    i.conn_params_negotiation  ble_conn_params.o
+    0x0001f3ac   0x0000002c   Code   RO         1069    i.connection_instance_find  device_manager_peripheral.o
+    0x0001f3d8   0x00000028   Code   RO         1070    i.connection_instance_init  device_manager_peripheral.o
     0x0001f400   0x00000054   Code   RO         1913    i.data_page_erase_state_run  pstorage.o
     0x0001f454   0x00000020   Code   RO         1914    i.data_to_swap_write_state_run  pstorage.o
     0x0001f474   0x00000060   Code   RO         2155    i.detection_delay_timeout_handler  app_button.o
-    0x0001f4d4   0x000000c0   Code   RO          788    i.device_context_store  device_manager_peripheral.o
-    0x0001f594   0x00000048   Code   RO          789    i.device_instance_find  device_manager_peripheral.o
-    0x0001f5dc   0x0000002c   Code   RO          790    i.device_instance_free  device_manager_peripheral.o
+    0x0001f4d4   0x000000c0   Code   RO         1071    i.device_context_store  device_manager_peripheral.o
+    0x0001f594   0x00000048   Code   RO         1072    i.device_instance_find  device_manager_peripheral.o
+    0x0001f5dc   0x0000002c   Code   RO         1073    i.device_instance_free  device_manager_peripheral.o
     0x0001f608   0x0000001e   Code   RO           12    i.device_manager_evt_handler  main.o
     0x0001f626   0x00000002   PAD
     0x0001f628   0x0000006c   Code   RO           13    i.device_manager_init  main.o
@@ -2530,24 +2530,24 @@ Memory Map of the image
     0x0001f770   0x00000002   Code   RO         2626    i.dfu_app_reset_prepare  dfu_app_handler.o
     0x0001f772   0x00000002   PAD
     0x0001f774   0x0000000c   Code   RO         2627    i.dfu_app_reset_prepare_set  dfu_app_handler.o
-    0x0001f780   0x0000009c   Code   RO          569    i.dfu_ctrl_pt_add   ble_dfu.o
-    0x0001f81c   0x0000009c   Code   RO          570    i.dfu_pkt_char_add  ble_dfu.o
-    0x0001f8b8   0x0000009e   Code   RO          571    i.dfu_rev_char_add  ble_dfu.o
+    0x0001f780   0x0000009c   Code   RO          816    i.dfu_ctrl_pt_add   ble_dfu.o
+    0x0001f81c   0x0000009c   Code   RO          817    i.dfu_pkt_char_add  ble_dfu.o
+    0x0001f8b8   0x0000009e   Code   RO          818    i.dfu_rev_char_add  ble_dfu.o
     0x0001f956   0x00000002   PAD
-    0x0001f958   0x00000094   Code   RO          791    i.dm_application_context_delete  device_manager_peripheral.o
-    0x0001f9ec   0x000000a8   Code   RO          792    i.dm_application_context_get  device_manager_peripheral.o
-    0x0001fa94   0x000000d0   Code   RO          793    i.dm_application_context_set  device_manager_peripheral.o
-    0x0001fb64   0x00000034   Code   RO          794    i.dm_application_instance_set  device_manager_peripheral.o
-    0x0001fb98   0x00000456   Code   RO          795    i.dm_ble_evt_handler  device_manager_peripheral.o
+    0x0001f958   0x00000094   Code   RO         1074    i.dm_application_context_delete  device_manager_peripheral.o
+    0x0001f9ec   0x000000a8   Code   RO         1075    i.dm_application_context_get  device_manager_peripheral.o
+    0x0001fa94   0x000000d0   Code   RO         1076    i.dm_application_context_set  device_manager_peripheral.o
+    0x0001fb64   0x00000034   Code   RO         1077    i.dm_application_instance_set  device_manager_peripheral.o
+    0x0001fb98   0x00000456   Code   RO         1078    i.dm_ble_evt_handler  device_manager_peripheral.o
     0x0001ffee   0x00000002   PAD
-    0x0001fff0   0x000000b8   Code   RO          799    i.dm_distributed_keys_get  device_manager_peripheral.o
-    0x000200a8   0x00000040   Code   RO          800    i.dm_handle_get     device_manager_peripheral.o
-    0x000200e8   0x00000016   Code   RO          801    i.dm_handle_initialize  device_manager_peripheral.o
+    0x0001fff0   0x000000b8   Code   RO         1082    i.dm_distributed_keys_get  device_manager_peripheral.o
+    0x000200a8   0x00000040   Code   RO         1083    i.dm_handle_get     device_manager_peripheral.o
+    0x000200e8   0x00000016   Code   RO         1084    i.dm_handle_initialize  device_manager_peripheral.o
     0x000200fe   0x00000002   PAD
-    0x00020100   0x000000c8   Code   RO          802    i.dm_init           device_manager_peripheral.o
-    0x000201c8   0x0000007c   Code   RO          803    i.dm_peer_addr_get  device_manager_peripheral.o
-    0x00020244   0x00000188   Code   RO          805    i.dm_pstorage_cb_handler  device_manager_peripheral.o
-    0x000203cc   0x00000068   Code   RO          806    i.dm_register       device_manager_peripheral.o
+    0x00020100   0x000000c8   Code   RO         1085    i.dm_init           device_manager_peripheral.o
+    0x000201c8   0x0000007c   Code   RO         1086    i.dm_peer_addr_get  device_manager_peripheral.o
+    0x00020244   0x00000188   Code   RO         1088    i.dm_pstorage_cb_handler  device_manager_peripheral.o
+    0x000203cc   0x00000068   Code   RO         1089    i.dm_register       device_manager_peripheral.o
     0x00020434   0x00000040   Code   RO         2387    i.elapsed_ticks_acquire  app_timer.o
     0x00020474   0x0000001c   Code   RO         1915    i.flash_api_err_code_process  pstorage.o
     0x00020490   0x0000008c   Code   RO         1916    i.flash_operation_success_run  pstorage.o
@@ -2555,36 +2555,36 @@ Memory Map of the image
     0x00020522   0x00000006   Code   RO         1918    i.flash_write       pstorage.o
     0x00020528   0x00000014   Code   RO         2695    i.fs_queued_op_count_get  fstorage.o
     0x0002053c   0x0000006c   Code   RO           14    i.gap_params_init   main.o
-    0x000205a8   0x00000004   Code   RO          813    i.gattc_context_apply  device_manager_peripheral.o
-    0x000205ac   0x00000004   Code   RO          814    i.gattc_context_load  device_manager_peripheral.o
-    0x000205b0   0x00000004   Code   RO          815    i.gattc_context_store  device_manager_peripheral.o
-    0x000205b4   0x000000b0   Code   RO          816    i.gatts_context_apply  device_manager_peripheral.o
-    0x00020664   0x00000038   Code   RO          817    i.gatts_context_load  device_manager_peripheral.o
-    0x0002069c   0x000000c8   Code   RO          818    i.gatts_context_store  device_manager_peripheral.o
-    0x00020764   0x00000004   Code   RO          819    i.gattsc_context_apply  device_manager_peripheral.o
-    0x00020768   0x00000004   Code   RO          820    i.gattsc_context_load  device_manager_peripheral.o
-    0x0002076c   0x00000004   Code   RO          821    i.gattsc_context_store  device_manager_peripheral.o
+    0x000205a8   0x00000004   Code   RO         1096    i.gattc_context_apply  device_manager_peripheral.o
+    0x000205ac   0x00000004   Code   RO         1097    i.gattc_context_load  device_manager_peripheral.o
+    0x000205b0   0x00000004   Code   RO         1098    i.gattc_context_store  device_manager_peripheral.o
+    0x000205b4   0x000000b0   Code   RO         1099    i.gatts_context_apply  device_manager_peripheral.o
+    0x00020664   0x00000038   Code   RO         1100    i.gatts_context_load  device_manager_peripheral.o
+    0x0002069c   0x000000c8   Code   RO         1101    i.gatts_context_store  device_manager_peripheral.o
+    0x00020764   0x00000004   Code   RO         1102    i.gattsc_context_apply  device_manager_peripheral.o
+    0x00020768   0x00000004   Code   RO         1103    i.gattsc_context_load  device_manager_peripheral.o
+    0x0002076c   0x00000004   Code   RO         1104    i.gattsc_context_store  device_manager_peripheral.o
     0x00020770   0x00000058   Code   RO         2156    i.gpiote_event_handler  app_button.o
     0x000207c8   0x00000078   Code   RO         1919    i.head_restore_state_run  pstorage.o
     0x00020840   0x00000050   Code   RO           15    i.heart_rate_meas_timeout_handler  main.o
-    0x00020890   0x000000c2   Code   RO          718    i.heart_rate_measurement_char_add  ble_hrs.o
-    0x00020952   0x00000090   Code   RO          719    i.hrm_encode        ble_hrs.o
+    0x00020890   0x000000c2   Code   RO          954    i.heart_rate_measurement_char_add  ble_hrs.o
+    0x00020952   0x00000090   Code   RO          955    i.hrm_encode        ble_hrs.o
     0x000209e2   0x00000002   PAD
     0x000209e4   0x00000070   Code   RO         3124    i.intern_softdevice_events_execute  softdevice_handler.o
-    0x00020a54   0x0000001c   Code   RO         1138    i.is_conn_params_ok  ble_conn_params.o
+    0x00020a54   0x0000001c   Code   RO          741    i.is_conn_params_ok  ble_conn_params.o
     0x00020a70   0x00000044   Code   RO         1920    i.is_page_erase_required  pstorage.o
     0x00020ab4   0x0000000c   Code   RO         1921    i.is_word_aligned   pstorage.o
-    0x00020ac0   0x00000054   Code   RO         1056    i.le_role_encode    ble_advdata.o
+    0x00020ac0   0x00000054   Code   RO          518    i.le_role_encode    ble_advdata.o
     0x00020b14   0x00000014   Code   RO          355    i.leds_timer_handler  bsp.o
     0x00020b28   0x000000bc   Code   RO         2388    i.list_deletions_handler  app_timer.o
     0x00020be4   0x000000cc   Code   RO         2389    i.list_insertions_handler  app_timer.o
     0x00020cb0   0x00000124   Code   RO           16    i.main              main.o
     0x00020dd4   0x00000014   Code   RO         1922    i.main_state_err_busy_process  pstorage.o
-    0x00020de8   0x00000064   Code   RO         1057    i.manuf_specific_data_encode  ble_advdata.o
-    0x00020e4c   0x0000009c   Code   RO         1058    i.name_encode       ble_advdata.o
-    0x00020ee8   0x00000004   Code   RO          822    i.no_service_context_apply  device_manager_peripheral.o
-    0x00020eec   0x00000004   Code   RO          823    i.no_service_context_load  device_manager_peripheral.o
-    0x00020ef0   0x00000004   Code   RO          824    i.no_service_context_store  device_manager_peripheral.o
+    0x00020de8   0x00000064   Code   RO          519    i.manuf_specific_data_encode  ble_advdata.o
+    0x00020e4c   0x0000009c   Code   RO          520    i.name_encode       ble_advdata.o
+    0x00020ee8   0x00000004   Code   RO         1105    i.no_service_context_apply  device_manager_peripheral.o
+    0x00020eec   0x00000004   Code   RO         1106    i.no_service_context_load  device_manager_peripheral.o
+    0x00020ef0   0x00000004   Code   RO         1107    i.no_service_context_store  device_manager_peripheral.o
     0x00020ef4   0x0000001a   Code   RO         1433    i.nrf_delay_ms      nrf_delay.o
     0x00020f0e   0x00000038   Code   RO         1467    i.nrf_drv_common_irq_enable  nrf_drv_common.o
     0x00020f46   0x00000002   PAD
@@ -2603,12 +2603,12 @@ Memory Map of the image
     0x0002119a   0x0000000a   Code   RO         1725    i.nrf_uarte_event_check  nrf_drv_uart.o
     0x000211a4   0x00000024   Code   RO           17    i.on_adv_evt        main.o
     0x000211c8   0x0000001c   Code   RO           18    i.on_conn_params_evt  main.o
-    0x000211e4   0x000000f8   Code   RO          572    i.on_ctrl_pt_write  ble_dfu.o
-    0x000212dc   0x00000014   Code   RO         1256    i.peer_address_exists  ble_advertising.o
-    0x000212f0   0x00000040   Code   RO          825    i.peer_instance_init  device_manager_peripheral.o
+    0x000211e4   0x000000f8   Code   RO          819    i.on_ctrl_pt_write  ble_dfu.o
+    0x000212dc   0x00000014   Code   RO          610    i.peer_address_exists  ble_advertising.o
+    0x000212f0   0x00000040   Code   RO         1108    i.peer_instance_init  device_manager_peripheral.o
     0x00021330   0x00000018   Code   RO         1530    i.pin_in_use_by_port  nrf_drv_gpiote.o
     0x00021348   0x00000018   Code   RO         1531    i.pin_in_use_by_te  nrf_drv_gpiote.o
-    0x00021360   0x00000034   Code   RO          655    i.pnp_id_encode     ble_dis.o
+    0x00021360   0x00000034   Code   RO          902    i.pnp_id_encode     ble_dis.o
     0x00021394   0x00000024   Code   RO         1923    i.pstorage_access_status_get  pstorage.o
     0x000213b8   0x00000054   Code   RO         1924    i.pstorage_block_identifier_get  pstorage.o
     0x0002140c   0x0000009c   Code   RO         1925    i.pstorage_clear    pstorage.o
@@ -2626,7 +2626,7 @@ Memory Map of the image
     0x00021898   0x00000020   Code   RO         1728    i.rx_done_event     nrf_drv_uart.o
     0x000218b8   0x00000010   Code   RO         3125    i.sd_check_ram_start  softdevice_handler.o
     0x000218c8   0x00000088   Code   RO         3126    i.sd_nvic_EnableIRQ  softdevice_handler.o
-    0x00021950   0x00000088   Code   RO         1059    i.service_data_encode  ble_advdata.o
+    0x00021950   0x00000088   Code   RO          521    i.service_data_encode  ble_advdata.o
     0x000219d8   0x000001d0   Code   RO           20    i.services_init     main.o
     0x00021ba8   0x00000028   Code   RO           21    i.sleep_mode_enter  main.o
     0x00021bd0   0x0000003c   Code   RO         1934    i.sm_state_change   pstorage.o
@@ -2644,13 +2644,13 @@ Memory Map of the image
     0x00021d98   0x0000001e   Code   RO         1939    i.state_swap_erase_entry_run  pstorage.o
     0x00021db6   0x00000002   PAD
     0x00021db8   0x00000030   Code   RO         1940    i.state_write_data_swap_entry_run  pstorage.o
-    0x00021de8   0x00000004   Code   RO          826    i.storage_operation_dummy_handler  device_manager_peripheral.o
+    0x00021de8   0x00000004   Code   RO         1109    i.storage_operation_dummy_handler  device_manager_peripheral.o
     0x00021dec   0x0000005c   Code   RO         1941    i.store_cmd_flash_write_execute  pstorage.o
     0x00021e48   0x00000018   Code   RO         1942    i.swap_erase_state_run  pstorage.o
     0x00021e60   0x00000014   Code   RO         1943    i.swap_sub_state_err_busy_process  pstorage.o
     0x00021e74   0x00000014   Code   RO         1944    i.swap_sub_state_state_change  pstorage.o
     0x00021e88   0x00000012   Code   RO           22    i.sys_evt_dispatch  main.o
-    0x00021e9a   0x00000042   Code   RO          656    i.sys_id_encode     ble_dis.o
+    0x00021e9a   0x00000042   Code   RO          903    i.sys_id_encode     ble_dis.o
     0x00021edc   0x00000014   Code   RO         1945    i.tail_restore_state_run  pstorage.o
     0x00021ef0   0x0000008c   Code   RO         2391    i.timer_list_handler  app_timer.o
     0x00021f7c   0x0000003c   Code   RO         2392    i.timer_list_insert  app_timer.o
@@ -2659,21 +2659,21 @@ Memory Map of the image
     0x00022060   0x00000024   Code   RO         1731    i.tx_done_event     nrf_drv_uart.o
     0x00022084   0x00000108   Code   RO         1732    i.uart_irq_handler  nrf_drv_uart.o
     0x0002218c   0x000000d8   Code   RO         1733    i.uarte_irq_handler  nrf_drv_uart.o
-    0x00022264   0x0000000a   Code   RO         1060    i.uint16_encode     ble_advdata.o
+    0x00022264   0x0000000a   Code   RO          522    i.uint16_encode     ble_advdata.o
     0x0002226e   0x00000002   PAD
-    0x00022270   0x00000014   Code   RO          827    i.update_status_bit_reset  device_manager_peripheral.o
-    0x00022284   0x00000060   Code   RO         1139    i.update_timeout_handler  ble_conn_params.o
+    0x00022270   0x00000014   Code   RO         1110    i.update_status_bit_reset  device_manager_peripheral.o
+    0x00022284   0x00000060   Code   RO          742    i.update_timeout_handler  ble_conn_params.o
     0x000222e4   0x0000003e   Code   RO         2394    i.user_id_get       app_timer.o
     0x00022322   0x00000028   Code   RO         2395    i.user_op_alloc     app_timer.o
-    0x0002234a   0x00000030   Code   RO         1061    i.uuid_list_encode  ble_advdata.o
-    0x0002237a   0x0000009e   Code   RO         1062    i.uuid_list_sized_encode  ble_advdata.o
-    0x00022418   0x0000000e   Code   RO         1257    i.whitelist_has_entries  ble_advertising.o
+    0x0002234a   0x00000030   Code   RO          523    i.uuid_list_encode  ble_advdata.o
+    0x0002237a   0x0000009e   Code   RO          524    i.uuid_list_sized_encode  ble_advdata.o
+    0x00022418   0x0000000e   Code   RO          611    i.whitelist_has_entries  ble_advertising.o
     0x00022426   0x00000002   PAD
     0x00022428   0x00000008   Data   RO           25    .constdata          main.o
     0x00022430   0x0000003c   Data   RO          360    .constdata          bsp.o
-    0x0002246c   0x00000010   Data   RO          574    .constdata          ble_dfu.o
-    0x0002247c   0x00000034   Data   RO          829    .constdata          device_manager_peripheral.o
-    0x000224b0   0x00000004   Data   RO         1142    .constdata          ble_conn_params.o
+    0x0002246c   0x00000004   Data   RO          745    .constdata          ble_conn_params.o
+    0x00022470   0x00000010   Data   RO          821    .constdata          ble_dfu.o
+    0x00022480   0x00000034   Data   RO         1112    .constdata          device_manager_peripheral.o
     0x000224b4   0x00000028   Data   RO         1947    .constdata          pstorage.o
     0x000224dc   0x00000008   Data   RO         2158    .constdata          app_button.o
     0x000224e4   0x00000020   Data   RO         3595    Region$$Table       anon$$obj.o
@@ -2686,13 +2686,13 @@ Memory Map of the image
     0x20002080   0x00000028   Data   RW           26    .data               main.o
     0x200020a8   0x00000018   Data   RW          361    .data               bsp.o
     0x200020c0   0x00000008   Data   RW          472    .data               bsp_btn_ble.o
-    0x200020c8   0x00000008   Data   RW          575    .data               ble_dfu.o
-    0x200020d0   0x0000004a   Data   RW          657    .data               ble_dis.o
-    0x2000211a   0x00000002   PAD
-    0x2000211c   0x00000018   Data   RW          830    .data               device_manager_peripheral.o
-    0x20002134   0x00000014   Data   RW         1143    .data               ble_conn_params.o
-    0x20002148   0x0000001f   Data   RW         1259    .data               ble_advertising.o
-    0x20002167   0x00000001   PAD
+    0x200020c8   0x0000001f   Data   RW          613    .data               ble_advertising.o
+    0x200020e7   0x00000001   PAD
+    0x200020e8   0x00000014   Data   RW          746    .data               ble_conn_params.o
+    0x200020fc   0x00000008   Data   RW          822    .data               ble_dfu.o
+    0x20002104   0x0000004a   Data   RW          904    .data               ble_dis.o
+    0x2000214e   0x00000002   PAD
+    0x20002150   0x00000018   Data   RW         1113    .data               device_manager_peripheral.o
     0x20002168   0x00000024   Data   RW         1948    .data               pstorage.o
     0x2000218c   0x00000014   Data   RW         2159    .data               app_button.o
     0x200021a0   0x00000020   Data   RW         2396    .data               app_timer.o
@@ -2705,11 +2705,11 @@ Memory Map of the image
     0x2000250c   0x00000020   Zero   RW          357    .bss                bsp.o
     0x2000252c   0x0000000c   Zero   RW          358    .bss                bsp.o
     0x20002538   0x00000020   Zero   RW          359    .bss                bsp.o
-    0x20002558   0x0000014f   Zero   RW          828    .bss                device_manager_peripheral.o
-    0x200026a7   0x00000001   PAD
-    0x200026a8   0x00000020   Zero   RW         1140    .bss                ble_conn_params.o
-    0x200026c8   0x0000001c   Zero   RW         1141    .bss                ble_conn_params.o
-    0x200026e4   0x00000103   Zero   RW         1258    .bss                ble_advertising.o
+    0x20002558   0x00000103   Zero   RW          612    .bss                ble_advertising.o
+    0x2000265b   0x00000001   PAD
+    0x2000265c   0x00000020   Zero   RW          743    .bss                ble_conn_params.o
+    0x2000267c   0x0000001c   Zero   RW          744    .bss                ble_conn_params.o
+    0x20002698   0x0000014f   Zero   RW         1111    .bss                device_manager_peripheral.o
     0x200027e7   0x00000001   PAD
     0x200027e8   0x00000058   Zero   RW         1532    .bss                nrf_drv_gpiote.o
     0x20002840   0x00000020   Zero   RW         1734    .bss                nrf_drv_uart.o
@@ -2734,12 +2734,12 @@ Image component sizes
         36         10          0          0          0      27249   app_error_weak.o
       1766         94          0         32          0      54739   app_timer.o
         36          8       1024          0       8192        860   arm_startup_nrf52.o
-      1540          0          0          0          0      22288   ble_advdata.o
+      1540          0          0          0          0      25500   ble_advdata.o
       1074         46          0         31        259      10069   ble_advertising.o
          0          0          0          0          0       6676   ble_bas.o
        448         58          4         20         60      13231   ble_conn_params.o
       1092         26         16          8          0      13668   ble_dfu.o
-       578          8          0         74          0       9239   ble_dis.o
+       578          8          0         74          0       6027   ble_dis.o
        568          0          0          0          0       7426   ble_hrs.o
         18          0          0          0          0       1188   ble_srv_common.o
         56          2          0          0          0       1088   bootloader_util.o

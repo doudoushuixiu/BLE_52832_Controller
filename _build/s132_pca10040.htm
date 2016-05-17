@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\_build\s132_pca10040.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\_build\s132_pca10040.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060183: Last Updated: Mon May 16 16:49:49 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060183: Last Updated: Tue May 17 15:34:03 2016
 <BR><P>
 <H3>Maximum Stack Usage =        392 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -388,11 +388,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ac]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;char_add
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_rev_char_add
-<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_pkt_char_add
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_ctrl_pt_add
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;softdevice_enable_get_default_config
+<BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;softdevice_enable_get_default_config
 <LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_init
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_ble_evt_handler
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
@@ -402,6 +398,10 @@ Global Symbols
 <LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gatts_context_store
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_pstorage_cb_handler
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;heart_rate_measurement_char_add
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;char_add
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_rev_char_add
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_pkt_char_add
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_ctrl_pt_add
 </UL>
 
 <P><STRONG><a name="[136]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
@@ -642,10 +642,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_fault_handler
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_id_encode
-<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pnp_id_encode
-<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;char_add
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_ble_evt_handler
+<BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_ble_evt_handler
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_on_dfu_evt
 <LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_dm_appl_instance_set
 <LI><a href="#[30]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -665,6 +662,9 @@ Global Symbols
 <LI><a href="#[37]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_evt_dispatch
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_context_load
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_pstorage_cb_handler
+<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_id_encode
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pnp_id_encode
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;char_add
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_peer_data_set
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_start
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_timeouts_check
@@ -758,8 +758,8 @@ Global Symbols
 <P><STRONG><a name="[b0]"></a>ble_advertising_restart_without_whitelist</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, ble_advertising.o(i.ble_advertising_restart_without_whitelist))
 <BR><BR>[Stack]<UL><LI>Max Depth = 296<LI>Call Chain = ble_advertising_restart_without_whitelist &rArr; ble_advertising_start &rArr; ble_advdata_set &rArr; adv_data_encode &rArr; uuid_list_encode &rArr; uuid_list_sized_encode
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advdata_set
+<BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advdata_set
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_event_handler
 </UL>
@@ -828,8 +828,8 @@ Global Symbols
 <P><STRONG><a name="[fc]"></a>ble_dfu_response_send</STRONG> (Thumb, 90 bytes, Stack size 32 bytes, ble_dfu.o(i.ble_dfu_response_send))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = ble_dfu_response_send
 </UL>
-<BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;on_ctrl_pt_write
-<LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_on_dfu_evt
+<BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_on_dfu_evt
+<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;on_ctrl_pt_write
 </UL>
 
 <P><STRONG><a name="[bf]"></a>ble_dis_init</STRONG> (Thumb, 296 bytes, Stack size 32 bytes, ble_dis.o(i.ble_dis_init))
@@ -974,8 +974,8 @@ Global Symbols
 <P><STRONG><a name="[46]"></a>dfu_app_on_dfu_evt</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, dfu_app_handler.o(i.dfu_app_on_dfu_evt))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = dfu_app_on_dfu_evt &rArr; bootloader_start &rArr; dfu_app_peer_data_set &rArr; dm_application_context_set &rArr; pstorage_update &rArr; cmd_queue_enqueue &rArr; cmd_process &rArr; clear_operation_execute &rArr; sm_state_change &rArr;  cmd_process (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_dfu_response_send
-<LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
+<BR>[Calls]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
+<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_dfu_response_send
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_start
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.services_init)
@@ -1229,8 +1229,8 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;is_word_aligned
 <LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_queue_enqueue
 </UL>
-<BR>[Address Reference Count : 3]<UL><LI> device_manager_peripheral.o(i.device_context_store)
-<LI> device_manager_peripheral.o(i.dm_application_context_set)
+<BR>[Address Reference Count : 3]<UL><LI> device_manager_peripheral.o(i.dm_application_context_set)
+<LI> device_manager_peripheral.o(i.device_context_store)
 <LI> device_manager_peripheral.o(i.gatts_context_store)
 </UL>
 <P><STRONG><a name="[11c]"></a>pstorage_sys_event_handler</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, pstorage.o(i.pstorage_sys_event_handler))
@@ -1253,8 +1253,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_application_context_delete
 <LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_application_context_set
 </UL>
-<BR>[Address Reference Count : 3]<UL><LI> device_manager_peripheral.o(i.device_context_store)
-<LI> device_manager_peripheral.o(i.dm_application_context_set)
+<BR>[Address Reference Count : 3]<UL><LI> device_manager_peripheral.o(i.dm_application_context_set)
+<LI> device_manager_peripheral.o(i.device_context_store)
 <LI> device_manager_peripheral.o(i.gatts_context_store)
 </UL>
 <P><STRONG><a name="[d0]"></a>sd_check_ram_start</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, softdevice_handler.o(i.sd_check_ram_start))
@@ -1498,6 +1498,102 @@ Local Symbols
 <LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_btn_ble_init
 </UL>
 
+<P><STRONG><a name="[87]"></a>ble_device_addr_encode</STRONG> (Thumb, 94 bytes, Stack size 24 bytes, ble_advdata.o(i.ble_device_addr_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = ble_device_addr_encode
+</UL>
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+</UL>
+
+<P><STRONG><a name="[8a]"></a>conn_int_encode</STRONG> (Thumb, 136 bytes, Stack size 24 bytes, ble_advdata.o(i.conn_int_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = conn_int_encode
+</UL>
+<BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uint16_encode
+</UL>
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+</UL>
+
+<P><STRONG><a name="[86]"></a>le_role_encode</STRONG> (Thumb, 84 bytes, Stack size 12 bytes, ble_advdata.o(i.le_role_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = le_role_encode
+</UL>
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+</UL>
+
+<P><STRONG><a name="[8b]"></a>manuf_specific_data_encode</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, ble_advdata.o(i.manuf_specific_data_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = manuf_specific_data_encode &rArr; __aeabi_memcpy
+</UL>
+<BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uint16_encode
+<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
+</UL>
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+</UL>
+
+<P><STRONG><a name="[8d]"></a>name_encode</STRONG> (Thumb, 156 bytes, Stack size 24 bytes, ble_advdata.o(i.name_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = name_encode
+</UL>
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+</UL>
+
+<P><STRONG><a name="[8c]"></a>service_data_encode</STRONG> (Thumb, 136 bytes, Stack size 24 bytes, ble_advdata.o(i.service_data_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = service_data_encode &rArr; __aeabi_memcpy
+</UL>
+<BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uint16_encode
+<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
+</UL>
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+</UL>
+
+<P><STRONG><a name="[88]"></a>uint16_encode</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, ble_advdata.o(i.uint16_encode))
+<BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+<LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;service_data_encode
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;manuf_specific_data_encode
+<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;conn_int_encode
+</UL>
+
+<P><STRONG><a name="[89]"></a>uuid_list_encode</STRONG> (Thumb, 48 bytes, Stack size 32 bytes, ble_advdata.o(i.uuid_list_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = uuid_list_encode &rArr; uuid_list_sized_encode
+</UL>
+<BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uuid_list_sized_encode
+</UL>
+<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
+</UL>
+
+<P><STRONG><a name="[12a]"></a>uuid_list_sized_encode</STRONG> (Thumb, 158 bytes, Stack size 48 bytes, ble_advdata.o(i.uuid_list_sized_encode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = uuid_list_sized_encode
+</UL>
+<BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uuid_list_encode
+</UL>
+
+<P><STRONG><a name="[ab]"></a>ble_advertising_peer_address_clear</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, ble_advertising.o(i.ble_advertising_peer_address_clear))
+<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
+<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_init
+</UL>
+
+<P><STRONG><a name="[b3]"></a>peer_address_exists</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, ble_advertising.o(i.peer_address_exists))
+<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
+</UL>
+
+<P><STRONG><a name="[b4]"></a>whitelist_has_entries</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, ble_advertising.o(i.whitelist_has_entries))
+<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
+</UL>
+
+<P><STRONG><a name="[b7]"></a>conn_params_negotiation</STRONG> (Thumb, 78 bytes, Stack size 24 bytes, ble_conn_params.o(i.conn_params_negotiation))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = conn_params_negotiation &rArr; app_timer_start
+</UL>
+<BR>[Calls]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_start
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;is_conn_params_ok
+</UL>
+<BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_conn_params_on_ble_evt
+</UL>
+
+<P><STRONG><a name="[eb]"></a>is_conn_params_ok</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, ble_conn_params.o(i.is_conn_params_ok))
+<BR><BR>[Called By]<UL><LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;conn_params_negotiation
+</UL>
+
+<P><STRONG><a name="[36]"></a>update_timeout_handler</STRONG> (Thumb, 88 bytes, Stack size 16 bytes, ble_conn_params.o(i.update_timeout_handler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = update_timeout_handler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> ble_conn_params.o(i.ble_conn_params_init)
+</UL>
 <P><STRONG><a name="[bb]"></a>dfu_ctrl_pt_add</STRONG> (Thumb, 156 bytes, Stack size 72 bytes, ble_dfu.o(i.dfu_ctrl_pt_add))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = dfu_ctrl_pt_add
 </UL>
@@ -1711,102 +1807,6 @@ Local Symbols
 <P><STRONG><a name="[107]"></a>update_status_bit_reset</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, device_manager_peripheral.o(i.update_status_bit_reset))
 <BR><BR>[Called By]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;peer_instance_init
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_pstorage_cb_handler
-</UL>
-
-<P><STRONG><a name="[87]"></a>ble_device_addr_encode</STRONG> (Thumb, 94 bytes, Stack size 24 bytes, ble_advdata.o(i.ble_device_addr_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = ble_device_addr_encode
-</UL>
-<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-</UL>
-
-<P><STRONG><a name="[8a]"></a>conn_int_encode</STRONG> (Thumb, 136 bytes, Stack size 24 bytes, ble_advdata.o(i.conn_int_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = conn_int_encode
-</UL>
-<BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uint16_encode
-</UL>
-<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-</UL>
-
-<P><STRONG><a name="[86]"></a>le_role_encode</STRONG> (Thumb, 84 bytes, Stack size 12 bytes, ble_advdata.o(i.le_role_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = le_role_encode
-</UL>
-<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-</UL>
-
-<P><STRONG><a name="[8b]"></a>manuf_specific_data_encode</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, ble_advdata.o(i.manuf_specific_data_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = manuf_specific_data_encode &rArr; __aeabi_memcpy
-</UL>
-<BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uint16_encode
-<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-</UL>
-<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-</UL>
-
-<P><STRONG><a name="[8d]"></a>name_encode</STRONG> (Thumb, 156 bytes, Stack size 24 bytes, ble_advdata.o(i.name_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = name_encode
-</UL>
-<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-</UL>
-
-<P><STRONG><a name="[8c]"></a>service_data_encode</STRONG> (Thumb, 136 bytes, Stack size 24 bytes, ble_advdata.o(i.service_data_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = service_data_encode &rArr; __aeabi_memcpy
-</UL>
-<BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uint16_encode
-<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-</UL>
-<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-</UL>
-
-<P><STRONG><a name="[88]"></a>uint16_encode</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, ble_advdata.o(i.uint16_encode))
-<BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-<LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;service_data_encode
-<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;manuf_specific_data_encode
-<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;conn_int_encode
-</UL>
-
-<P><STRONG><a name="[89]"></a>uuid_list_encode</STRONG> (Thumb, 48 bytes, Stack size 32 bytes, ble_advdata.o(i.uuid_list_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = uuid_list_encode &rArr; uuid_list_sized_encode
-</UL>
-<BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uuid_list_sized_encode
-</UL>
-<BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adv_data_encode
-</UL>
-
-<P><STRONG><a name="[12a]"></a>uuid_list_sized_encode</STRONG> (Thumb, 158 bytes, Stack size 48 bytes, ble_advdata.o(i.uuid_list_sized_encode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = uuid_list_sized_encode
-</UL>
-<BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uuid_list_encode
-</UL>
-
-<P><STRONG><a name="[b7]"></a>conn_params_negotiation</STRONG> (Thumb, 78 bytes, Stack size 24 bytes, ble_conn_params.o(i.conn_params_negotiation))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = conn_params_negotiation &rArr; app_timer_start
-</UL>
-<BR>[Calls]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_start
-<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;is_conn_params_ok
-</UL>
-<BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_conn_params_on_ble_evt
-</UL>
-
-<P><STRONG><a name="[eb]"></a>is_conn_params_ok</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, ble_conn_params.o(i.is_conn_params_ok))
-<BR><BR>[Called By]<UL><LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;conn_params_negotiation
-</UL>
-
-<P><STRONG><a name="[36]"></a>update_timeout_handler</STRONG> (Thumb, 88 bytes, Stack size 16 bytes, ble_conn_params.o(i.update_timeout_handler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = update_timeout_handler
-</UL>
-<BR>[Address Reference Count : 1]<UL><LI> ble_conn_params.o(i.ble_conn_params_init)
-</UL>
-<P><STRONG><a name="[ab]"></a>ble_advertising_peer_address_clear</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, ble_advertising.o(i.ble_advertising_peer_address_clear))
-<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
-<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_init
-</UL>
-
-<P><STRONG><a name="[b3]"></a>peer_address_exists</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, ble_advertising.o(i.peer_address_exists))
-<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
-</UL>
-
-<P><STRONG><a name="[b4]"></a>whitelist_has_entries</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, ble_advertising.o(i.whitelist_has_entries))
-<BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
 </UL>
 
 <P><STRONG><a name="[118]"></a>channel_free</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, nrf_drv_gpiote.o(i.channel_free))
