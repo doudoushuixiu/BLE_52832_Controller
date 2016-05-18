@@ -52,7 +52,7 @@
 #define CENTRAL_LINK_COUNT               0                                          /**< Number of central links used by the application. When changing this number remember to adjust the RAM settings*/
 #define PERIPHERAL_LINK_COUNT            1                                          /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
 
-#define DEVICE_NAME                      "Nordic_HRM"                               /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                      "Controller_Test"                               /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                "SpiderSens"                      /**< Manufacturer. Will be passed to Device Information Service. */
 #define MODEL_NUM                        "Controller_xx"
 
@@ -141,8 +141,8 @@ static uint8_t SW_VERSION[64] = {0};
 																	 
 uint16_t        heart_rate;																	 
 																	 
-																	 #ifdef BLE_DFU_APP_SUPPORT
-static ble_dfu_t                         m_dfus;                                    /**< Structure used to identify the DFU service. */
+#ifdef BLE_DFU_APP_SUPPORT
+static ble_dfu_t  m_dfus;                                    /**< Structure used to identify the DFU service. */
 #endif // BLE_DFU_APP_SUPPORT
 
 
@@ -163,43 +163,6 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
 }
 
 
-/**@brief Function for performing battery measurement and updating the Battery Level characteristic
- *        in Battery Service.
- *//*
-static void battery_level_update(void)
-{
-    uint32_t err_code;
-    uint8_t  battery_level;
-
-    battery_level = (uint8_t)sensorsim_measure(&m_battery_sim_state, &m_battery_sim_cfg);
-
-    err_code = ble_bas_battery_level_update(&m_bas, battery_level);
-    if ((err_code != NRF_SUCCESS) &&
-        (err_code != NRF_ERROR_INVALID_STATE) &&
-        (err_code != BLE_ERROR_NO_TX_PACKETS) &&
-        (err_code != BLE_ERROR_GATTS_SYS_ATTR_MISSING)
-        )
-    {
-        APP_ERROR_HANDLER(err_code);
-    }
-}
-*/
-
-/**@brief Function for handling the Battery measurement timer timeout.
- *
- * @details This function will be called each time the battery level measurement timer expires.
- *
- * @param[in] p_context  Pointer used for passing some arbitrary information (context) from the
- *                       app_start_timer() call to the timeout handler.
- */
-/*
-static void battery_level_meas_timeout_handler(void * p_context)
-{
-    UNUSED_PARAMETER(p_context);
-    battery_level_update();
-}*/
-
-
 /**@brief Function for handling the Heart rate measurement timer timeout.
  *
  * @details This function will be called each time the heart rate measurement timer expires.
@@ -212,16 +175,13 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 {
     static uint32_t cnt = 0;
     uint32_t        err_code;
-    
 
     UNUSED_PARAMETER(p_context);
 
-   // heart_rate = (uint16_t)sensorsim_measure(&m_heart_rate_sim_state, &m_heart_rate_sim_cfg);
     heart_rate++;
 	
     cnt++;
     err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, heart_rate);
-	
 	
     if ((err_code != NRF_SUCCESS) &&
         (err_code != NRF_ERROR_INVALID_STATE) &&
@@ -235,50 +195,9 @@ static void heart_rate_meas_timeout_handler(void * p_context)
     // Disable RR Interval recording every third heart rate measurement.
     // NOTE: An application will normally not do this. It is done here just for testing generation
     //       of messages without RR Interval measurements.
-    m_rr_interval_enabled = ((cnt % 3) != 0);
+  //  m_rr_interval_enabled = ((cnt % 3) != 0);
 }
 
-
-/**@brief Function for handling the RR interval timer timeout.
- *
- * @details This function will be called each time the RR interval timer expires.
- *
- * @param[in] p_context  Pointer used for passing some arbitrary information (context) from the
- *                       app_start_timer() call to the timeout handler.
- */
-/*
-static void rr_interval_timeout_handler(void * p_context)
-{
-    UNUSED_PARAMETER(p_context); 
-
-    if (m_rr_interval_enabled)
-    {
-        uint16_t rr_interval;
-
-        rr_interval = (uint16_t)sensorsim_measure(&m_rr_interval_sim_state,
-                                                      &m_rr_interval_sim_cfg);
-        ble_hrs_rr_interval_add(&m_hrs, rr_interval);
-    }
-}
-*/
-
-/**@brief Function for handling the Sensor Contact Detected timer timeout.
- *
- * @details This function will be called each time the Sensor Contact Detected timer expires.
- *
- * @param[in] p_context  Pointer used for passing some arbitrary information (context) from the
- *                       app_start_timer() call to the timeout handler.
- */
-/*
-static void sensor_contact_detected_timeout_handler(void * p_context)
-{
-    static bool sensor_contact_detected = false;
-
-    UNUSED_PARAMETER(p_context);
-
-    sensor_contact_detected = !sensor_contact_detected;
-   // ble_hrs_sensor_contact_detected_update(&m_hrs, sensor_contact_detected);
-}*/
 
 
 /**@brief Function for the Timer initialization.
@@ -290,28 +209,12 @@ static void timers_init(void)
     uint32_t err_code;
 
     // Initialize timer module.
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);   //定时器频率设置
+    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);   
 
-    // Create timers.
-  /*  err_code = app_timer_create(&m_battery_timer_id,
-                                APP_TIMER_MODE_REPEATED,
-                                battery_level_meas_timeout_handler);
-    APP_ERROR_CHECK(err_code);
-*/
-    err_code = app_timer_create(&m_heart_rate_timer_id,       //心跳报文定时器设置
-                                APP_TIMER_MODE_REPEATED,
+    err_code = app_timer_create(&m_heart_rate_timer_id, APP_TIMER_MODE_REPEATED,
                                 heart_rate_meas_timeout_handler);
     APP_ERROR_CHECK(err_code);
 
- //   err_code = app_timer_create(&m_rr_interval_timer_id,
- //                               APP_TIMER_MODE_REPEATED,
- //                               rr_interval_timeout_handler);
- //   APP_ERROR_CHECK(err_code);
-
- /*   err_code = app_timer_create(&m_sensor_contact_timer_id,
-                                APP_TIMER_MODE_REPEATED,
-                                sensor_contact_detected_timeout_handler);
-    APP_ERROR_CHECK(err_code);  */
 }
 
 
@@ -447,22 +350,29 @@ static void reset_prepare(void)
 #endif // BLE_DFU_APP_SUPPORT
 
 
+
+
+static void nus_data_handler(ble_hrs_t * p_nus, uint8_t * p_data, uint16_t length)
+{
+	__nop;
+}
+
+
 /**@brief Function for initializing services that will be used by the application.
- *
+ * 
  * @details Initialize the Heart Rate, Battery and Device Information services.
  */
 static void services_init(void)
 {
     uint32_t       err_code;
-    ble_hrs_init_t hrs_init;
-    ble_dis_init_t dis_init;	
+	  ble_hrs_init_t hrs_init;   //蹇冭烦鏈嶅姟
+	  ble_dis_init_t dis_init;	 //绯荤粺淇℃伅鏈嶅姟
 	  uint8_t        addr[8] = {0};
 
-		
     memset(&hrs_init, 0, sizeof(hrs_init));
 		
-    hrs_init.evt_handler                 = NULL;
-
+    hrs_init.evt_handler  = NULL;
+    hrs_init.data_handler = nus_data_handler;
 
     // Here the sec level for the Heart Rate Service can be changed/increased.
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&hrs_init.hrs_hrm_attr_md.cccd_write_perm);
@@ -471,9 +381,6 @@ static void services_init(void)
 
     err_code = ble_hrs_init(&m_hrs, &hrs_init);
     APP_ERROR_CHECK(err_code);
-
-
-
 
     // Initialize Device Information Service.
     memset(&dis_init, 0, sizeof(dis_init));
@@ -501,7 +408,6 @@ static void services_init(void)
     APP_ERROR_CHECK(err_code);
 
 
-
 #ifdef BLE_DFU_APP_SUPPORT
     /** @snippet [DFU BLE Service initialization] */
     ble_dfu_init_t   dfus_init;
@@ -524,33 +430,6 @@ static void services_init(void)
 }
 
 
-/**@brief Function for initializing the sensor simulators.
- */
-/*
-static void sensor_simulator_init(void)
-{
-    m_battery_sim_cfg.min          = MIN_BATTERY_LEVEL;
-    m_battery_sim_cfg.max          = MAX_BATTERY_LEVEL;
-    m_battery_sim_cfg.incr         = BATTERY_LEVEL_INCREMENT;
-    m_battery_sim_cfg.start_at_max = true;
-
-    sensorsim_init(&m_battery_sim_state, &m_battery_sim_cfg);
-
-    m_heart_rate_sim_cfg.min          = MIN_HEART_RATE;
-    m_heart_rate_sim_cfg.max          = MAX_HEART_RATE;
-    m_heart_rate_sim_cfg.incr         = HEART_RATE_INCREMENT;
-    m_heart_rate_sim_cfg.start_at_max = false;
-
-    sensorsim_init(&m_heart_rate_sim_state, &m_heart_rate_sim_cfg);
-
-    m_rr_interval_sim_cfg.min          = MIN_RR_INTERVAL;
-    m_rr_interval_sim_cfg.max          = MAX_RR_INTERVAL;
-    m_rr_interval_sim_cfg.incr         = RR_INTERVAL_INCREMENT;
-    m_rr_interval_sim_cfg.start_at_max = false;
-
-    sensorsim_init(&m_rr_interval_sim_state, &m_rr_interval_sim_cfg);
-}*/
-
 
 /**@brief Function for starting application timers.
  */
@@ -558,18 +437,9 @@ static void application_timers_start(void)
 {
     uint32_t err_code;
 
-    // Start application timers.
-  //  err_code = app_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL);
- //   APP_ERROR_CHECK(err_code);
-
     err_code = app_timer_start(m_heart_rate_timer_id, HEART_RATE_MEAS_INTERVAL, NULL);  //timer时间设置
     APP_ERROR_CHECK(err_code);
 
-  //  err_code = app_timer_start(m_rr_interval_timer_id, RR_INTERVAL_INTERVAL, NULL);
- //   APP_ERROR_CHECK(err_code);
-
-   // err_code = app_timer_start(m_sensor_contact_timer_id, SENSOR_CONTACT_DETECTED_INTERVAL, NULL);
-   // APP_ERROR_CHECK(err_code);
 }
 
 
@@ -950,7 +820,7 @@ int main(void)
     gap_params_init();
     advertising_init();
     services_init();
-   // sensor_simulator_init();
+
     conn_params_init();
 
     // Start execution.

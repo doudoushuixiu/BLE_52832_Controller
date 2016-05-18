@@ -143,14 +143,14 @@ static uint8_t hrm_encode(ble_hrs_t * p_hrs, uint16_t heart_rate, uint8_t * p_en
     int     i;
 
     // Set sensor contact related flags
-    if (p_hrs->is_sensor_contact_supported)
+  /*  if (p_hrs->is_sensor_contact_supported)
     {
         flags |= HRM_FLAG_MASK_SENSOR_CONTACT_SUPPORTED;
     }
     if (p_hrs->is_sensor_contact_detected)
     {
         flags |= HRM_FLAG_MASK_SENSOR_CONTACT_DETECTED;
-    }
+    }*/
 
     // Encode heart rate measurement
     if (heart_rate > 0xff)
@@ -189,6 +189,61 @@ static uint8_t hrm_encode(ble_hrs_t * p_hrs, uint16_t heart_rate, uint8_t * p_en
     return len;
 }
 
+static uint32_t rx_char_add(ble_hrs_t            * p_hrs,
+                            const ble_hrs_init_t * p_hrs_init)
+{
+    /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
+    ble_gatts_char_md_t char_md;
+    ble_gatts_attr_md_t cccd_md;
+    ble_gatts_attr_t    attr_char_value;
+    ble_uuid_t          ble_uuid;
+    ble_gatts_attr_md_t attr_md;
+
+    memset(&cccd_md, 0, sizeof(cccd_md));
+
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
+
+    cccd_md.vloc = BLE_GATTS_VLOC_STACK;
+
+    memset(&char_md, 0, sizeof(char_md));
+
+    char_md.char_props.notify = 1;
+	  char_md.char_props.write         = 1;
+    char_md.char_props.write_wo_resp = 1;
+    char_md.p_char_user_desc  = NULL;
+    char_md.p_char_pf         = NULL;
+    char_md.p_user_desc_md    = NULL;
+    char_md.p_cccd_md         = &cccd_md;
+    char_md.p_sccd_md         = NULL;
+
+    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE1);
+
+    memset(&attr_md, 0, sizeof(attr_md));
+
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.write_perm);
+
+    attr_md.vloc    = BLE_GATTS_VLOC_STACK;
+    attr_md.rd_auth = 0;
+    attr_md.wr_auth = 0;
+    attr_md.vlen    = 1;
+
+    memset(&attr_char_value, 0, sizeof(attr_char_value));
+
+    attr_char_value.p_uuid    = &ble_uuid;
+    attr_char_value.p_attr_md = &attr_md;
+    attr_char_value.init_len  = sizeof(uint8_t);
+    attr_char_value.init_offs = 0;
+    attr_char_value.max_len   = 20;
+
+   return sd_ble_gatts_characteristic_add(p_hrs->service_handle,
+                                           &char_md,
+                                           &attr_char_value,
+                                           &p_hrs->disdata_handles);
+																					 
+    /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
+}
 
 /**@brief Function for adding the Heart Rate Measurement characteristic.
  *
@@ -225,7 +280,7 @@ static uint32_t heart_rate_measurement_char_add(ble_hrs_t            * p_hrs,
     char_md.p_cccd_md         = &cccd_md;
     char_md.p_sccd_md         = NULL;
 
-    BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_HEART_RATE_MEASUREMENT_CHAR);
+    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE0);
 
     memset(&attr_md, 0, sizeof(attr_md));
 
@@ -252,56 +307,7 @@ static uint32_t heart_rate_measurement_char_add(ble_hrs_t            * p_hrs,
 }
 
 
-/**@brief Function for adding the Body Sensor Location characteristic.
- *
- * @param[in]   p_hrs        Heart Rate Service structure.
- * @param[in]   p_hrs_init   Information needed to initialize the service.
- *
- * @return      NRF_SUCCESS on success, otherwise an error code.
- */
-/*
-static uint32_t body_sensor_location_char_add(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
-{
-    ble_gatts_char_md_t char_md;
-    ble_gatts_attr_t    attr_char_value;
-    ble_uuid_t          ble_uuid;
-    ble_gatts_attr_md_t attr_md;
 
-    memset(&char_md, 0, sizeof(char_md));
-
-    char_md.char_props.read  = 1;
-    char_md.p_char_user_desc = NULL;
-    char_md.p_char_pf        = NULL;
-    char_md.p_user_desc_md   = NULL;
-    char_md.p_cccd_md        = NULL;
-    char_md.p_sccd_md        = NULL;
-
-    BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_BODY_SENSOR_LOCATION_CHAR);
-
-    memset(&attr_md, 0, sizeof(attr_md));
-
-    attr_md.read_perm  = p_hrs_init->hrs_bsl_attr_md.read_perm;
-    attr_md.write_perm = p_hrs_init->hrs_bsl_attr_md.write_perm;
-    attr_md.vloc       = BLE_GATTS_VLOC_STACK;
-    attr_md.rd_auth    = 0;
-    attr_md.wr_auth    = 0;
-    attr_md.vlen       = 0;
-
-    memset(&attr_char_value, 0, sizeof(attr_char_value));
-
-    attr_char_value.p_uuid    = &ble_uuid;
-    attr_char_value.p_attr_md = &attr_md;
-    attr_char_value.init_len  = sizeof (uint8_t);
-    attr_char_value.init_offs = 0;
-    attr_char_value.max_len   = sizeof (uint8_t);
-    attr_char_value.p_value   = p_hrs_init->p_body_sensor_location;
-
-    return sd_ble_gatts_characteristic_add(p_hrs->service_handle,
-                                           &char_md,
-                                           &attr_char_value,
-                                           &p_hrs->bsl_handles);
-}
-*/
 
 uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
 {
@@ -310,13 +316,11 @@ uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
 
     // Initialize service structure
 	  p_hrs->evt_handler                 = p_hrs_init->evt_handler; //mainä¸­å£°æ˜Žä¸ºç©º
-    p_hrs->is_sensor_contact_supported = p_hrs_init->is_sensor_contact_supported;
+	  p_hrs->data_handler                = p_hrs_init->data_handler;  //æ•°æ®æŽ¥æ”¶
     p_hrs->conn_handle                 = BLE_CONN_HANDLE_INVALID;
-    p_hrs->is_sensor_contact_detected  = false;
-    p_hrs->rr_interval_count           = 0;
 
     // Add service
-    BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_HEART_RATE_SERVICE);   //èµ‹å€¼ç»™uuid
+    BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_HEART_RATE_SERVICE);   //èµ‹å€¼ç»™uuid 0x180D
 
     err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,  //æ·»åŠ servers
                                         &ble_uuid,
@@ -329,22 +333,17 @@ uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
 
     // Add heart rate measurement characteristic
     err_code = heart_rate_measurement_char_add(p_hrs, p_hrs_init);
-		
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
     }
 
-  /*  if (p_hrs_init->p_body_sensor_location != NULL)
+    err_code = rx_char_add(p_hrs, p_hrs_init);
+    if (err_code != NRF_SUCCESS)
     {
-        // Add body sensor location characteristic
-        err_code = body_sensor_location_char_add(p_hrs, p_hrs_init);
-        if (err_code != NRF_SUCCESS)
-        {
-            return err_code;
-        }
-    }
-*/
+        return err_code;
+    }		
+		
     return NRF_SUCCESS;
 }
 
@@ -354,14 +353,14 @@ uint32_t ble_hrs_heart_rate_measurement_send(ble_hrs_t * p_hrs, uint16_t heart_r
     uint32_t err_code;
 
     // Send value if connected and notifying
-    if (p_hrs->conn_handle != BLE_CONN_HANDLE_INVALID)  //ÅÐ¶ÏÊÇ·ñ´¦ÓÚÁ¬½Ó×´Ì¬
+    if (p_hrs->conn_handle != BLE_CONN_HANDLE_INVALID)  
     {
         uint8_t                encoded_hrm[MAX_HRM_LEN];
         uint16_t               len;
         uint16_t               hvx_len;
         ble_gatts_hvx_params_t hvx_params;
 
-        len     = hrm_encode(p_hrs, heart_rate, encoded_hrm);  //´ò°üÒª·¢ËÍµÄÊý¾Ý
+        len     = hrm_encode(p_hrs, heart_rate, encoded_hrm);  
         hvx_len = len;
 
         memset(&hvx_params, 0, sizeof(hvx_params));
@@ -408,7 +407,7 @@ bool ble_hrs_rr_interval_buffer_is_full(ble_hrs_t * p_hrs)
     return (p_hrs->rr_interval_count == BLE_HRS_MAX_BUFFERED_RR_INTERVALS);
 }
 
-
+/*
 uint32_t ble_hrs_sensor_contact_supported_set(ble_hrs_t * p_hrs, bool is_sensor_contact_supported)
 {
     // Check if we are connected to peer
@@ -428,7 +427,7 @@ void ble_hrs_sensor_contact_detected_update(ble_hrs_t * p_hrs, bool is_sensor_co
 {
     p_hrs->is_sensor_contact_detected = is_sensor_contact_detected;
 }
-
+*/
 /*
 uint32_t ble_hrs_body_sensor_location_set(ble_hrs_t * p_hrs, uint8_t body_sensor_location)
 {

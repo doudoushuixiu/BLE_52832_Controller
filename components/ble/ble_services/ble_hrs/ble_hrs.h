@@ -79,11 +79,20 @@ typedef struct ble_hrs_s ble_hrs_t;
 /**@brief Heart Rate Service event handler type. */
 typedef void (*ble_hrs_evt_handler_t) (ble_hrs_t * p_hrs, ble_hrs_evt_t * p_evt);
 
+
+//UART
+typedef void (*ble_nus_data_handler_t) (ble_hrs_t * p_hrs, uint8_t * p_data, uint16_t length);
+
+
+
+
+
 /**@brief Heart Rate Service init structure. This contains all options and data needed for
  *        initialization of the service. */
 typedef struct
 {
-    ble_hrs_evt_handler_t        evt_handler;                                          /**< Event handler to be called for handling events in the Heart Rate Service. */
+    ble_hrs_evt_handler_t        evt_handler;
+    ble_nus_data_handler_t       data_handler;	        /**< Event handler to be called for handling events in the Heart Rate Service. */
     bool                         is_sensor_contact_supported;                          /**< Determines if sensor contact detection is to be supported. */
     uint8_t *                    p_body_sensor_location;                               /**< If not NULL, initial value of the Body Sensor Location characteristic. */
     ble_srv_cccd_security_mode_t hrs_hrm_attr_md;                                      /**< Initial security level for heart rate service measurement attribute */
@@ -94,12 +103,14 @@ typedef struct
 struct ble_hrs_s
 {
     ble_hrs_evt_handler_t        evt_handler;                                          /**< Event handler to be called for handling events in the Heart Rate Service. */
-    bool                         is_expended_energy_supported;                         /**< TRUE if Expended Energy measurement is supported. */
-    bool                         is_sensor_contact_supported;                          /**< TRUE if sensor contact detection is supported. */
+    ble_nus_data_handler_t       data_handler;
+  	
+	 // bool                         is_expended_energy_supported;                         /**< TRUE if Expended Energy measurement is supported. */
+   // bool                         is_sensor_contact_supported;                          /**< TRUE if sensor contact detection is supported. */
     uint16_t                     service_handle;                                       /**< Handle of Heart Rate Service (as provided by the BLE stack). */
     ble_gatts_char_handles_t     hrm_handles;                                          /**< Handles related to the Heart Rate Measurement characteristic. */
-    //ble_gatts_char_handles_t     bsl_handles;                                          /**< Handles related to the Body Sensor Location characteristic. */
-    ble_gatts_char_handles_t     hrcp_handles;                                         /**< Handles related to the Heart Rate Control Point characteristic. */
+    ble_gatts_char_handles_t     disdata_handles;
+	  ble_gatts_char_handles_t     hrcp_handles;                                         /**< Handles related to the Heart Rate Control Point characteristic. */
     uint16_t                     conn_handle;                                          /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
     bool                         is_sensor_contact_detected;                           /**< TRUE if sensor contact has been detected. */
     uint16_t                     rr_interval[BLE_HRS_MAX_BUFFERED_RR_INTERVALS];       /**< Set of RR Interval measurements since the last Heart Rate Measurement transmission. */
