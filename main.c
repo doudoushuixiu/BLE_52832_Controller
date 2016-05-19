@@ -354,7 +354,11 @@ static void reset_prepare(void)
 
 static void nus_data_handler(ble_hrs_t * p_nus, uint8_t * p_data, uint16_t length)
 {
-	__nop;
+	  uint8_t dis_data[20];
+    for (uint32_t i = 0; i < length; i++)
+    {
+         dis_data[i] = p_data[i];
+    }  
 }
 
 
@@ -579,10 +583,11 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
 static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
     dm_ble_evt_handler(p_ble_evt);
-    ble_hrs_on_ble_evt(&m_hrs, p_ble_evt);
+    ble_hrs_on_ble_evt(&m_hrs, p_ble_evt);  //bleç³»ç»Ÿå“åº”å¤„ç†
 
     ble_conn_params_on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);
+    bsp_btn_ble_on_ble_evt(p_ble_evt);  //æ·»åŠ æŒ‰é”®å“åº”
+	
 	
 #ifdef BLE_DFU_APP_SUPPORT
     /** @snippet [Propagating BLE Stack events to DFU Service] */
@@ -677,7 +682,7 @@ void bsp_event_handler(bsp_event_t event)
             break;
 				
 				case  BSP_EVENT_KEY_2:
-					LEDS_INVERT(BSP_LED_3_MASK);      //ĞÂÔö°´¼üº¯Êı
+					LEDS_INVERT(BSP_LED_3_MASK);     
 				  break;
 						
 						
@@ -832,6 +837,6 @@ int main(void)
     for (;;)
     {
         power_manage();
-		   	LEDS_ON(BSP_LED_2_MASK);
+		  // 	LEDS_ON(BSP_LED_2_MASK);
     }
 }

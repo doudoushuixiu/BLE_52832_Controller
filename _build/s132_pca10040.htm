@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\_build\s132_pca10040.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\_build\s132_pca10040.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060183: Last Updated: Wed May 18 11:19:53 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060183: Last Updated: Thu May 19 09:24:33 2016
 <BR><P>
 <H3>Maximum Stack Usage =        392 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -398,7 +398,7 @@ Global Symbols
 <LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;services_init
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gatts_context_store
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_pstorage_cb_handler
-<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rx_char_add
+<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tx_char_add
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;heart_rate_measurement_char_add
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;char_add
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_rev_char_add
@@ -491,18 +491,18 @@ Global Symbols
 <P><STRONG><a name="[13b]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
 <P><STRONG><a name="[6a]"></a>__aeabi_llsl</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
-<BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
-<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
-<LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<BR><BR>[Called By]<UL><LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2ulz
+<LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
+<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 
 <P><STRONG><a name="[13c]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
 
 <P><STRONG><a name="[69]"></a>__aeabi_llsr</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
-<BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
+<BR><BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2ulz
+<LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
-<LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2ulz
 </UL>
 
 <P><STRONG><a name="[13d]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
@@ -514,9 +514,9 @@ Global Symbols
 <P><STRONG><a name="[13e]"></a>_ll_sshift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llsshr.o(.text), UNUSED)
 
 <P><STRONG><a name="[6e]"></a>_double_round</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, depilogue.o(.text), UNUSED)
-<BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
-<LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<BR><BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
 </UL>
 
 <P><STRONG><a name="[6d]"></a>_double_epilogue</STRONG> (Thumb, 156 bytes, Stack size 32 bytes, depilogue.o(.text), UNUSED)
@@ -855,7 +855,7 @@ Global Symbols
 <P><STRONG><a name="[ca]"></a>ble_hrs_init</STRONG> (Thumb, 70 bytes, Stack size 16 bytes, ble_hrs.o(i.ble_hrs_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = ble_hrs_init &rArr; heart_rate_measurement_char_add &rArr; hrm_encode &rArr; __aeabi_memmove
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rx_char_add
+<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tx_char_add
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;heart_rate_measurement_char_add
 </UL>
 <BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;services_init
@@ -1094,7 +1094,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SWI2_EGU2_IRQHandler
 </UL>
 
-<P><STRONG><a name="[30]"></a>main</STRONG> (Thumb, 254 bytes, Stack size 104 bytes, main.o(i.main))
+<P><STRONG><a name="[30]"></a>main</STRONG> (Thumb, 240 bytes, Stack size 104 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 392<LI>Call Chain = main &rArr; ble_advertising_start &rArr; ble_advdata_set &rArr; adv_data_encode &rArr; uuid_list_encode &rArr; uuid_list_sized_encode
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_conn_params_init
@@ -1154,8 +1154,8 @@ Global Symbols
 <P><STRONG><a name="[95]"></a>nrf_drv_gpiote_init</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, nrf_drv_gpiote.o(i.nrf_drv_gpiote_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = nrf_drv_gpiote_init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;channel_free
-<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_common_irq_enable
+<BR>[Calls]<UL><LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_common_irq_enable
+<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;channel_free
 </UL>
 <BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_button_init
 </UL>
@@ -1394,7 +1394,9 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.main)
 </UL>
-<P><STRONG><a name="[46]"></a>nus_data_handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, main.o(i.nus_data_handler))
+<P><STRONG><a name="[46]"></a>nus_data_handler</STRONG> (Thumb, 24 bytes, Stack size 28 bytes, main.o(i.nus_data_handler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = nus_data_handler
+</UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.services_init)
 </UL>
 <P><STRONG><a name="[43]"></a>on_adv_evt</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, main.o(i.on_adv_evt))
@@ -1423,8 +1425,8 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.services_init)
 </UL>
-<P><STRONG><a name="[114]"></a>services_init</STRONG> (Thumb, 350 bytes, Stack size 144 bytes, main.o(i.services_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = services_init &rArr; ble_hrs_init &rArr; heart_rate_measurement_char_add &rArr; hrm_encode &rArr; __aeabi_memmove
+<P><STRONG><a name="[114]"></a>services_init</STRONG> (Thumb, 344 bytes, Stack size 128 bytes, main.o(i.services_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 272<LI>Call Chain = services_init &rArr; ble_hrs_init &rArr; heart_rate_measurement_char_add &rArr; hrm_encode &rArr; __aeabi_memmove
 </UL>
 <BR>[Calls]<UL><LI><a href="#[120]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_reset_prepare_set
 <LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_dm_appl_instance_set
@@ -1675,8 +1677,8 @@ Local Symbols
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;heart_rate_measurement_char_add
 </UL>
 
-<P><STRONG><a name="[cc]"></a>rx_char_add</STRONG> (Thumb, 220 bytes, Stack size 80 bytes, ble_hrs.o(i.rx_char_add))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = rx_char_add
+<P><STRONG><a name="[cc]"></a>tx_char_add</STRONG> (Thumb, 162 bytes, Stack size 72 bytes, ble_hrs.o(i.tx_char_add))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = tx_char_add
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
@@ -2385,12 +2387,12 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[81]"></a>_fp_digits</STRONG> (Thumb, 334 bytes, Stack size 56 bytes, printfa.o(i._fp_digits), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
-<LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<BR><BR>[Calls]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2ulz
 <LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdrcmple
+<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 <BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
 </UL>

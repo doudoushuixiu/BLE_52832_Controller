@@ -29,3 +29,6 @@
 .\_build\ble_hrs.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\nrf52_name_change.h
 .\_build\ble_hrs.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\_build\ble_hrs.o: .\components\libraries\util\nordic_common.h
+.\_build\ble_hrs.o: .\bsp\boards.h
+.\_build\ble_hrs.o: .\components\drivers_nrf\hal\nrf_gpio.h
+.\_build\ble_hrs.o: .\bsp\pca10040.h

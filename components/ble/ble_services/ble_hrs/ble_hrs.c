@@ -21,7 +21,7 @@
 #include "ble_l2cap.h"
 #include "ble_srv_common.h"
 #include "app_util.h"
-
+#include "boards.h"
 
 #define OPCODE_LENGTH 1                                                    /**< Length of opcode inside Heart Rate Measurement packet. */
 #define HANDLE_LENGTH 2                                                    /**< Length of handle inside Heart Rate Measurement packet. */
@@ -94,14 +94,18 @@ static void on_hrm_cccd_write(ble_hrs_t * p_hrs, ble_gatts_evt_write_t * p_evt_w
  * @param[in]   p_hrs       Heart Rate Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_write(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt)
+static void on_write(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt) //接收到来自APP的数据
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 
-    if (p_evt_write->handle == p_hrs->hrm_handles.cccd_handle)
+    if (p_evt_write->handle == p_hrs->disdata_handles.value_handle)   //0x50 == ？
     {
-        on_hrm_cccd_write(p_hrs, p_evt_write);
+       // on_hrm_cccd_write(p_hrs, p_evt_write);
+			  LEDS_INVERT(BSP_LED_2_MASK);
+			  p_hrs->data_handler(p_hrs, p_evt_write->data, p_evt_write->len);
     }
+	
+
 }
 
 
@@ -140,7 +144,7 @@ static uint8_t hrm_encode(ble_hrs_t * p_hrs, uint16_t heart_rate, uint8_t * p_en
 {
     uint8_t flags = 0;
     uint8_t len   = 1;
-    int     i;
+    int     i; 
 
     // Set sensor contact related flags
   /*  if (p_hrs->is_sensor_contact_supported)
@@ -189,32 +193,30 @@ static uint8_t hrm_encode(ble_hrs_t * p_hrs, uint16_t heart_rate, uint8_t * p_en
     return len;
 }
 
-static uint32_t rx_char_add(ble_hrs_t            * p_hrs,
+
+
+//新增char
+static uint32_t tx_char_add(ble_hrs_t            * p_hrs,
                             const ble_hrs_init_t * p_hrs_init)
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
     ble_gatts_char_md_t char_md;
-    ble_gatts_attr_md_t cccd_md;
+   // ble_gatts_attr_md_t cccd_md;
     ble_gatts_attr_t    attr_char_value;
     ble_uuid_t          ble_uuid;
     ble_gatts_attr_md_t attr_md;
 
-    memset(&cccd_md, 0, sizeof(cccd_md));
-
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
-
-    cccd_md.vloc = BLE_GATTS_VLOC_STACK;
-
     memset(&char_md, 0, sizeof(char_md));
-
+	
     char_md.char_props.notify = 1;
+	  char_md.char_props.read   = 1;   //读写权限声明
 	  char_md.char_props.write         = 1;
     char_md.char_props.write_wo_resp = 1;
+	
     char_md.p_char_user_desc  = NULL;
     char_md.p_char_pf         = NULL;
     char_md.p_user_desc_md    = NULL;
-    char_md.p_cccd_md         = &cccd_md;
+    char_md.p_cccd_md         = NULL;
     char_md.p_sccd_md         = NULL;
 
     BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE1);
@@ -272,7 +274,7 @@ static uint32_t heart_rate_measurement_char_add(ble_hrs_t            * p_hrs,
 
     char_md.char_props.notify = 1;
 	  char_md.char_props.read   = 1;   //读写权限声明
-	  char_md.char_props.write_wo_resp   = 1;
+	//  char_md.char_props.write_wo_resp   = 1;
 	
     char_md.p_char_user_desc  = NULL;
     char_md.p_char_pf         = NULL;
@@ -338,7 +340,7 @@ uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
         return err_code;
     }
 
-    err_code = rx_char_add(p_hrs, p_hrs_init);
+    err_code = tx_char_add(p_hrs, p_hrs_init);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
@@ -402,12 +404,21 @@ void ble_hrs_rr_interval_add(ble_hrs_t * p_hrs, uint16_t rr_interval)
 }
 
 
+
+
+
+
+
+
+
+
+/*
 bool ble_hrs_rr_interval_buffer_is_full(ble_hrs_t * p_hrs)
 {
     return (p_hrs->rr_interval_count == BLE_HRS_MAX_BUFFERED_RR_INTERVALS);
 }
 
-/*
+
 uint32_t ble_hrs_sensor_contact_supported_set(ble_hrs_t * p_hrs, bool is_sensor_contact_supported)
 {
     // Check if we are connected to peer
