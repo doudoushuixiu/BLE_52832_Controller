@@ -29,7 +29,7 @@
 #include "ble_advdata.h"
 #include "ble_advertising.h"
 #include "ble_bas.h"
-#include "ble_hrs.h"
+#include "ble_spider_tunnel.h"
 #include "ble_dis.h"
 #ifdef BLE_DFU_APP_SUPPORT
 #include "ble_dfu.h"
@@ -139,7 +139,7 @@ static uint8_t device_name_with_addr[32] = {0};
 static uint8_t BLE_ADDR[32] = {0};
 static uint8_t SW_VERSION[64] = {0};																	 
 																	 
-uint16_t        heart_rate;																	 
+static uint8_t        tra_data[20];																	 
 																	 
 #ifdef BLE_DFU_APP_SUPPORT
 static ble_dfu_t  m_dfus;                                    /**< Structure used to identify the DFU service. */
@@ -175,13 +175,17 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 {
     static uint32_t cnt = 0;
     uint32_t        err_code;
-
+	
     UNUSED_PARAMETER(p_context);
 
-    heart_rate++;
-	
+    tra_data[0]++;
+	  tra_data[1]++;
     cnt++;
-    err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, heart_rate);
+	
+	
+	   ble_nus_string_send(&m_hrs, tra_data,10);
+	
+   // err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, tra_data,10);
 	
     if ((err_code != NRF_SUCCESS) &&
         (err_code != NRF_ERROR_INVALID_STATE) &&
@@ -192,10 +196,6 @@ static void heart_rate_meas_timeout_handler(void * p_context)
         APP_ERROR_HANDLER(err_code);
     }
 
-    // Disable RR Interval recording every third heart rate measurement.
-    // NOTE: An application will normally not do this. It is done here just for testing generation
-    //       of messages without RR Interval measurements.
-  //  m_rr_interval_enabled = ((cnt % 3) != 0);
 }
 
 

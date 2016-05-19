@@ -27,7 +27,18 @@ Project File Date:  05/17/2016
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 2 (build 183)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 's132_pca10040'
-".\_build\s132_pca10040.axf" - 0 Error(s), 0 Warning(s).
+compiling ble_spider_tunnel.c...
+User\ble_spider_tunnel.c(436): warning:  #177-D: variable "encoded_hrm" was declared but never referenced
+          uint8_t                encoded_hrm[MAX_HRM_LEN];
+User\ble_spider_tunnel.c(560): warning:  #1-D: last line of file ends without a newline
+  */
+User\ble_spider_tunnel.c(69): warning:  #177-D: function "on_hrm_cccd_write" was declared but never referenced
+  static void on_hrm_cccd_write(ble_hrs_t * p_hrs, ble_gatts_evt_write_t * p_evt_write)
+User\ble_spider_tunnel.c: 3 warnings, 0 errors
+linking...
+Program Size: Code=25024 RO-data=1244 RW-data=348 ZI-data=10708  
+FromELF: creating hex file...
+".\_build\s132_pca10040.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -57,7 +68,7 @@ Package Vendor: NordicSemiconductor
       Source file:   Device\Source\arm\arm_startup_nrf52.s
       Source file:   Device\Source\system_nrf52.c
       Include file:  Device\Include\system_nrf52.h
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:06
 </pre>
 </body>
 </html>

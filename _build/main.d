@@ -38,7 +38,7 @@
 .\_build\main.o: .\components\ble\common\ble_advdata.h
 .\_build\main.o: .\components\ble\ble_advertising\ble_advertising.h
 .\_build\main.o: .\components\ble\ble_services\ble_bas\ble_bas.h
-.\_build\main.o: .\components\ble\ble_services\ble_hrs\ble_hrs.h
+.\_build\main.o: .\User\ble_spider_tunnel.h
 .\_build\main.o: .\components\ble\ble_services\ble_dis\ble_dis.h
 .\_build\main.o: .\components\ble\ble_services\ble_dfu\ble_dfu.h
 .\_build\main.o: .\components\libraries\bootloader_dfu\dfu_app_handler.h
