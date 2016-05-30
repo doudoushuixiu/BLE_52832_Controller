@@ -46,6 +46,14 @@
 #define SPI1_IRQ_HANDLER    SPI1_TWI1_IRQHandler
 
 
+		
+//#define SPI0_USE_EASY_DMA      1
+//#define SPI0_CONFIG_SCK_PIN    15
+//#define SPI0_CONFIG_MOSI_PIN   13
+//#define SPI0_CONFIG_MISO_PIN   14
+//#define SPI0_CONFIG_IRQ_PRIORITY    APP_IRQ_PRIORITY_LOW
+		
+		
 /**
  * @defgroup nrf_drv_spi_master SPI master driver
  * @{

@@ -28,16 +28,16 @@
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
 #include "ble_advertising.h"
-#include "ble_bas.h"
 #include "ble_spider_tunnel.h"
 #include "ble_dis.h"
 #ifdef BLE_DFU_APP_SUPPORT
 #include "ble_dfu.h"
 #include "dfu_app_handler.h"
 #endif // BLE_DFU_APP_SUPPORT
+
+#include "app_util_platform.h"
 #include "ble_conn_params.h"
 #include "boards.h"
-#include "sensorsim.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
 #include "device_manager.h"
@@ -46,6 +46,10 @@
 #include "bsp.h"
 #include "nrf_delay.h"
 #include "bsp_btn_ble.h"
+#include "version.h"
+#include "nrf_drv_spi.h"
+#include "custom_board.h"
+
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  1                                          /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
@@ -114,18 +118,26 @@ STATIC_ASSERT(IS_SRVC_CHANGED_CHARACT_PRESENT);                                 
 #define BUTTON_2 14
 #define BUTTON_3 15
 #define BUTTON_4 16																					
-																					
+										
+#define SPI_CS_PIN    12
+#define SPI_INSTANCE  0 /**< SPI instance index. */
+static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);  /**< SPI instance. */
+static volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instance completed the transfer. */
+
+
+
+
 
 static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 static ble_hrs_t                         m_hrs;                                     /**< Structure used to identify the heart rate service. */
-static bool                              m_rr_interval_enabled = true;              /**< Flag for enabling and disabling the registration of new RR interval measurements (the purpose of disabling this is just to test sending HRM without RR interval data. */
+//static bool                              m_rr_interval_enabled = true;              /**< Flag for enabling and disabling the registration of new RR interval measurements (the purpose of disabling this is just to test sending HRM without RR interval data. */
 //static sensorsim_cfg_t                   m_heart_rate_sim_cfg;                      /**< Heart Rate sensor simulator configuration. */
 //static sensorsim_state_t                 m_heart_rate_sim_state;                    /**< Heart Rate sensor simulator state. */
 //static sensorsim_cfg_t                   m_rr_interval_sim_cfg;                     /**< RR Interval sensor simulator configuration. */
 //static sensorsim_state_t                 m_rr_interval_sim_state;                   /**< RR Interval sensor simulator state. */
 
 APP_TIMER_DEF(m_heart_rate_timer_id);                                               /**< Heart rate measurement timer. */
-APP_TIMER_DEF(m_rr_interval_timer_id);                                              /**< RR interval timer. */                 /**< RR interval timer. */
+//APP_TIMER_DEF(m_rr_interval_timer_id);                                              /**< RR interval timer. */                 /**< RR interval timer. */
 
 static dm_application_instance_t         m_app_handle;                              /**< Application identifier allocated by device manager */
 
@@ -395,6 +407,7 @@ static void services_init(void)
     sprintf(HWID_Str, "%04X%04X %uK %uK %u", FICR_CONFIG_ID[1], FICR_CONFIG_ID[0],NRF_FICR->INFO.RAM,NRF_FICR->INFO.FLASH,NRF_FICR->INFO.VARIANT);
     sprintf(FWID_Str, "%02X%02X", FICR_CONFIG_ID[3], FICR_CONFIG_ID[2]);
     sprintf(BLE_ADDR, "%02X:%02X:%02X:%02X:%02X:%02X", addr[5], addr[4], addr[3], addr[2], addr[1], addr[0]);
+	  sprintf(SW_VERSION, "%s", GIT_VERSION);
 	
     ble_srv_ascii_to_utf8(&dis_init.manufact_name_str, (char *)MANUFACTURER_NAME);
 		ble_srv_ascii_to_utf8(&dis_init.model_num_str, (char *)MODEL_NUM);
@@ -402,7 +415,7 @@ static void services_init(void)
 		
 		ble_srv_ascii_to_utf8(&dis_init.hw_rev_str, (char *)HWID_Str);
     ble_srv_ascii_to_utf8(&dis_init.fw_rev_str, (char *)FWID_Str);
-    //ble_srv_ascii_to_utf8(&dis_init.sw_rev_str, (char *)SW_VERSION);
+    ble_srv_ascii_to_utf8(&dis_init.sw_rev_str, (char *)SW_VERSION);
 		
 		
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&dis_init.dis_attr_md.read_perm);
@@ -777,25 +790,45 @@ static void advertising_init(void)
 
 
 
+
+void spi_event_handler(nrf_drv_spi_evt_t const * p_event)
+{
+    spi_xfer_done = true;
+//    NRF_LOG_PRINTF(" Transfer completed.\r\n");
+//    if (m_rx_buf[0] != 0)
+//    {
+//        NRF_LOG_PRINTF(" Received: %s\r\n",m_rx_buf);
+//    }
+}
+
+
 /**@brief Function for initializing buttons and leds.
  *
  * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
  */
-static void buttons_leds_init(bool * p_erase_bonds)
+static void ctrl_gpio_pin_init(bool * p_erase_bonds)
 {
     bsp_event_t startup_event;
-
     uint32_t err_code = bsp_init(BSP_INIT_LED | BUTTON_2,  //| BSP_INIT_BUTTONS 
                                  APP_TIMER_TICKS(100, APP_TIMER_PRESCALER),  //100ms
                                   bsp_event_handler);
-	  APP_ERROR_CHECK(err_code);
-	
+	  APP_ERROR_CHECK(err_code);	
 	  LEDS_CONFIGURE(LEDS_MASK);  
-
     err_code = bsp_btn_ble_init(NULL, &startup_event); 
     APP_ERROR_CHECK(err_code);
-
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
+	
+	
+	  nrf_gpio_cfg_output(SX1276_RST);
+	  nrf_gpio_cfg_output(SX1276_NSS);
+	  nrf_gpio_cfg_input(SX1276_DIO0,NRF_GPIO_PIN_NOPULL);
+	
+	  nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG(SPI_INSTANCE);
+    spi_config.ss_pin = SPI_CS_PIN;
+    APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler));
+	
+	
+
 }
 
 
@@ -818,7 +851,7 @@ int main(void)
     // Initialize.
     app_trace_init();
     timers_init();
-    buttons_leds_init(&erase_bonds);
+    ctrl_gpio_pin_init(&erase_bonds);
 	
     ble_stack_init();
     device_manager_init(erase_bonds);

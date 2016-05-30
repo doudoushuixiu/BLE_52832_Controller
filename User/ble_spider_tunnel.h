@@ -167,6 +167,9 @@ void ble_hrs_rr_interval_add(ble_hrs_t * p_hrs, uint16_t rr_interval);
  */
 bool ble_hrs_rr_interval_buffer_is_full(ble_hrs_t * p_hrs);
 
+uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t length);
+
+
 /**@brief Function for setting the state of the Sensor Contact Supported bit.
  *
  * @param[in]   p_hrs                        Heart Rate Service structure.
@@ -198,3 +201,4 @@ bool ble_hrs_rr_interval_buffer_is_full(ble_hrs_t * p_hrs);
 #endif // BLE_HRS_H__
 
 /** @} */
+

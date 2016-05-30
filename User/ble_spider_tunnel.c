@@ -107,7 +107,7 @@ static void on_write(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt) //
 			
 			  if (ble_srv_is_notification_enabled(p_evt_write->data))
         {
-          //  p_hrs->is_notification_enabled = true;
+            p_hrs->is_notification_enabled = true;
         }
         else
         {

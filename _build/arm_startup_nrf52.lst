@@ -580,7 +580,7 @@ ARM Macro Assembler    Page 9
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=.\_build\arm_startup_nrf52.d -o.\_build\arm_startup_nrf52.o -IC
-:\Users\idea\Desktop\BLE_51822_Controller\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4
+:\Users\idea\Desktop\BLE_52832_Controller\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4
 .5.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPa
 ck\8.5.0\Device\Include -IC:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFam
 

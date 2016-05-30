@@ -1,5 +1,6 @@
 --cpu Cortex-M4.fp
 ".\_build\main.o"
+".\_build\sx1276_hal.o"
 ".\_build\bsp.o"
 ".\_build\bsp_btn_ble.o"
 ".\_build\ble_advdata.o"
@@ -16,6 +17,7 @@
 ".\_build\nrf_drv_gpiote.o"
 ".\_build\nrf_drv_uart.o"
 ".\_build\pstorage.o"
+".\_build\nrf_drv_spi.o"
 ".\_build\app_button.o"
 ".\_build\app_error.o"
 ".\_build\app_error_weak.o"
