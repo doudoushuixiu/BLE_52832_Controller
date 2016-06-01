@@ -26,16 +26,24 @@
  *
  * Last modified by Miguel Luis on Jun 19 2013
  */
+ 
+ 
+ #include "platform.h"
+ 
 #ifndef __SX1276_LORA_MISC_H__
 #define __SX1276_LORA_MISC_H__
 
+typedef unsigned           char uint8_t;
+typedef unsigned short     int uint16_t;
+typedef unsigned           int uint32_t;
+typedef   signed           char int8_t;
 
 /*!
  * \brief Writes the new RF frequency value
  *
  * \param [IN] freq New RF frequency value in [Hz]
  */
-void SX1276LoRaSetRFFrequency( uint32_t freq );
+ void SX1276LoRaSetRFFrequency( uint32_t freq );
 
 /*!
  * \brief Reads the current RF frequency value

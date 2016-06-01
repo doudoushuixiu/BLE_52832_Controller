@@ -22,17 +22,16 @@
 #include "boards.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
+#include "app_trace.h"
 #include "device_manager.h"
 #include "pstorage.h"
-#include "app_trace.h"
 #include "bsp.h"
-#include "nrf_delay.h"
 #include "bsp_btn_ble.h"
 #include "version.h"
 #include "nrf_drv_spi.h"
-#include "custom_board.h"
 #include "nrf_drv_timer.h"
-
+#include "nrf_delay.h"
+#include "custom_board.h"
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-hal.h"
@@ -98,9 +97,9 @@ STATIC_ASSERT(IS_SRVC_CHANGED_CHARACT_PRESENT);                                 
                                           nrf_gpio_cfg_output(pin); } while (0)
 
 #define ARRAY_LEN(a)            (sizeof(a)/sizeof(a[0]))															
-																			
-										
- //init  spi0
+					
+					
+//init  SPI0
 #define SPI_CS_PIN    12
 #define SPI_INSTANCE  0 /**< SPI instance index. */
 const   nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);  /**< SPI instance. */

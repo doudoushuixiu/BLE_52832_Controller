@@ -63,12 +63,11 @@
 .\_build\main.o: .\components\softdevice\common\softdevice_handler\ant_stack_handler_types.h
 .\_build\main.o: .\components\softdevice\common\softdevice_handler\app_ram_base.h
 .\_build\main.o: .\components\libraries\timer\app_timer.h
+.\_build\main.o: .\components\libraries\trace\app_trace.h
 .\_build\main.o: .\components\drivers_nrf\pstorage\pstorage.h
 .\_build\main.o: .\config\pstorage_platform.h
-.\_build\main.o: .\components\libraries\trace\app_trace.h
 .\_build\main.o: .\bsp\bsp.h
 .\_build\main.o: .\components\libraries\button\app_button.h
-.\_build\main.o: .\components\drivers_nrf\delay\nrf_delay.h
 .\_build\main.o: .\bsp\bsp_btn_ble.h
 .\_build\main.o: .\config\version.h
 .\_build\main.o: .\components\drivers_nrf\spi_master\nrf_drv_spi.h
@@ -77,9 +76,10 @@
 .\_build\main.o: .\components\drivers_nrf\hal\nrf_spi.h
 .\_build\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\_build\main.o: .\components\drivers_nrf\hal\nrf_spim.h
-.\_build\main.o: .\config\custom_board.h
 .\_build\main.o: .\components\drivers_nrf\timer\nrf_drv_timer.h
 .\_build\main.o: .\components\drivers_nrf\hal\nrf_timer.h
+.\_build\main.o: .\components\drivers_nrf\delay\nrf_delay.h
+.\_build\main.o: .\config\custom_board.h
 .\_build\main.o: .\SX12xx_Driver\radio\radio.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276-hal.h
