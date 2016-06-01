@@ -78,3 +78,11 @@
 .\_build\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\_build\main.o: .\components\drivers_nrf\hal\nrf_spim.h
 .\_build\main.o: .\config\custom_board.h
+.\_build\main.o: .\components\drivers_nrf\timer\nrf_drv_timer.h
+.\_build\main.o: .\components\drivers_nrf\hal\nrf_timer.h
+.\_build\main.o: .\SX12xx_Driver\radio\radio.h
+.\_build\main.o: .\SX12xx_Driver\radio\sx1276.h
+.\_build\main.o: .\SX12xx_Driver\radio\sx1276-hal.h
+.\_build\main.o: .\SX12xx_Driver\radio\sx1276-LoRa.h
+.\_build\main.o: .\SX12xx_Driver\radio\sx1276-LoRaMisc.h
+.\_build\main.o: .\SX12xx_Driver\platform\platform.h

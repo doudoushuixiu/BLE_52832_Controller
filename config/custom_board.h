@@ -54,6 +54,7 @@
 #define SX1276_RST     17
 #define SX1276_NSS     12 
 #define SX1276_DIO0    16
+#define SX1276_EXPA    11
 
 //static __INLINE void nrf_gpio_cfg_disconnect(uint32_t pin_number)
 //{

@@ -222,11 +222,14 @@ void SX1276LoRaReset( void )
     uint32_t startTick = GET_TICK_COUNT( );
     while( ( GET_TICK_COUNT( ) - startTick ) < TICK_RATE_MS( 1 ) );    
 
+	
+	
     SX1276SetReset( RADIO_RESET_OFF );
     
     // Wait 6ms
     startTick = GET_TICK_COUNT( );
     while( ( GET_TICK_COUNT( ) - startTick ) < TICK_RATE_MS( 6 ) );    
+
 }
 
 void SX1276LoRaSetOpMode( uint8_t opMode )

@@ -334,7 +334,7 @@
               <MiscControls></MiscControls>
               <Define>BLE_DFU_APP_SUPPORT BLE_STACK_SUPPORT_REQD S132 BOARD_PCA10040 NRF52_PAN_12 NRF52_PAN_15 NRF52_PAN_20 NRF52_PAN_30 NRF52_PAN_31 NRF52_PAN_36 NRF52_PAN_51 NRF52_PAN_53 NRF52_PAN_54 NRF52_PAN_55 NRF52_PAN_58 NRF52_PAN_62 NRF52_PAN_63 NRF52_PAN_64 CONFIG_GPIO_AS_PINRESET NRF_LOG_USES_UART=1 SWI_DISABLE0 SOFTDEVICE_PRESENT NRF52</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config\ble_app_hrs_s132_with_dfu_pca10040;.\config;.\components\ble\ble_advertising;.\components\ble\ble_services\ble_dfu;.\components\ble\ble_services\ble_dis;.\components\ble\ble_services\ble_hrs;.\components\ble\common;.\components\ble\device_manager;.\components\drivers_nrf\common;.\components\drivers_nrf\config;.\components\drivers_nrf\delay;.\components\drivers_nrf\gpiote;.\components\drivers_nrf\hal;.\components\drivers_nrf\pstorage;.\components\drivers_nrf\uart;.\components\libraries\bootloader_dfu;.\components\libraries\button;.\components\libraries\experimental_section_vars;.\components\libraries\fifo;.\components\libraries\fstorage;.\components\libraries\fstorage\config;.\components\libraries\sensorsim;.\components\libraries\timer;.\components\libraries\trace;.\components\libraries\uart;.\components\libraries\util;.\components\softdevice\common\softdevice_handler;.\components\softdevice\s132\headers;.\components\softdevice\s132\headers\nrf52;.\components\toolchain;.\bsp;.\external\segger_rtt;.\User;.\SX12xx_Driver\platform;.\SX12xx_Driver\radio;.\config;.\components\drivers_nrf\spi_master</IncludePath>
+              <IncludePath>.\config\ble_app_hrs_s132_with_dfu_pca10040;.\config;.\components\ble\ble_advertising;.\components\ble\ble_services\ble_dfu;.\components\ble\ble_services\ble_dis;.\components\ble\ble_services\ble_hrs;.\components\ble\common;.\components\ble\device_manager;.\components\drivers_nrf\common;.\components\drivers_nrf\config;.\components\drivers_nrf\delay;.\components\drivers_nrf\gpiote;.\components\drivers_nrf\hal;.\components\drivers_nrf\pstorage;.\components\drivers_nrf\uart;.\components\libraries\bootloader_dfu;.\components\libraries\button;.\components\libraries\experimental_section_vars;.\components\libraries\fifo;.\components\libraries\fstorage;.\components\libraries\fstorage\config;.\components\libraries\sensorsim;.\components\libraries\timer;.\components\libraries\trace;.\components\libraries\uart;.\components\libraries\util;.\components\softdevice\common\softdevice_handler;.\components\softdevice\s132\headers;.\components\softdevice\s132\headers\nrf52;.\components\toolchain;.\bsp;.\external\segger_rtt;.\User;.\SX12xx_Driver\platform;.\SX12xx_Driver\radio;.\config;.\components\drivers_nrf\spi_master;.\SX12xx_Driver\radio;.\components\drivers_nrf\timer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -430,11 +430,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>sx1276_hal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SX12xx_Driver\sx1276_hal.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1270,6 +1265,11 @@
               <FileName>nrf_drv_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\components\drivers_nrf\spi_master\nrf_drv_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>nrf_drv_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\components\drivers_nrf\timer\nrf_drv_timer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2281,6 +2281,81 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>sx1276</GroupName>
+          <Files>
+            <File>
+              <FileName>sx1276_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\sx1276_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>radio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\radio.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1232.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1232.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1232-Misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1232-Misc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-Fsk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-Fsk.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-FskMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-FskMisc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-LoRa.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRa.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-LoRaMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRaMisc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-Fsk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-Fsk.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-FskMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-FskMisc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-LoRa.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-LoRa.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-LoRaMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-LoRaMisc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2716,11 +2791,6 @@
                 </FileArmAds>
               </FileOption>
             </File>
-            <File>
-              <FileName>sx1276_hal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SX12xx_Driver\sx1276_hal.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -3555,6 +3625,11 @@
               <FileName>nrf_drv_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\components\drivers_nrf\spi_master\nrf_drv_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>nrf_drv_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\components\drivers_nrf\timer\nrf_drv_timer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4566,6 +4641,81 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>sx1276</GroupName>
+          <Files>
+            <File>
+              <FileName>sx1276_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\sx1276_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>radio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\radio.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1232.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1232.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1232-Misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1232-Misc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-Fsk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-Fsk.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-FskMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-FskMisc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-LoRa.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRa.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1272-LoRaMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRaMisc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-Fsk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-Fsk.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-FskMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-FskMisc.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-LoRa.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-LoRa.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276-LoRaMisc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SX12xx_Driver\radio\sx1276-LoRaMisc.c</FilePath>
             </File>
           </Files>
         </Group>

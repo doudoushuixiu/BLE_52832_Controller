@@ -1,22 +1,4 @@
-/* Copyright (c) 2014 Nordic Semiconductor. All Rights Reserved.
- *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
- *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
- */
-/** @example examples/ble_peripheral/ble_app_hrs/main.c
- *
- * @brief Heart Rate Service Sample Application main file.
- *
- * This file contains the source code for a sample application using the Heart Rate service
- * (and also Battery and Device Information services). This application uses the
- * @ref srvlib_conn_params module.
- */
+
 
 #include <stdint.h>
 #include <string.h>
@@ -49,7 +31,13 @@
 #include "version.h"
 #include "nrf_drv_spi.h"
 #include "custom_board.h"
+#include "nrf_drv_timer.h"
 
+#include "radio.h"
+#include "sx1276.h"
+#include "sx1276-hal.h"
+#include "sx1276-LoRa.h"
+#include "sx1276-LoRaMisc.h"
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  1                                          /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
@@ -68,15 +56,11 @@
 #define APP_TIMER_OP_QUEUE_SIZE          4                                          /**< Size of timer operation queues. */
 
 
-#define HEART_RATE_MEAS_INTERVAL         APP_TIMER_TICKS(2500, APP_TIMER_PRESCALER) /**< Heart rate measurement interval (ticks). */
+#define HEART_RATE_MEAS_INTERVAL         APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Heart rate measurement interval (ticks). */
 #define MIN_HEART_RATE                   140                                        /**< Minimum heart rate as returned by the simulated measurement function. */
 #define MAX_HEART_RATE                   300                                        /**< Maximum heart rate as returned by the simulated measurement function. */
 #define HEART_RATE_INCREMENT             16                                      /**< Value by which the heart rate is incremented/decremented for each call to the simulated measurement function. */
 
-#define RR_INTERVAL_INTERVAL             APP_TIMER_TICKS(300, APP_TIMER_PRESCALER)  /**< RR interval interval (ticks). */
-#define MIN_RR_INTERVAL                  100                                        /**< Minimum RR interval as returned by the simulated measurement function. */
-#define MAX_RR_INTERVAL                  500                                        /**< Maximum RR interval as returned by the simulated measurement function. */
-#define RR_INTERVAL_INCREMENT            1                                          /**< Value by which the RR interval is incremented/decremented for each call to the simulated measurement function. */
 
 
 #define MIN_CONN_INTERVAL                MSEC_TO_UNITS(400, UNIT_1_25_MS)           /**< Minimum acceptable connection interval (0.4 seconds). */
@@ -114,30 +98,54 @@ STATIC_ASSERT(IS_SRVC_CHANGED_CHARACT_PRESENT);                                 
                                           nrf_gpio_cfg_output(pin); } while (0)
 
 #define ARRAY_LEN(a)            (sizeof(a)/sizeof(a[0]))															
-#define BUTTON_1 13
-#define BUTTON_2 14
-#define BUTTON_3 15
-#define BUTTON_4 16																					
+																			
 										
+ //init  spi0
 #define SPI_CS_PIN    12
 #define SPI_INSTANCE  0 /**< SPI instance index. */
-static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);  /**< SPI instance. */
-static volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instance completed the transfer. */
+const   nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);  /**< SPI instance. */
+static  volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instance completed the transfer. */
+
+//init time tick
+__IO uint32_t uwTick;
+const nrf_drv_timer_t TIMER_ONEMS = NRF_DRV_TIMER_INSTANCE(1);  //set timer1
 
 
+uint8_t   radioReady = 0;
+uint8_t   channel = 1;   //set channel of freq
+uint32_t  deviceCount = 6;
+//uint32_t  pa_gain_voltage = 2800;
+
+uint32_t  timeSlot = 33;
+uint32_t  preDataTimestamp[16] = {0};
+float     pressure = 1020.0f;
+float     temperature = 25.0f;
+bool      pressure_valid = false;
+bool      reference_valid = false;
+bool      rfTxBusyFlag = false;
+bool      changeChannelFlag = false;
+bool      channel_confirmed = false;
+bool      total_number_confirmed = false;
+
+uint8_t   dispatchCmdCount = 0;
+uint32_t  RadioChannelFrequencies[] = {
+  868000000,
+  870000000,
+  872000000,
+  874000000,
+  876000000,
+  878000000,
+  880000000,
+  882000000,
+  884000000,
+  886000000,
+};
 
 
-
-static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
-static ble_hrs_t                         m_hrs;                                     /**< Structure used to identify the heart rate service. */
-//static bool                              m_rr_interval_enabled = true;              /**< Flag for enabling and disabling the registration of new RR interval measurements (the purpose of disabling this is just to test sending HRM without RR interval data. */
-//static sensorsim_cfg_t                   m_heart_rate_sim_cfg;                      /**< Heart Rate sensor simulator configuration. */
-//static sensorsim_state_t                 m_heart_rate_sim_state;                    /**< Heart Rate sensor simulator state. */
-//static sensorsim_cfg_t                   m_rr_interval_sim_cfg;                     /**< RR Interval sensor simulator configuration. */
-//static sensorsim_state_t                 m_rr_interval_sim_state;                   /**< RR Interval sensor simulator state. */
+static uint16_t      m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
+static ble_hrs_t     m_hrs;                                     /**< Structure used to identify the heart rate service. */
 
 APP_TIMER_DEF(m_heart_rate_timer_id);                                               /**< Heart rate measurement timer. */
-//APP_TIMER_DEF(m_rr_interval_timer_id);                                              /**< RR interval timer. */                 /**< RR interval timer. */
 
 static dm_application_instance_t         m_app_handle;                              /**< Application identifier allocated by device manager */
 
@@ -210,7 +218,11 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 
 }
 
-
+//static void one_ms_timeout_handler(void * p_context)
+void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
+{
+	uwTick++;
+}
 
 /**@brief Function for the Timer initialization.
  *
@@ -219,14 +231,24 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 static void timers_init(void)
 {
     uint32_t err_code;
-
+    uint32_t time_ticks;
     // Initialize timer module.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);   
 
     err_code = app_timer_create(&m_heart_rate_timer_id, APP_TIMER_MODE_REPEATED,
                                 heart_rate_meas_timeout_handler);
     APP_ERROR_CHECK(err_code);
-
+	   
+    err_code = nrf_drv_timer_init(&TIMER_ONEMS, NULL, one_ms_timeout_handler);
+    APP_ERROR_CHECK(err_code);
+	 
+  	time_ticks = nrf_drv_timer_ms_to_ticks(&TIMER_ONEMS, 1);
+	 
+  	nrf_drv_timer_extended_compare(
+         &TIMER_ONEMS, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
+    
+    nrf_drv_timer_enable(&TIMER_ONEMS);
+	
 }
 
 
@@ -794,11 +816,6 @@ static void advertising_init(void)
 void spi_event_handler(nrf_drv_spi_evt_t const * p_event)
 {
     spi_xfer_done = true;
-//    NRF_LOG_PRINTF(" Transfer completed.\r\n");
-//    if (m_rx_buf[0] != 0)
-//    {
-//        NRF_LOG_PRINTF(" Received: %s\r\n",m_rx_buf);
-//    }
 }
 
 
@@ -821,12 +838,18 @@ static void ctrl_gpio_pin_init(bool * p_erase_bonds)
 	
 	  nrf_gpio_cfg_output(SX1276_RST);
 	  nrf_gpio_cfg_output(SX1276_NSS);
-	  nrf_gpio_cfg_input(SX1276_DIO0,NRF_GPIO_PIN_NOPULL);
 	
+	  nrf_gpio_cfg_input(SX1276_DIO0,NRF_GPIO_PIN_NOPULL);
+	  nrf_gpio_cfg_output(SX1276_EXPA);  //init PA
+	  nrf_gpio_pin_set(SX1276_EXPA);
+	
+	//	nrf_gpio_cfg_output(SPI0_CONFIG_SCK_PIN); //init spi's gpio
+	//	nrf_gpio_cfg_output(SPI0_CONFIG_MOSI_PIN);
+	//	nrf_gpio_cfg_input(SPI0_CONFIG_MISO_PIN,NRF_GPIO_PIN_NOPULL);
+
 	  nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG(SPI_INSTANCE);
     spi_config.ss_pin = SPI_CS_PIN;
     APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler));
-	
 	
 
 }
@@ -841,13 +864,41 @@ static void power_manage(void)
 }
 
 
+void SetRadioChannel(uint8_t ch)
+{
+  if (ch>=1 && ch<=10)
+  {
+    SX1276LoRaSetRFFrequency(RadioChannelFrequencies[ch-1]);
+  }
+}
+void SX1276_Rx_IT(void)
+{
+  float gain = 0.0f;
+  
+  if (rfTxBusyFlag)
+  {
+    return;
+  }
+  else
+  {
+   // HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, (uint32_t)(4095*gain/3.3f));
+  //  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);    
+    SX1276LoRaStartRx();
+    SX1276LoRaProcess();
+  }
+}
+
 /**@brief Function for application main entry.
  */
 int main(void)
 {
-    uint32_t err_code;
-    bool erase_bonds;
-
+    uint32_t  err_code;
+    bool      erase_bonds;
+	  uint8_t   rfLoRaState = RFLR_STATE_IDLE;
+    uint8_t   rx_buf[128] = {0};
+    uint16_t  rx_len = 0;
+	
+	
     // Initialize.
     app_trace_init();
     timers_init();
@@ -858,9 +909,18 @@ int main(void)
     gap_params_init();
     advertising_init();
     services_init();
-
     conn_params_init();
-
+	
+   //init sx1276	
+	  SX1276Init();
+    SX1276LoRaSetPreambleLength(6);
+    SX1276LoRaSetLowDatarateOptimize(false);
+  
+    SetRadioChannel(channel);
+    SX1276_Rx_IT();
+    radioReady = 1;
+	
+	
     // Start execution.
     application_timers_start();
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
@@ -869,7 +929,27 @@ int main(void)
     // Enter main loop.
     for (;;)
     {
-        power_manage();
-		  // 	LEDS_ON(BSP_LED_2_MASK);
+       // power_manage();
+			  if(nrf_gpio_port_read(SX1276_DIO0) == 1)
+				{
+					rfLoRaState = SX1276LoRaGetRFState();
+					if(rfLoRaState == RFLR_STATE_RX_RUNNING )
+					{
+						SX1276LoRaProcess();
+						SX1276LoRaProcess();
+						rfLoRaState = SX1276LoRaGetRFState();
+						if (RFLR_STATE_RX_RUNNING == rfLoRaState)
+						{
+						//  rxDoneTick = osKernelSysTick();
+							SX1276LoRaGetRxPacket(rx_buf, &rx_len);
+					 //   ProcessRadioPacket(rx_buf, rx_len, tick);
+						}
+						else if (RFLR_STATE_RX_INIT == rfLoRaState) // RX TimeOut
+						{
+							SX1276LoRaProcess();
+						}
+					}				
+				}
+
     }
 }

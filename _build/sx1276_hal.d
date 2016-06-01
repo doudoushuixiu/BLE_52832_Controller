@@ -18,3 +18,12 @@
 .\_build\sx1276_hal.o: .\SX12xx_Driver\radio\sx1276-Hal.h
 .\_build\sx1276_hal.o: .\components\drivers_nrf\hal\nrf_gpio.h
 .\_build\sx1276_hal.o: .\config\custom_board.h
+.\_build\sx1276_hal.o: .\components\drivers_nrf\spi_master\nrf_drv_spi.h
+.\_build\sx1276_hal.o: .\components\libraries\util\nordic_common.h
+.\_build\sx1276_hal.o: .\config\ble_app_hrs_s132_with_dfu_pca10040\nrf_drv_config.h
+.\_build\sx1276_hal.o: .\components\drivers_nrf\config\nrf_drv_config_validation.h
+.\_build\sx1276_hal.o: .\components\drivers_nrf\hal\nrf_spi.h
+.\_build\sx1276_hal.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\_build\sx1276_hal.o: .\components\drivers_nrf\hal\nrf_spim.h
+.\_build\sx1276_hal.o: .\components\libraries\util\sdk_errors.h
+.\_build\sx1276_hal.o: .\components\softdevice\s132\headers\nrf_error.h

@@ -29,8 +29,19 @@
 #include "sx1276-Hal.h"
 #include "nrf_gpio.h"
 #include "custom_board.h"
+#include "nrf_drv_spi.h"
 
+
+
+extern const nrf_drv_spi_t spi; 
 //extern SPI_HandleTypeDef hspi1;
+
+extern __IO uint32_t uwTick;
+uint32_t HAL_GetTick(void)
+{
+  return uwTick;
+}
+
 
 void SX1276InitIo( void )
 {
@@ -86,6 +97,7 @@ void SX1276WriteBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
   txBuf[0] = addr | 0x80;
   memcpy(txBuf+1, buffer, size);
  // HAL_StatusTypeDef result = HAL_SPI_TransmitReceive(&hspi1, txBuf, rxBuf, size+1, 1000);
+	nrf_drv_spi_transfer(&spi, txBuf, size+1, rxBuf, size+1);
   
   //NSS = 1;
  // HAL_GPIO_WritePin(SX1276_NSS_GPIO_Port, SX1276_NSS_Pin, GPIO_PIN_SET);
@@ -104,7 +116,9 @@ void SX1276ReadBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
 	
   txBuf[0] = addr & 0x7F;
  // HAL_StatusTypeDef result = HAL_SPI_TransmitReceive(&hspi1, txBuf, rxBuf, size+1, 1000);
-  
+  nrf_drv_spi_transfer(&spi, txBuf, size+1, rxBuf, size+1);
+	
+	
   //NSS = 1;
 //  HAL_GPIO_WritePin(SX1276_NSS_GPIO_Port, SX1276_NSS_Pin, GPIO_PIN_SET);
   nrf_gpio_pin_set(SX1276_NSS);
@@ -129,7 +143,16 @@ inline uint8_t SX1276ReadDio0( void )
 	return (nrf_gpio_pin_read(SX1276_DIO0));
 
 }
-
+inline uint8_t SX1276ReadDio1( void )
+{}
+inline uint8_t SX1276ReadDio2( void )
+{}
+inline uint8_t SX1276ReadDio3( void )
+{}
+inline uint8_t SX1276ReadDio4( void )
+{}
+inline uint8_t SX1276ReadDio5( void )
+{}
 
 inline void SX1276WriteRxTx( uint8_t txEnable )
 {

@@ -20,6 +20,7 @@
  */
 #include "platform.h"
 #include "radio.h"
+#include "nrf_delay.h"
 
 #if defined( USE_SX1276_RADIO )
 
@@ -75,8 +76,12 @@ void SX1276Reset( void )
     uint32_t startTick = GET_TICK_COUNT( );
     while( ( GET_TICK_COUNT( ) - startTick ) < TICK_RATE_MS( 1 ) );    
 
+
+	
     SX1276SetReset( RADIO_RESET_OFF );
     
+	//nrf_delay_ms(8);
+	
     // Wait 6ms
     startTick = GET_TICK_COUNT( );
     while( ( GET_TICK_COUNT( ) - startTick ) < TICK_RATE_MS( 6 ) );    
