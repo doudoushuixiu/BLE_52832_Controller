@@ -163,8 +163,8 @@ typedef struct
     .ss_pin       = CONCAT_3(SPI, id, _CONFIG_CSN_PIN),               \
     .irq_priority = CONCAT_3(SPI, id, _CONFIG_IRQ_PRIORITY), \
     .orc          = 0xFF,                                    \
-    .frequency    = NRF_DRV_SPI_FREQ_1M,                     \
-    .mode         = NRF_DRV_SPI_MODE_2,                      \
+    .frequency    = NRF_DRV_SPI_FREQ_125K,                     \
+    .mode         = NRF_DRV_SPI_MODE_3,                      \
     .bit_order    = NRF_DRV_SPI_BIT_ORDER_MSB_FIRST,         \
 }
 
