@@ -14,10 +14,8 @@
 .\_build\sx1276_hal.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\nrf51_to_nrf52.h
 .\_build\sx1276_hal.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\nrf52_name_change.h
 .\_build\sx1276_hal.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\compiler_abstraction.h
-.\_build\sx1276_hal.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\_build\sx1276_hal.o: .\SX12xx_Driver\radio\sx1276-Hal.h
-.\_build\sx1276_hal.o: .\components\drivers_nrf\hal\nrf_gpio.h
 .\_build\sx1276_hal.o: .\config\custom_board.h
+.\_build\sx1276_hal.o: .\components\drivers_nrf\hal\nrf_gpio.h
 .\_build\sx1276_hal.o: .\components\drivers_nrf\spi_master\nrf_drv_spi.h
 .\_build\sx1276_hal.o: .\components\libraries\util\nordic_common.h
 .\_build\sx1276_hal.o: .\config\ble_app_hrs_s132_with_dfu_pca10040\nrf_drv_config.h
@@ -27,3 +25,5 @@
 .\_build\sx1276_hal.o: .\components\drivers_nrf\hal\nrf_spim.h
 .\_build\sx1276_hal.o: .\components\libraries\util\sdk_errors.h
 .\_build\sx1276_hal.o: .\components\softdevice\s132\headers\nrf_error.h
+.\_build\sx1276_hal.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\_build\sx1276_hal.o: .\SX12xx_Driver\radio\sx1276-Hal.h

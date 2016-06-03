@@ -36,7 +36,7 @@
 // RXTX pin control see errata note
 #define RXTX( txEnable )                            SX1276WriteRxTx( txEnable );
 
-#define GET_TICK_COUNT( )                           HAL_GetTick()
+#define GET_TICK_COUNT( )                           ( HAL_GetTick() )
 #define TICK_RATE_MS( ms )                          ( ms )
 
 typedef enum
@@ -44,6 +44,10 @@ typedef enum
     RADIO_RESET_OFF,
     RADIO_RESET_ON,
 }tRadioResetState;
+
+typedef unsigned          char uint8_t;
+typedef unsigned short     int uint16_t;
+typedef unsigned           int uint32_t;
 
 
 uint32_t HAL_GetTick(void);

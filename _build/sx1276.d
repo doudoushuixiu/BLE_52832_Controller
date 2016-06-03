@@ -15,7 +15,6 @@
 .\_build\sx1276.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\nrf52_name_change.h
 .\_build\sx1276.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\compiler_abstraction.h
 .\_build\sx1276.o: SX12xx_Driver\radio\radio.h
-.\_build\sx1276.o: .\components\drivers_nrf\delay\nrf_delay.h
 .\_build\sx1276.o: SX12xx_Driver\radio\sx1276.h
 .\_build\sx1276.o: SX12xx_Driver\radio\sx1276-Hal.h
 .\_build\sx1276.o: SX12xx_Driver\radio\sx1276-Fsk.h

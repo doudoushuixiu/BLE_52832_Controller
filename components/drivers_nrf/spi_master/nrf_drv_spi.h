@@ -160,7 +160,7 @@ typedef struct
     .sck_pin      = CONCAT_3(SPI, id, _CONFIG_SCK_PIN),      \
     .mosi_pin     = CONCAT_3(SPI, id, _CONFIG_MOSI_PIN),     \
     .miso_pin     = CONCAT_3(SPI, id, _CONFIG_MISO_PIN),     \
-    .ss_pin       = NRF_DRV_SPI_PIN_NOT_USED,                \
+    .ss_pin       = CONCAT_3(SPI, id, _CONFIG_CSN_PIN),               \
     .irq_priority = CONCAT_3(SPI, id, _CONFIG_IRQ_PRIORITY), \
     .orc          = 0xFF,                                    \
     .frequency    = NRF_DRV_SPI_FREQ_1M,                     \

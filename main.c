@@ -38,6 +38,11 @@
 #include "sx1276-LoRa.h"
 #include "sx1276-LoRaMisc.h"
 
+//#include "spi.h"
+//#include "sx1278.h"
+
+
+
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  1                                          /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
 #define CENTRAL_LINK_COUNT               0                                          /**< Number of central links used by the application. When changing this number remember to adjust the RAM settings*/
@@ -107,7 +112,7 @@ static  volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instan
 
 //init time tick
 __IO uint32_t uwTick;
-const nrf_drv_timer_t TIMER_ONEMS = NRF_DRV_TIMER_INSTANCE(1);  //set timer1
+nrf_drv_timer_t TIMER_ONEMS = NRF_DRV_TIMER_INSTANCE(1);  //set timer1
 
 
 uint8_t   radioReady = 0;
@@ -139,7 +144,7 @@ uint32_t  RadioChannelFrequencies[] = {
   884000000,
   886000000,
 };
-
+uint32_t time_ticks;
 
 static uint16_t      m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 static ble_hrs_t     m_hrs;                                     /**< Structure used to identify the heart rate service. */
@@ -201,7 +206,6 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 	  tra_data[1]++;
     cnt++;
 	
-	
 	   ble_nus_string_send(&m_hrs, tra_data,10);
 	
    // err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, tra_data,10);
@@ -217,10 +221,22 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 
 }
 
-//static void one_ms_timeout_handler(void * p_context)
+
 void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
 {
-	uwTick++;
+	UNUSED_PARAMETER(p_context);
+  switch(event_type)
+	{
+			case NRF_TIMER_EVENT_COMPARE0:
+					uwTick++;
+					break;
+			
+			default:
+					//Do nothing.
+					break;
+	}   
+	
+	
 }
 
 /**@brief Function for the Timer initialization.
@@ -230,7 +246,7 @@ void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
 static void timers_init(void)
 {
     uint32_t err_code;
-    uint32_t time_ticks;
+    
     // Initialize timer module.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);   
 
@@ -238,14 +254,21 @@ static void timers_init(void)
                                 heart_rate_meas_timeout_handler);
     APP_ERROR_CHECK(err_code);
 	   
+	
+	
     err_code = nrf_drv_timer_init(&TIMER_ONEMS, NULL, one_ms_timeout_handler);
     APP_ERROR_CHECK(err_code);
 	 
-  	time_ticks = nrf_drv_timer_ms_to_ticks(&TIMER_ONEMS, 1);
-	 
+  	time_ticks = nrf_drv_timer_ms_to_ticks(&TIMER_ONEMS,1);
+
   	nrf_drv_timer_extended_compare(
          &TIMER_ONEMS, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
     
+	
+	
+	//nrf_drv_timer_compare(&TIMER_ONEMS, NRF_TIMER_CC_CHANNEL0, time_ticks, true);
+	
+	
     nrf_drv_timer_enable(&TIMER_ONEMS);
 	
 }
@@ -617,10 +640,10 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
 static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
     dm_ble_evt_handler(p_ble_evt);
-    ble_hrs_on_ble_evt(&m_hrs, p_ble_evt);  //ble系统响应处理
+    ble_hrs_on_ble_evt(&m_hrs, p_ble_evt);  //ble event
 
     ble_conn_params_on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);  //添加按键响应
+    bsp_btn_ble_on_ble_evt(p_ble_evt);      //button event
 	
 	
 #ifdef BLE_DFU_APP_SUPPORT
@@ -718,9 +741,7 @@ void bsp_event_handler(bsp_event_t event)
 				case  BSP_EVENT_KEY_2:
 					LEDS_INVERT(BSP_LED_3_MASK);     
 				  break;
-						
-						
-						
+							
         default:
             break;
     }
@@ -809,9 +830,6 @@ static void advertising_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
-
-
 void spi_event_handler(nrf_drv_spi_evt_t const * p_event)
 {
     spi_xfer_done = true;
@@ -824,33 +842,29 @@ void spi_event_handler(nrf_drv_spi_evt_t const * p_event)
  */
 static void ctrl_gpio_pin_init(bool * p_erase_bonds)
 {
-    bsp_event_t startup_event;
-    uint32_t err_code = bsp_init(BSP_INIT_LED | BUTTON_2,  //| BSP_INIT_BUTTONS 
-                                 APP_TIMER_TICKS(100, APP_TIMER_PRESCALER),  //100ms
-                                  bsp_event_handler);
-	  APP_ERROR_CHECK(err_code);	
-	  LEDS_CONFIGURE(LEDS_MASK);  
-    err_code = bsp_btn_ble_init(NULL, &startup_event); 
-    APP_ERROR_CHECK(err_code);
-    *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
-	
+//    bsp_event_t startup_event;
+//    uint32_t err_code = bsp_init(BSP_INIT_LED | BUTTON_2,  //| BSP_INIT_BUTTONS 
+//                                 APP_TIMER_TICKS(100, APP_TIMER_PRESCALER),  //100ms
+//                                  bsp_event_handler);
+//	  APP_ERROR_CHECK(err_code);	
+//	  LEDS_CONFIGURE(LEDS_MASK);  
+//    err_code = bsp_btn_ble_init(NULL, &startup_event); 
+//    APP_ERROR_CHECK(err_code);
+//    *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
 	
 	  nrf_gpio_cfg_output(SX1276_RST);
 	  nrf_gpio_cfg_output(SX1276_NSS);
-	
+	//	nrf_gpio_cfg_output(SPI0_CONFIG_SCK_PIN); //init spi's gpio
+	//	nrf_gpio_cfg_output(SPI0_CONFIG_MOSI_PIN);
+	//	nrf_gpio_cfg_input (SPI0_CONFIG_MISO_PIN,NRF_GPIO_PIN_NOPULL);	
+		
 	  nrf_gpio_cfg_input(SX1276_DIO0,NRF_GPIO_PIN_NOPULL);
 	  nrf_gpio_cfg_output(SX1276_EXPA);  //init PA
 	  nrf_gpio_pin_set(SX1276_EXPA);
 	
-	//	nrf_gpio_cfg_output(SPI0_CONFIG_SCK_PIN); //init spi's gpio
-	//	nrf_gpio_cfg_output(SPI0_CONFIG_MOSI_PIN);
-	//	nrf_gpio_cfg_input(SPI0_CONFIG_MISO_PIN,NRF_GPIO_PIN_NOPULL);
-
 	  nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG(SPI_INSTANCE);
     spi_config.ss_pin = SPI_CS_PIN;
     APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler));
-	
-
 }
 
 
@@ -868,6 +882,28 @@ void SetRadioChannel(uint8_t ch)
   if (ch>=1 && ch<=10)
   {
     SX1276LoRaSetRFFrequency(RadioChannelFrequencies[ch-1]);
+  }
+}
+
+void SX1276_Tx_IT(uint8_t* tx_buf, uint32_t tx_len)
+{
+//  float32_t gain = (float32_t)pa_gain_voltage / 1000;
+  
+  if (rfTxBusyFlag)
+  {
+    return;
+  }
+  else
+  {
+    rfTxBusyFlag = true;
+//    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, (uint32_t)(4095*gain/3.3f));
+//    HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
+    
+    //osDelay(1);
+    //txStartTick = osKernelSysTick();
+    
+    SX1276LoRaSetTxPacket(tx_buf, tx_len);
+    SX1276LoRaProcess();
   }
 }
 void SX1276_Rx_IT(void)
@@ -890,13 +926,14 @@ void SX1276_Rx_IT(void)
 /**@brief Function for application main entry.
  */
 int main(void)
-{
+ {
     uint32_t  err_code;
     bool      erase_bonds;
 	  uint8_t   rfLoRaState = RFLR_STATE_IDLE;
     uint8_t   rx_buf[128] = {0};
     uint16_t  rx_len = 0;
-	
+	  uint8_t   send[5] = {1,2,3,4,5};
+		
 	
     // Initialize.
     app_trace_init();
@@ -919,20 +956,24 @@ int main(void)
     SX1276_Rx_IT();
     radioReady = 1;
 	
-	
+
     // Start execution.
     application_timers_start();
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 
-    // Enter main loop.
+
+  //  SX1276_Tx_IT(send,sizeof(send));
+	//	SX1276_Rx_IT();
+		
     for (;;)
     {
        // power_manage();
-			  if(nrf_gpio_port_read(SX1276_DIO0) == 1)
+			   					
+			  if(nrf_gpio_pin_read(SX1276_DIO0) == 1)
 				{
 					rfLoRaState = SX1276LoRaGetRFState();
-					if(rfLoRaState == RFLR_STATE_RX_RUNNING )
+					if(rfLoRaState == RFLR_STATE_RX_DONE )
 					{
 						SX1276LoRaProcess();
 						SX1276LoRaProcess();

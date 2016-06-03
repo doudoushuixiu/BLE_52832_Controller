@@ -85,4 +85,3 @@
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276-hal.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276-LoRa.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276-LoRaMisc.h
-.\_build\main.o: .\SX12xx_Driver\platform\platform.h
