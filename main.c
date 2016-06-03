@@ -61,10 +61,6 @@
 
 
 #define HEART_RATE_MEAS_INTERVAL         APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Heart rate measurement interval (ticks). */
-#define MIN_HEART_RATE                   140                                        /**< Minimum heart rate as returned by the simulated measurement function. */
-#define MAX_HEART_RATE                   300                                        /**< Maximum heart rate as returned by the simulated measurement function. */
-#define HEART_RATE_INCREMENT             16                                      /**< Value by which the heart rate is incremented/decremented for each call to the simulated measurement function. */
-
 
 
 #define MIN_CONN_INTERVAL                MSEC_TO_UNITS(400, UNIT_1_25_MS)           /**< Minimum acceptable connection interval (0.4 seconds). */
@@ -92,33 +88,31 @@
 #define DFU_REVISION                     ((DFU_REV_MAJOR << 8) | DFU_REV_MINOR)     /** DFU Revision number to be exposed. Combined of major and minor versions. */
 #define APP_SERVICE_HANDLE_START         0x000C                                     /**< Handle of first application specific service when when service changed characteristic is present. */
 #define BLE_HANDLE_MAX                   0xFFFF                                     /**< Max handle value in BLE. */
-
 STATIC_ASSERT(IS_SRVC_CHANGED_CHARACT_PRESENT);                                     /** When having DFU Service support in application the Service Changed Characteristic should always be present. */
 #endif // BLE_DFU_APP_SUPPORT
 
-#define LEDS_CONFIGURE(leds_mask) do { uint32_t pin;                  \
-                                  for (pin = 0; pin < 32; pin++) \
-                                      if ( (leds_mask) & (1 << pin) )   \
-                                          nrf_gpio_cfg_output(pin); } while (0)
+//#define LEDS_CONFIGURE(leds_mask) do { uint32_t pin;                  \
+//                                  for (pin = 0; pin < 32; pin++) \
+//                                      if ( (leds_mask) & (1 << pin) )   \
+//                                          nrf_gpio_cfg_output(pin); } while (0)
 
-#define ARRAY_LEN(a)            (sizeof(a)/sizeof(a[0]))															
+//#define ARRAY_LEN(a)            (sizeof(a)/sizeof(a[0]))															
 					
 					
-//init  SPI0
+//Init  SPI0
 #define SPI_CS_PIN    12
-#define SPI_INSTANCE  0 /**< SPI instance index. */
+#define SPI_INSTANCE  0 
 const   nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);  /**< SPI instance. */
 static  volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instance completed the transfer. */
 
-//init time tick
-__IO uint32_t uwTick;
-nrf_drv_timer_t TIMER_ONEMS = NRF_DRV_TIMER_INSTANCE(1);  //set timer1
+//Init Timer tick
+__IO uint32_t   uwTick;
+nrf_drv_timer_t TIMER_ONEMS = NRF_DRV_TIMER_INSTANCE(1);  //Selcet Timer1
 
 
 uint8_t   radioReady = 0;
-uint8_t   channel = 1;   //set channel of freq
+uint8_t   channel = 1;      //set channel of freq
 uint32_t  deviceCount = 6;
-//uint32_t  pa_gain_voltage = 2800;
 
 uint32_t  timeSlot = 33;
 uint32_t  preDataTimestamp[16] = {0};
@@ -235,8 +229,6 @@ void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
 					//Do nothing.
 					break;
 	}   
-	
-	
 }
 
 /**@brief Function for the Timer initialization.
@@ -254,8 +246,6 @@ static void timers_init(void)
                                 heart_rate_meas_timeout_handler);
     APP_ERROR_CHECK(err_code);
 	   
-	
-	
     err_code = nrf_drv_timer_init(&TIMER_ONEMS, NULL, one_ms_timeout_handler);
     APP_ERROR_CHECK(err_code);
 	 
@@ -264,11 +254,6 @@ static void timers_init(void)
   	nrf_drv_timer_extended_compare(
          &TIMER_ONEMS, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
     
-	
-	
-	//nrf_drv_timer_compare(&TIMER_ONEMS, NRF_TIMER_CC_CHANNEL0, time_ticks, true);
-	
-	
     nrf_drv_timer_enable(&TIMER_ONEMS);
 	
 }
@@ -852,15 +837,25 @@ static void ctrl_gpio_pin_init(bool * p_erase_bonds)
 //    APP_ERROR_CHECK(err_code);
 //    *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
 	
+	
+	
 	  nrf_gpio_cfg_output(SX1276_RST);
 	  nrf_gpio_cfg_output(SX1276_NSS);
-	//	nrf_gpio_cfg_output(SPI0_CONFIG_SCK_PIN); //init spi's gpio
-	//	nrf_gpio_cfg_output(SPI0_CONFIG_MOSI_PIN);
-	//	nrf_gpio_cfg_input (SPI0_CONFIG_MISO_PIN,NRF_GPIO_PIN_NOPULL);	
+	
+		nrf_gpio_cfg_output(SPI0_CONFIG_SCK_PIN); //init SPI's gpio
+		nrf_gpio_cfg_output(SPI0_CONFIG_MOSI_PIN);
+		nrf_gpio_cfg_input (SPI0_CONFIG_MISO_PIN,NRF_GPIO_PIN_NOPULL);	
 		
 	  nrf_gpio_cfg_input(SX1276_DIO0,NRF_GPIO_PIN_NOPULL);
-	  nrf_gpio_cfg_output(SX1276_EXPA);  //init PA
+	  nrf_gpio_cfg_output(SX1276_EXPA);  //Init PA
 	  nrf_gpio_pin_set(SX1276_EXPA);
+	
+	  nrf_gpio_cfg_output(24);  //VCC Power
+	  nrf_gpio_pin_set(24);
+		nrf_gpio_cfg_output(6);
+	  nrf_gpio_pin_set(6);
+	  
+	  nrf_delay_ms(50);
 	
 	  nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG(SPI_INSTANCE);
     spi_config.ss_pin = SPI_CS_PIN;
@@ -886,9 +881,7 @@ void SetRadioChannel(uint8_t ch)
 }
 
 void SX1276_Tx_IT(uint8_t* tx_buf, uint32_t tx_len)
-{
-//  float32_t gain = (float32_t)pa_gain_voltage / 1000;
-  
+{ 
   if (rfTxBusyFlag)
   {
     return;
@@ -896,28 +889,18 @@ void SX1276_Tx_IT(uint8_t* tx_buf, uint32_t tx_len)
   else
   {
     rfTxBusyFlag = true;
-//    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, (uint32_t)(4095*gain/3.3f));
-//    HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
-    
-    //osDelay(1);
-    //txStartTick = osKernelSysTick();
-    
     SX1276LoRaSetTxPacket(tx_buf, tx_len);
     SX1276LoRaProcess();
   }
 }
 void SX1276_Rx_IT(void)
 {
-  float gain = 0.0f;
-  
   if (rfTxBusyFlag)
   {
     return;
   }
   else
-  {
-   // HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, (uint32_t)(4095*gain/3.3f));
-  //  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);    
+  { 
     SX1276LoRaStartRx();
     SX1276LoRaProcess();
   }
@@ -934,12 +917,11 @@ int main(void)
     uint16_t  rx_len = 0;
 	  uint8_t   send[5] = {1,2,3,4,5};
 		
-	
     // Initialize.
-    app_trace_init();
+    ctrl_gpio_pin_init(&erase_bonds);			
+    app_trace_init();	
     timers_init();
-    ctrl_gpio_pin_init(&erase_bonds);
-	
+
     ble_stack_init();
     device_manager_init(erase_bonds);
     gap_params_init();
@@ -951,29 +933,23 @@ int main(void)
 	  SX1276Init();
     SX1276LoRaSetPreambleLength(6);
     SX1276LoRaSetLowDatarateOptimize(false);
-  
-    SetRadioChannel(channel);
+    SetRadioChannel(channel);  
     SX1276_Rx_IT();
     radioReady = 1;
 	
-
-    // Start execution.
+    // Start execution. 
     application_timers_start();
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
-
-
-  //  SX1276_Tx_IT(send,sizeof(send));
-	//	SX1276_Rx_IT();
 		
     for (;;)
     {
-       // power_manage();
+        power_manage();
 			   					
 			  if(nrf_gpio_pin_read(SX1276_DIO0) == 1)
 				{
 					rfLoRaState = SX1276LoRaGetRFState();
-					if(rfLoRaState == RFLR_STATE_RX_DONE )
+					if(rfLoRaState == RFLR_STATE_RX_RUNNING )
 					{
 						SX1276LoRaProcess();
 						SX1276LoRaProcess();
@@ -981,15 +957,15 @@ int main(void)
 						if (RFLR_STATE_RX_RUNNING == rfLoRaState)
 						{
 						//  rxDoneTick = osKernelSysTick();
-							SX1276LoRaGetRxPacket(rx_buf, &rx_len);
-					 //   ProcessRadioPacket(rx_buf, rx_len, tick);
+ 							SX1276LoRaGetRxPacket(rx_buf, &rx_len);
+					 //   ProcessRadioPacket(rx_buf, rx_len, 100);
 						}
 						else if (RFLR_STATE_RX_INIT == rfLoRaState) // RX TimeOut
 						{
 							SX1276LoRaProcess();
 						}
 					}				
-				}
+			}
 
     }
 }
