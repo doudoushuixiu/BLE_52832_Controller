@@ -100,7 +100,7 @@ void SX1276SetLoRaOn( bool enable )
         
         SX1276LoRaSetOpMode( RFLR_OPMODE_STANDBY );
                                         // RxDone               RxTimeout                   FhssChangeChannel           CadDone
-        SX1276LR->RegDioMapping1 = RFLR_DIOMAPPING1_DIO0_00 | RFLR_DIOMAPPING1_DIO1_00 | RFLR_DIOMAPPING1_DIO2_00 | RFLR_DIOMAPPING1_DIO3_00;
+        SX1276LR->RegDioMapping1 = RFLR_DIOMAPPING1_DIO0_00; //| RFLR_DIOMAPPING1_DIO1_00 | RFLR_DIOMAPPING1_DIO2_00 | RFLR_DIOMAPPING1_DIO3_00;
                                         // CadDetected          ModeReady
         SX1276LR->RegDioMapping2 = RFLR_DIOMAPPING2_DIO4_00 | RFLR_DIOMAPPING2_DIO5_00;
         SX1276WriteBuffer( REG_LR_DIOMAPPING1, &SX1276LR->RegDioMapping1, 2 );

@@ -22,7 +22,7 @@
 #include <stdbool.h> 
 
 #include "platform.h"
-#include "custom_board.h"
+//#include "custom_board.h"
 #include "nrf_gpio.h"
 #include "nrf_drv_spi.h"
 #if defined( USE_SX1276_RADIO )
@@ -92,8 +92,8 @@ void SX1276WriteBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
 
   //NSS = 0;
  // HAL_GPIO_WritePin(SX1276_NSS_GPIO_Port, SX1276_NSS_Pin, GPIO_PIN_RESET);
-  	nrf_gpio_pin_clear(SX1276_NSS);
-	 nrf_delay_ms(5);
+  nrf_gpio_pin_clear(SX1276_NSS);
+	nrf_delay_ms(2);
 	
   txBuf[0] = addr | 0x80;
   memcpy(txBuf+1, buffer, size);
@@ -101,6 +101,7 @@ void SX1276WriteBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
   
 	 nrf_drv_spi_transfer(&spi,txBuf,size+1,rxBuf,size+1);
   //NSS = 1;
+	 nrf_delay_ms(2);
    nrf_gpio_pin_set(SX1276_NSS);
 }
 
@@ -112,15 +113,15 @@ void SX1276ReadBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
   //NSS = 0;
 //  HAL_GPIO_WritePin(SX1276_NSS_GPIO_Port, SX1276_NSS_Pin, GPIO_PIN_RESET);
    nrf_gpio_pin_clear(SX1276_NSS);
-	 nrf_delay_ms(5);
-	
-	
+nrf_delay_ms(2);
    txBuf[0] = addr & 0x7F;
   //HAL_StatusTypeDef result = HAL_SPI_TransmitReceive(&hspi1, txBuf, rxBuf, size+1, 1000);
    nrf_drv_spi_transfer(&spi,txBuf,size+1,rxBuf,size+1);
 	
   //NSS = 1;
   //HAL_GPIO_WritePin(SX1276_NSS_GPIO_Port, SX1276_NSS_Pin, GPIO_PIN_SET);
+	
+  nrf_delay_ms(2);
    nrf_gpio_pin_set(SX1276_NSS);
 	
 	
@@ -146,26 +147,30 @@ inline uint8_t SX1276ReadDio0( void )
 inline uint8_t SX1276ReadDio1( void )
 {
  // return (HAL_GPIO_ReadPin(SX1276_DIO1_GPIO_Port, SX1276_DIO1_Pin) == GPIO_PIN_SET);
+
 }
 
 inline uint8_t SX1276ReadDio2( void )
 {
  // return (HAL_GPIO_ReadPin(SX1276_DIO2_GPIO_Port, SX1276_DIO2_Pin) == GPIO_PIN_SET);
+
 }
 
 inline uint8_t SX1276ReadDio3( void )
 {
  // return (HAL_GPIO_ReadPin(SX1276_DIO3_GPIO_Port, SX1276_DIO3_Pin) == GPIO_PIN_SET);
+
 }
 
 inline uint8_t SX1276ReadDio4( void )
 {
-  //return (HAL_GPIO_ReadPin(SX1276_DIO4_GPIO_Port, SX1276_DIO4_Pin) == GPIO_PIN_SET);
+  //return (HAL_GPIO_ReadPin(SX1276_DIO4_GPIO_Port, SX1276_DIO4_Pin) == GPIO_PIN_SET);		return 0;
 }
 
 inline uint8_t SX1276ReadDio5( void )
 {
 //  return (HAL_GPIO_ReadPin(SX1276_DIO5_GPIO_Port, SX1276_DIO5_Pin) == GPIO_PIN_SET);
+
 }
 
 inline void SX1276WriteRxTx( uint8_t txEnable )

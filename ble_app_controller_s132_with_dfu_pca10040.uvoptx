@@ -117,7 +117,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>t`?ta?</Name>
+          <Name>/</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -149,25 +149,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>975</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>136778</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\s132_pca10040\main.c\975</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
           <LineNumber>110</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>127676</Address>
+          <Address>127684</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -177,6 +161,22 @@
           <Filename>.\User\ble_spider_tunnel.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\s132_pca10040\User/ble_spider_tunnel.c\110</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>313</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>118370</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\SX12xx_Driver\radio\sx1276-LoRa.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\s132_pca10040\SX12xx_Driver/radio/sx1276-LoRa.c\313</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -224,6 +224,26 @@
           <count>8</count>
           <WinNumber>1</WinNumber>
           <ItemText>time_ticks</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rxBuf</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rxBuf</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rxBuf</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>RFBuffer</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -582,6 +602,22 @@
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>0</BreakIfRCount>
           <Filename>.\main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>13</Number>
+          <Type>0</Type>
+          <LineNumber>313</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>.\SX12xx_Driver\radio\sx1276-LoRa.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>

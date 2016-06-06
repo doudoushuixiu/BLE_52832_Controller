@@ -32,6 +32,8 @@
 ".\_build\nrf_log.o"
 ".\_build\retarget.o"
 ".\_build\sensorsim.o"
+".\_build\app_scheduler.o"
+".\_build\app_timer_appsh.o"
 ".\_build\rtt_syscalls_keil.o"
 ".\_build\segger_rtt.o"
 ".\_build\segger_rtt_printf.o"

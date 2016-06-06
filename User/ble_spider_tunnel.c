@@ -351,7 +351,7 @@ static uint32_t heart_rate_measurement_char_add(ble_hrs_t            * p_hrs,
     char_md.p_cccd_md         = &cccd_md;
     char_md.p_sccd_md         = NULL;
 
-    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE0);
+    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE9);
 
     memset(&attr_md, 0, sizeof(attr_md));
 
@@ -380,7 +380,7 @@ static uint32_t heart_rate_measurement_char_add(ble_hrs_t            * p_hrs,
 
 
 
-uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
+uint32_t ble_spider_tunnel_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
 {
     uint32_t   err_code;
     ble_uuid_t ble_uuid;
@@ -391,7 +391,7 @@ uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
     p_hrs->conn_handle                 = BLE_CONN_HANDLE_INVALID;
 
     // Add service
-    BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_HEART_RATE_SERVICE);   //uuid 0x180D
+    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE0);  //server id            //uuid 0x180D
 
     err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,  //servers
                                         &ble_uuid,
@@ -420,7 +420,6 @@ uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
     {
         return err_code;
     }				
-		
 		
     return NRF_SUCCESS;
 }

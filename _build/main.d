@@ -79,9 +79,11 @@
 .\_build\main.o: .\components\drivers_nrf\timer\nrf_drv_timer.h
 .\_build\main.o: .\components\drivers_nrf\hal\nrf_timer.h
 .\_build\main.o: .\components\drivers_nrf\delay\nrf_delay.h
-.\_build\main.o: .\config\custom_board.h
 .\_build\main.o: .\SX12xx_Driver\radio\radio.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276-hal.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276-LoRa.h
 .\_build\main.o: .\SX12xx_Driver\radio\sx1276-LoRaMisc.h
+.\_build\main.o: .\config\config.h
+.\_build\main.o: .\components\libraries\scheduler\app_scheduler.h
+.\_build\main.o: .\components\libraries\timer\app_timer_appsh.h

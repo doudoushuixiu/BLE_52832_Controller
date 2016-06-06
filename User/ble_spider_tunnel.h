@@ -123,7 +123,7 @@ struct ble_hrs_s
  *
  * @return      NRF_SUCCESS on successful initialization of service, otherwise an error code.
  */
-uint32_t ble_hrs_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init);
+uint32_t ble_spider_tunnel_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init);
 
 /**@brief Function for handling the Application's BLE Stack events.
  *
@@ -157,7 +157,7 @@ uint32_t ble_hrs_heart_rate_measurement_send(ble_hrs_t * p_hrs, uint8_t * p_stri
  * @param[in]   rr_interval  New RR Interval measurement (will be buffered until the next
  *                           transmission of Heart Rate Measurement).
  */
-void ble_hrs_rr_interval_add(ble_hrs_t * p_hrs, uint16_t rr_interval);
+//void ble_hrs_rr_interval_add(ble_hrs_t * p_hrs, uint16_t rr_interval);
 
 /**@brief Function for checking if RR Interval buffer is full.
  *
@@ -165,7 +165,7 @@ void ble_hrs_rr_interval_add(ble_hrs_t * p_hrs, uint16_t rr_interval);
  *
  * @return      true if RR Interval buffer is full, false otherwise.
  */
-bool ble_hrs_rr_interval_buffer_is_full(ble_hrs_t * p_hrs);
+//bool ble_hrs_rr_interval_buffer_is_full(ble_hrs_t * p_hrs);
 
 uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t length);
 

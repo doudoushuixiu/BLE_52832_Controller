@@ -24,6 +24,17 @@
  * This functionality requires a more complicated interrupt handling and driver
  * initialization, hence it is not always desirable to use it.
  */
+ 
+#define SX1276_RST     17
+#define SX1276_NSS     12 
+#define SX1276_DIO0    16
+#define SX1276_EXPA    11	
+ 
+ //Init  SPI0
+#define SPI_CS_PIN    12
+#define SPI_INSTANCE  0 
+ 
+ 
 #define PERIPHERAL_RESOURCE_SHARING_ENABLED  0
 
 /* CLOCK */

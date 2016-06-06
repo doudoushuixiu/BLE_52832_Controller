@@ -14,7 +14,6 @@
 .\_build\sx1276_hal.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\nrf51_to_nrf52.h
 .\_build\sx1276_hal.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\nrf52_name_change.h
 .\_build\sx1276_hal.o: C:\Keil_v5\ARM\PACK\NordicSemiconductor\nRF_DeviceFamilyPack\8.5.0\Device\Include\compiler_abstraction.h
-.\_build\sx1276_hal.o: .\config\custom_board.h
 .\_build\sx1276_hal.o: .\components\drivers_nrf\hal\nrf_gpio.h
 .\_build\sx1276_hal.o: .\components\drivers_nrf\spi_master\nrf_drv_spi.h
 .\_build\sx1276_hal.o: .\components\libraries\util\nordic_common.h
