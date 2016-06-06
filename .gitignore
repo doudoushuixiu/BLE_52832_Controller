@@ -3,8 +3,12 @@
 *.ko
 *.obj
 *.elf
+<<<<<<< HEAD
 ./_build
 *.crf
+=======
+*/_build
+>>>>>>> 09ee8c00e9232f114db35573bb7b2c87a7ca071d
 # Precompiled Headers
 *.gch
 *.pch
@@ -30,4 +34,9 @@
 *.hex
 
 # Debug files
+<<<<<<< HEAD
 *.dSYM/
+=======
+*.dSYM/
+
+>>>>>>> 09ee8c00e9232f114db35573bb7b2c87a7ca071d

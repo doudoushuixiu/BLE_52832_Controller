@@ -270,7 +270,7 @@ static uint32_t tx_char_add(ble_hrs_t            * p_hrs,
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
     ble_gatts_char_md_t char_md;
-   // ble_gatts_attr_md_t cccd_md;
+      ble_gatts_attr_md_t cccd_md;
     ble_gatts_attr_t    attr_char_value;
     ble_uuid_t          ble_uuid;
     ble_gatts_attr_md_t attr_md;
@@ -323,59 +323,59 @@ static uint32_t tx_char_add(ble_hrs_t            * p_hrs,
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-static uint32_t heart_rate_measurement_char_add(ble_hrs_t            * p_hrs,
-                                                const ble_hrs_init_t * p_hrs_init)
-{
-    ble_gatts_char_md_t char_md;
-    ble_gatts_attr_md_t cccd_md;
-    ble_gatts_attr_t    attr_char_value;
-    ble_uuid_t          ble_uuid;
-    ble_gatts_attr_md_t attr_md;
-    uint8_t             encoded_initial_hrm[MAX_HRM_LEN];
+//static uint32_t heart_rate_measurement_char_add(ble_hrs_t            * p_hrs,
+//                                                const ble_hrs_init_t * p_hrs_init)
+//{
+//    ble_gatts_char_md_t char_md;
+//    ble_gatts_attr_md_t cccd_md;
+//    ble_gatts_attr_t    attr_char_value;
+//    ble_uuid_t          ble_uuid;
+//    ble_gatts_attr_md_t attr_md;
+//    uint8_t             encoded_initial_hrm[MAX_HRM_LEN];
 
-    memset(&cccd_md, 0, sizeof(cccd_md));
+//    memset(&cccd_md, 0, sizeof(cccd_md));
 
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
-    cccd_md.write_perm = p_hrs_init->hrs_hrm_attr_md.cccd_write_perm;
-    cccd_md.vloc       = BLE_GATTS_VLOC_STACK;
+//    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
+//    cccd_md.write_perm = p_hrs_init->hrs_hrm_attr_md.cccd_write_perm;
+//    cccd_md.vloc       = BLE_GATTS_VLOC_STACK;
 
-    memset(&char_md, 0, sizeof(char_md));
+//    memset(&char_md, 0, sizeof(char_md));
 
-    char_md.char_props.notify = 1;
-	  char_md.char_props.read   = 1;   
-	//  char_md.char_props.write_wo_resp   = 1;
-	
-    char_md.p_char_user_desc  = NULL;
-    char_md.p_char_pf         = NULL;
-    char_md.p_user_desc_md    = NULL;
-    char_md.p_cccd_md         = &cccd_md;
-    char_md.p_sccd_md         = NULL;
+//    char_md.char_props.notify = 1;
+//	  char_md.char_props.read   = 1;   
+//	//  char_md.char_props.write_wo_resp   = 1;
+//	
+//    char_md.p_char_user_desc  = NULL;
+//    char_md.p_char_pf         = NULL;
+//    char_md.p_user_desc_md    = NULL;
+//    char_md.p_cccd_md         = &cccd_md;
+//    char_md.p_sccd_md         = NULL;
 
-    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE9);
+//    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE9);
 
-    memset(&attr_md, 0, sizeof(attr_md));
+//    memset(&attr_md, 0, sizeof(attr_md));
 
-    attr_md.read_perm  = p_hrs_init->hrs_hrm_attr_md.read_perm;
-    attr_md.write_perm = p_hrs_init->hrs_hrm_attr_md.write_perm;
-    attr_md.vloc       = BLE_GATTS_VLOC_STACK;
-    attr_md.rd_auth    = 0;
-    attr_md.wr_auth    = 0;
-    attr_md.vlen       = 1;
+//    attr_md.read_perm  = p_hrs_init->hrs_hrm_attr_md.read_perm;
+//    attr_md.write_perm = p_hrs_init->hrs_hrm_attr_md.write_perm;
+//    attr_md.vloc       = BLE_GATTS_VLOC_STACK;
+//    attr_md.rd_auth    = 0;
+//    attr_md.wr_auth    = 0;
+//    attr_md.vlen       = 1;
 
-    memset(&attr_char_value, 0, sizeof(attr_char_value));
+//    memset(&attr_char_value, 0, sizeof(attr_char_value));
 
-    attr_char_value.p_uuid    = &ble_uuid;
-    attr_char_value.p_attr_md = &attr_md;
-    attr_char_value.init_len  = hrm_encode(p_hrs, INITIAL_VALUE_HRM, encoded_initial_hrm);
-    attr_char_value.init_offs = 0;
-    attr_char_value.max_len   = MAX_HRM_LEN;
-    attr_char_value.p_value   = encoded_initial_hrm;
+//    attr_char_value.p_uuid    = &ble_uuid;
+//    attr_char_value.p_attr_md = &attr_md;
+//    attr_char_value.init_len  = hrm_encode(p_hrs, INITIAL_VALUE_HRM, encoded_initial_hrm);
+//    attr_char_value.init_offs = 0;
+//    attr_char_value.max_len   = MAX_HRM_LEN;
+//    attr_char_value.p_value   = encoded_initial_hrm;
 
-    return sd_ble_gatts_characteristic_add(p_hrs->service_handle,
-                                           &char_md,
-                                           &attr_char_value,
-                                           &p_hrs->hrm_handles);
-}
+//    return sd_ble_gatts_characteristic_add(p_hrs->service_handle,
+//                                           &char_md,
+//                                           &attr_char_value,
+//                                           &p_hrs->hrm_handles);
+//}
 
 
 
@@ -403,11 +403,11 @@ uint32_t ble_spider_tunnel_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_
     }
 
     // Add heart rate measurement characteristic
-    err_code = heart_rate_measurement_char_add(p_hrs, p_hrs_init);
-    if (err_code != NRF_SUCCESS)
-    {
-        return err_code;
-    }
+//    err_code = heart_rate_measurement_char_add(p_hrs, p_hrs_init);
+//    if (err_code != NRF_SUCCESS)
+//    {
+//        return err_code;
+//    }
 
     err_code = tx_char_add(p_hrs, p_hrs_init);
     if (err_code != NRF_SUCCESS)
@@ -425,43 +425,43 @@ uint32_t ble_spider_tunnel_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_
 }
 
 
-uint32_t ble_hrs_heart_rate_measurement_send(ble_hrs_t * p_hrs, uint8_t * p_string, uint16_t length)
-{
-    uint32_t err_code;
+//uint32_t ble_hrs_heart_rate_measurement_send(ble_hrs_t * p_hrs, uint8_t * p_string, uint16_t length)
+//{
+//    uint32_t err_code;
 
-    // Send value if connected and notifying
-    if (p_hrs->conn_handle != BLE_CONN_HANDLE_INVALID)  
-    {
-        uint8_t                encoded_hrm[MAX_HRM_LEN];
-        uint16_t               len;
-        uint16_t               hvx_len;
-        ble_gatts_hvx_params_t hvx_params;
+//    // Send value if connected and notifying
+//    if (p_hrs->conn_handle != BLE_CONN_HANDLE_INVALID)  
+//    {
+//        uint8_t                encoded_hrm[MAX_HRM_LEN];
+//        uint16_t               len;
+//        uint16_t               hvx_len;
+//        ble_gatts_hvx_params_t hvx_params;
 
-     //   len     = hrm_encode(p_hrs, heart_rate, encoded_hrm);  
-        hvx_len = 10;
+//     //   len     = hrm_encode(p_hrs, heart_rate, encoded_hrm);  
+//        hvx_len = 10;
 
-        memset(&hvx_params, 0, sizeof(hvx_params));
+//        memset(&hvx_params, 0, sizeof(hvx_params));
 
-        hvx_params.handle = p_hrs->hrm_handles.value_handle;
-        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
-        hvx_params.offset = 0;
-        hvx_params.p_len  = &hvx_len;
-        hvx_params.p_data = p_string;			
-			
-			
-        err_code = sd_ble_gatts_hvx(p_hrs->conn_handle, &hvx_params);
-        if ((err_code == NRF_SUCCESS) && (hvx_len != len))
-        {
-            err_code = NRF_ERROR_DATA_SIZE;
-        }
-    }
-    else
-    {
-        err_code = NRF_ERROR_INVALID_STATE;
-    }
+//        hvx_params.handle = p_hrs->hrm_handles.value_handle;
+//        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+//        hvx_params.offset = 0;
+//        hvx_params.p_len  = &hvx_len;
+//        hvx_params.p_data = p_string;			
+//			
+//			
+//        err_code = sd_ble_gatts_hvx(p_hrs->conn_handle, &hvx_params);
+//        if ((err_code == NRF_SUCCESS) && (hvx_len != len))
+//        {
+//            err_code = NRF_ERROR_DATA_SIZE;
+//        }
+//    }
+//    else
+//    {
+//        err_code = NRF_ERROR_INVALID_STATE;
+//    }
 
-    return err_code;
-}
+//    return err_code;
+//}
 
 uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t length)
 {

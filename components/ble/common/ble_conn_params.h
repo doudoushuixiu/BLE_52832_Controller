@@ -49,7 +49,8 @@ typedef struct
     uint32_t                      first_conn_params_update_delay;   /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (in number of timer ticks). */
     uint32_t                      next_conn_params_update_delay;    /**< Time between each call to sd_ble_gap_conn_param_update after the first (in number of timer ticks). Recommended value 30 seconds as per BLUETOOTH SPECIFICATION Version 4.0. */
     uint8_t                       max_conn_params_update_count;     /**< Number of attempts before giving up the negotiation. */
-    uint16_t                      start_on_notify_cccd_handle;      /**< If procedure is to be started when notification is started, set this to the handle of the corresponding CCCD. Set to BLE_GATT_HANDLE_INVALID if procedure is to be started on connect event. */
+    uint16_t                      start_on_notify_cccd_handle;      /**< If procedure is to be started when notification is started, 
+	set this to the handle of the corresponding CCCD. Set to BLE_GATT_HANDLE_INVALID if procedure is to be started on connect event. */
     bool                          disconnect_on_fail;               /**< Set to TRUE if a failed connection parameters update shall cause an automatic disconnection, set to FALSE otherwise. */
     ble_conn_params_evt_handler_t evt_handler;                      /**< Event handler to be called for handling events in the Connection Parameters. */
     ble_srv_error_handler_t       error_handler;                    /**< Function to be called in case of an error. */
