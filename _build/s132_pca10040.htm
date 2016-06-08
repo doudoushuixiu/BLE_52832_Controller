@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\_build\s132_pca10040.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\_build\s132_pca10040.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060183: Last Updated: Mon Jun 06 16:47:21 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060183: Last Updated: Wed Jun 08 15:33:38 2016
 <BR><P>
 <H3>Maximum Stack Usage =        688 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -336,10 +336,10 @@ Global Symbols
 </UL>
 <P><STRONG><a name="[85]"></a>__aeabi_memcpy</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, memcpya.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pstorage_load
-<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_peer_data_set
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;service_data_encode
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;manuf_specific_data_encode
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SX1276LoRaGetRxPacket
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_peer_data_set
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SX1276WriteBuffer
 <LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SX1276ReadBuffer
 </UL>
@@ -369,18 +369,18 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[a5]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tx_char_add
-<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rx_char_add
+<BR><BR>[Called By]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spider_tunnel_char_add
+<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pass_mode_char_add
 <LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gatts_context_store
 <LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_pstorage_cb_handler
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;char_add
 <LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_rev_char_add
 <LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_pkt_char_add
 <LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_ctrl_pt_add
+<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
 <LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;softdevice_enable_get_default_config
 <LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_init
 <LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_ble_evt_handler
-<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
 <LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_init
 <LI><a href="#[31]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;services_init
@@ -860,8 +860,8 @@ Global Symbols
 <P><STRONG><a name="[87]"></a>SX1276ReadBuffer</STRONG> (Thumb, 92 bytes, Stack size 288 bytes, sx1276_hal.o(i.SX1276ReadBuffer))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = SX1276ReadBuffer &rArr; nrf_drv_spi_transfer &rArr; nrf_drv_spi_xfer &rArr; spim_xfer
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_spi_transfer
-<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_delay_ms
+<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_delay_ms
+<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_spi_transfer
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
@@ -949,8 +949,8 @@ Global Symbols
 <P><STRONG><a name="[88]"></a>SX1276WriteBuffer</STRONG> (Thumb, 92 bytes, Stack size 288 bytes, sx1276_hal.o(i.SX1276WriteBuffer))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = SX1276WriteBuffer &rArr; nrf_drv_spi_transfer &rArr; nrf_drv_spi_xfer &rArr; spim_xfer
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_spi_transfer
-<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_delay_ms
+<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_delay_ms
+<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_spi_transfer
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
@@ -1063,9 +1063,6 @@ Global Symbols
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_id_encode
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pnp_id_encode
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;char_add
-<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_peer_data_set
-<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_start
-<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_timeouts_check
 <LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_ble_evt_handler
 <LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_on_dfu_evt
 <LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_dm_appl_instance_set
@@ -1085,6 +1082,9 @@ Global Symbols
 <LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_stack_init
 <LI><a href="#[36]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_evt_dispatch
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_context_load
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_peer_data_set
+<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_start
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_timeouts_check
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;intern_softdevice_events_execute
 <LI><a href="#[22]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SWI2_EGU2_IRQHandler
 </UL>
@@ -1129,7 +1129,6 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;conn_params_negotiation
 <LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_led_indication
 <LI><a href="#[47]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_button_event_handler
-<LI><a href="#[31]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[d2]"></a>app_timer_stop</STRONG> (Thumb, 76 bytes, Stack size 24 bytes, app_timer.o(i.app_timer_stop))
@@ -1194,7 +1193,6 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_on_sys_evt
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_on_ble_evt
-<LI><a href="#[31]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[de]"></a>ble_conn_params_init</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, ble_conn_params.o(i.ble_conn_params_init))
@@ -1258,23 +1256,23 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;services_init
 </UL>
 
-<P><STRONG><a name="[ee]"></a>ble_hrs_on_ble_evt</STRONG> (Thumb, 92 bytes, Stack size 16 bytes, ble_spider_tunnel.o(i.ble_hrs_on_ble_evt))
+<P><STRONG><a name="[ee]"></a>ble_hrs_on_ble_evt</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, ble_spider_tunnel.o(i.ble_hrs_on_ble_evt))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = ble_hrs_on_ble_evt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[36]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_evt_dispatch
 </UL>
 
-<P><STRONG><a name="[135]"></a>ble_nus_string_send</STRONG> (Thumb, 80 bytes, Stack size 32 bytes, ble_spider_tunnel.o(i.ble_nus_string_send))
+<P><STRONG><a name="[135]"></a>ble_nus_string_send</STRONG> (Thumb, 78 bytes, Stack size 32 bytes, ble_spider_tunnel.o(i.ble_nus_string_send))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = ble_nus_string_send
 </UL>
 <BR>[Called By]<UL><LI><a href="#[45]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;heart_rate_meas_timeout_handler
 </UL>
 
 <P><STRONG><a name="[f1]"></a>ble_spider_tunnel_init</STRONG> (Thumb, 70 bytes, Stack size 16 bytes, ble_spider_tunnel.o(i.ble_spider_tunnel_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = ble_spider_tunnel_init &rArr; rx_char_add
+<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = ble_spider_tunnel_init &rArr; pass_mode_char_add
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tx_char_add
-<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rx_char_add
+<BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spider_tunnel_char_add
+<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pass_mode_char_add
 </UL>
 <BR>[Called By]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;services_init
 </UL>
@@ -1356,8 +1354,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = dfu_app_on_dfu_evt &rArr; bootloader_start &rArr; dfu_app_peer_data_set &rArr; dm_application_context_set &rArr; pstorage_update &rArr; cmd_queue_enqueue &rArr; cmd_process &rArr; clear_operation_execute &rArr; sm_state_change &rArr;  cmd_process (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_dfu_response_send
-<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_start
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
+<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_start
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.services_init)
 </UL>
@@ -1472,13 +1470,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[22]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SWI2_EGU2_IRQHandler
 </UL>
 
-<P><STRONG><a name="[31]"></a>main</STRONG> (Thumb, 330 bytes, Stack size 232 bytes, main.o(i.main))
+<P><STRONG><a name="[31]"></a>main</STRONG> (Thumb, 298 bytes, Stack size 232 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 688<LI>Call Chain = main &rArr; SX1276_Rx_IT &rArr; SX1276LoRaProcess &rArr; SX1276LoRaSetOpMode &rArr; SX1276Write &rArr; SX1276WriteBuffer &rArr; nrf_drv_spi_transfer &rArr; nrf_drv_spi_xfer &rArr; spim_xfer
 </UL>
 <BR>[Calls]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_conn_params_init
-<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_start
 <LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_advertising_init
-<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_start
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_sched_init
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_sched_execute
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
@@ -2227,16 +2223,16 @@ Local Symbols
 <LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_pstorage_cb_handler
 </UL>
 
-<P><STRONG><a name="[f3]"></a>rx_char_add</STRONG> (Thumb, 220 bytes, Stack size 80 bytes, ble_spider_tunnel.o(i.rx_char_add))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = rx_char_add
+<P><STRONG><a name="[f3]"></a>pass_mode_char_add</STRONG> (Thumb, 220 bytes, Stack size 80 bytes, ble_spider_tunnel.o(i.pass_mode_char_add))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = pass_mode_char_add
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ble_spider_tunnel_init
 </UL>
 
-<P><STRONG><a name="[f2]"></a>tx_char_add</STRONG> (Thumb, 162 bytes, Stack size 72 bytes, ble_spider_tunnel.o(i.tx_char_add))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = tx_char_add
+<P><STRONG><a name="[f2]"></a>spider_tunnel_char_add</STRONG> (Thumb, 162 bytes, Stack size 72 bytes, ble_spider_tunnel.o(i.spider_tunnel_char_add))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = spider_tunnel_char_add
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
@@ -2651,14 +2647,14 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[7b]"></a>nrf_gpio_pin_set</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, nrf_drv_spi.o(i.nrf_gpio_pin_set))
-<BR><BR>[Called By]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler
-<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_spi_init
+<BR><BR>[Called By]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nrf_drv_spi_init
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spim_xfer
+<LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler
 </UL>
 
 <P><STRONG><a name="[7a]"></a>nrf_spim_event_check</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, nrf_drv_spi.o(i.nrf_spim_event_check))
-<BR><BR>[Called By]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler
-<LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spim_xfer
+<BR><BR>[Called By]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spim_xfer
+<LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler
 </UL>
 
 <P><STRONG><a name="[140]"></a>spim_xfer</STRONG> (Thumb, 196 bytes, Stack size 32 bytes, nrf_drv_spi.o(i.spim_xfer))
@@ -2672,20 +2668,20 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[cb]"></a>NVIC_ClearPendingIRQ</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, app_timer.o(i.NVIC_ClearPendingIRQ))
-<BR><BR>[Called By]<UL><LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_init
+<BR><BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_init
+<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
 </UL>
 
 <P><STRONG><a name="[cd]"></a>NVIC_EnableIRQ</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, app_timer.o(i.NVIC_EnableIRQ))
-<BR><BR>[Called By]<UL><LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_init
+<BR><BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_init
+<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
 </UL>
 
 <P><STRONG><a name="[d1]"></a>NVIC_SetPendingIRQ</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, app_timer.o(i.NVIC_SetPendingIRQ))
-<BR><BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_timeouts_check
-<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
-<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_stop
+<BR><BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_stop
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_start
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_timeouts_check
+<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
 </UL>
 
 <P><STRONG><a name="[cc]"></a>NVIC_SetPriority</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, app_timer.o(i.NVIC_SetPriority))
@@ -2729,8 +2725,8 @@ Local Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__asm___11_app_timer_c_cd27f9c3__nrf_delay_us
 </UL>
-<BR>[Called By]<UL><LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_init
+<BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_timer_init
+<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_reg_update
 </UL>
 
 <P><STRONG><a name="[7c]"></a>timer_list_handler</STRONG> (Thumb, 134 bytes, Stack size 40 bytes, app_timer.o(i.timer_list_handler))
@@ -2753,8 +2749,8 @@ Local Symbols
 <P><STRONG><a name="[79]"></a>timer_timeouts_check</STRONG> (Thumb, 124 bytes, Stack size 24 bytes, app_timer.o(i.timer_timeouts_check))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = timer_timeouts_check &rArr; app_error_handler_bare
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPendingIRQ
-<LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
+<BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
+<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPendingIRQ
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC1_IRQHandler
 </UL>
@@ -2772,9 +2768,9 @@ Local Symbols
 <P><STRONG><a name="[100]"></a>bootloader_start</STRONG> (Thumb, 128 bytes, Stack size 24 bytes, dfu_app_handler.o(i.bootloader_start))
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = bootloader_start &rArr; dfu_app_peer_data_set &rArr; dm_application_context_set &rArr; pstorage_update &rArr; cmd_queue_enqueue &rArr; cmd_process &rArr; clear_operation_execute &rArr; sm_state_change &rArr;  cmd_process (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_peer_data_set
+<BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_peer_data_set
 <LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bootloader_util_app_start
-<LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;app_error_handler_bare
 </UL>
 <BR>[Called By]<UL><LI><a href="#[42]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dfu_app_on_dfu_evt
 </UL>

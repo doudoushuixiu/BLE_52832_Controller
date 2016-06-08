@@ -49,16 +49,13 @@
 #include "ble.h"
 #include "ble_srv_common.h"
 
-// Body Sensor Location values
-#define BLE_HRS_BODY_SENSOR_LOCATION_OTHER      0
-#define BLE_HRS_BODY_SENSOR_LOCATION_CHEST      1
-#define BLE_HRS_BODY_SENSOR_LOCATION_WRIST      2
-#define BLE_HRS_BODY_SENSOR_LOCATION_FINGER     3
-#define BLE_HRS_BODY_SENSOR_LOCATION_HAND       4
-#define BLE_HRS_BODY_SENSOR_LOCATION_EAR_LOBE   5
-#define BLE_HRS_BODY_SENSOR_LOCATION_FOOT       6
+#define BLE_UUID_SPIDER_TUNNEL_SERVICE            0xFFE0                       /**< The UUID of the Nordic UART Service. */
+#define BLE_UUID_SPIDER_TUNNEL_CHARACTERISTIC     0xFFE1                       /**< The UUID of the TX Characteristic. */
+#define BLE_UUID_PASS_MODE_CHARACTERISTIC         0xFFE2                       /**< The UUID of the TX Characteristic. */
+#define MY_SERVICE_PASSMODE_SPIDER_TUNNEL         0
+#define MY_SERVICE_PASSMODE_STM32_ISP_UPDATE      1
+#define MY_SERVICE_PASSMODE_PASS_THROUGH          2
 
-#define BLE_HRS_MAX_BUFFERED_RR_INTERVALS       20      /**< Size of RR Interval buffer inside service. */
 
 /**@brief Heart Rate Service event type. */
 typedef enum
@@ -104,14 +101,12 @@ struct ble_hrs_s
     ble_nus_data_handler_t       data_handler;
   	
     uint16_t                     service_handle;                                       /**< Handle of Heart Rate Service (as provided by the BLE stack). */
-    ble_gatts_char_handles_t     hrm_handles;                                          /**< Handles related to the Heart Rate Measurement characteristic. */
-    ble_gatts_char_handles_t     disdata_handles;
-    ble_gatts_char_handles_t     rx_handles;
+//    ble_gatts_char_handles_t     hrm_handles;                                          /**< Handles related to the Heart Rate Measurement characteristic. */
+    ble_gatts_char_handles_t     tunnel_handles;
+    ble_gatts_char_handles_t     pass_mode_handles;
 	  bool                         is_notification_enabled; /**< Variable to indicate if the peer has enabled notification of the RX characteristic.*/
    
    	uint16_t                     conn_handle;                                          /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
-    uint16_t                     rr_interval[BLE_HRS_MAX_BUFFERED_RR_INTERVALS];       /**< Set of RR Interval measurements since the last Heart Rate Measurement transmission. */
-    uint16_t                     rr_interval_count;                                    /**< Number of RR Interval measurements since the last Heart Rate Measurement transmission. */
 };
 
 /**@brief Function for initializing the Heart Rate Service.

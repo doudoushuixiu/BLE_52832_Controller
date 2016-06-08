@@ -99,7 +99,7 @@ static void on_write(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt) //
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 
-    if (p_evt_write->handle == p_hrs->disdata_handles.value_handle)   //0x50 == 
+    if (p_evt_write->handle == p_hrs->tunnel_handles.value_handle)   //0x50 == 
     {
 
 			  LEDS_INVERT(BSP_LED_2_MASK);
@@ -143,69 +143,8 @@ void ble_hrs_on_ble_evt(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt)
 }
 
 
-/**@brief Function for encoding a Heart Rate Measurement.
- *
- * @param[in]   p_hrs              Heart Rate Service structure.
- * @param[in]   heart_rate         Measurement to be encoded.
- * @param[out]  p_encoded_buffer   Buffer where the encoded data will be written.
- *
- * @return      Size of encoded data.
- */
-static uint8_t hrm_encode(ble_hrs_t * p_hrs, uint16_t heart_rate, uint8_t * p_encoded_buffer)
-{
-    uint8_t flags = 0;
-    uint8_t len   = 1;
-    int     i; 
-
-    // Set sensor contact related flags
-  /*  if (p_hrs->is_sensor_contact_supported)
-    {
-        flags |= HRM_FLAG_MASK_SENSOR_CONTACT_SUPPORTED;
-    }
-    if (p_hrs->is_sensor_contact_detected)
-    {
-        flags |= HRM_FLAG_MASK_SENSOR_CONTACT_DETECTED;
-    }*/
-
-    // Encode heart rate measurement
-    if (heart_rate > 0xff)
-    {
-        flags |= HRM_FLAG_MASK_HR_VALUE_16BIT;
-        len   += uint16_encode(heart_rate, &p_encoded_buffer[len]);
-    }
-    else
-    {
-        p_encoded_buffer[len++] = (uint8_t)heart_rate;
-    }
-
-    // Encode rr_interval values
-    if (p_hrs->rr_interval_count > 0)
-    {
-        flags |= HRM_FLAG_MASK_RR_INTERVAL_INCLUDED;
-    }
-    for (i = 0; i < p_hrs->rr_interval_count; i++)
-    {
-        if (len + sizeof(uint16_t) > MAX_HRM_LEN)
-        {
-            // Not all stored rr_interval values can fit into the encoded hrm,
-            // move the remaining values to the start of the buffer.
-            memmove(&p_hrs->rr_interval[0],
-                    &p_hrs->rr_interval[i],
-                    (p_hrs->rr_interval_count - i) * sizeof(uint16_t));
-            break;
-        }
-        len += uint16_encode(p_hrs->rr_interval[i], &p_encoded_buffer[len]);
-    }
-    p_hrs->rr_interval_count -= i;
-
-    // Add flags
-    p_encoded_buffer[0] = flags;
-
-    return len;
-}
-
-//     NRF --> APP
-static uint32_t rx_char_add(ble_hrs_t            * p_hrs,
+//   APP --> NRF -->RF send
+static uint32_t pass_mode_char_add(ble_hrs_t            * p_hrs,
                             const ble_hrs_init_t * p_hrs_init)
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
@@ -233,10 +172,9 @@ static uint32_t rx_char_add(ble_hrs_t            * p_hrs,
     char_md.p_cccd_md         = &cccd_md;
     char_md.p_sccd_md         = NULL;
 
-   // ble_uuid.type = p_nus->uuid_type;   //UUID设置
-   // ble_uuid.uuid = BLE_UUID_NUS_RX_CHARACTERISTIC;
+ 
 	 
-	  BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE2);
+	  BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_PASS_MODE_CHARACTERISTIC);  //0xFFE2
 
     memset(&attr_md, 0, sizeof(attr_md));
 
@@ -259,13 +197,13 @@ static uint32_t rx_char_add(ble_hrs_t            * p_hrs,
     return sd_ble_gatts_characteristic_add(p_hrs->service_handle, 
                                            &char_md,
                                            &attr_char_value,
-                                           &p_hrs->rx_handles);
+                                           &p_hrs->pass_mode_handles);
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
 }
 
 
-//char   APP -> NRF
-static uint32_t tx_char_add(ble_hrs_t            * p_hrs,
+//char   NRF -> APP
+static uint32_t spider_tunnel_char_add(ble_hrs_t            * p_hrs,
                             const ble_hrs_init_t * p_hrs_init)
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
@@ -288,7 +226,7 @@ static uint32_t tx_char_add(ble_hrs_t            * p_hrs,
     char_md.p_cccd_md         = NULL;
     char_md.p_sccd_md         = NULL;
 
-    BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE1);
+    BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_SPIDER_TUNNEL_CHARACTERISTIC); //0xFFE1
 
     memset(&attr_md, 0, sizeof(attr_md));
 
@@ -311,7 +249,7 @@ static uint32_t tx_char_add(ble_hrs_t            * p_hrs,
    return sd_ble_gatts_characteristic_add(p_hrs->service_handle,
                                            &char_md,
                                            &attr_char_value,
-                                           &p_hrs->disdata_handles);
+                                           &p_hrs->tunnel_handles);
 																					 
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
 }
@@ -409,13 +347,13 @@ uint32_t ble_spider_tunnel_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_
 //        return err_code;
 //    }
 
-    err_code = tx_char_add(p_hrs, p_hrs_init);
+    err_code = spider_tunnel_char_add(p_hrs, p_hrs_init);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
     }		
 		
-    err_code = rx_char_add(p_hrs, p_hrs_init);
+    err_code = pass_mode_char_add(p_hrs, p_hrs_init);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
@@ -481,7 +419,7 @@ uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t len
 
     memset(&hvx_params, 0, sizeof(hvx_params));
 
-    hvx_params.handle = p_nus->rx_handles.value_handle;
+    hvx_params.handle = p_nus->pass_mode_handles.value_handle;
     hvx_params.p_data = p_string;
     hvx_params.p_len  = &length;
     hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;

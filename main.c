@@ -366,6 +366,7 @@ static void services_init(void)
 		
     hrs_init.evt_handler  = NULL;
     hrs_init.data_handler = nus_data_handler;
+		
 
     // Here the sec level for the Heart Rate Service can be changed/increased.
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&hrs_init.hrs_hrm_attr_md.cccd_write_perm);
@@ -483,7 +484,7 @@ static void conn_params_init(void)
     cp_init.next_conn_params_update_delay  = NEXT_CONN_PARAMS_UPDATE_DELAY;
     cp_init.max_conn_params_update_count   = MAX_CONN_PARAMS_UPDATE_COUNT;
   //  cp_init.start_on_notify_cccd_handle    = m_hrs.hrm_handles.cccd_handle;
-	  cp_init.start_on_notify_cccd_handle    = m_hrs.disdata_handles.cccd_handle;
+	  cp_init.start_on_notify_cccd_handle    = m_hrs.tunnel_handles.cccd_handle;
 	
     cp_init.disconnect_on_fail             = false;
     cp_init.evt_handler                    = on_conn_params_evt;
@@ -830,19 +831,20 @@ void SetRadioChannel(uint8_t ch)
   }
 }
 
-void SX1276_Tx_IT(uint8_t* tx_buf, uint32_t tx_len)
-{ 
-  if (rfTxBusyFlag)
-  {
-    return;
-  }
-  else
-  {
-    rfTxBusyFlag = true;
-    SX1276LoRaSetTxPacket(tx_buf, tx_len);
-    SX1276LoRaProcess();
-  }
-}
+//void SX1276_Tx_IT(uint8_t* tx_buf, uint32_t tx_len)
+//{ 
+//  if (rfTxBusyFlag)
+//  {
+//    return;
+//  }
+//  else
+//  {
+//    rfTxBusyFlag = true;
+//    SX1276LoRaSetTxPacket(tx_buf, tx_len);
+//		nrf_delay_ms(50);
+//    SX1276LoRaProcess();
+//  }
+//}
 void SX1276_Rx_IT(void)
 {
   if (rfTxBusyFlag)
@@ -865,7 +867,7 @@ int main(void)
 	  uint8_t   rfLoRaState = RFLR_STATE_IDLE;
     uint8_t   rx_buf[128] = {0};
     uint16_t  rx_len = 0;
-	  uint8_t   send[5] = {1,2,3,4,5};
+	  uint8_t   send[10] = {1,2,3,4,5,6,7,8,9,0};
 		
     // Initialize.
     ctrl_gpio_pin_init(&erase_bonds);			
@@ -889,9 +891,19 @@ int main(void)
     radioReady = 1;
 	
     // Start execution. 
-    application_timers_start();
-    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
-    APP_ERROR_CHECK(err_code);
+//    application_timers_start();
+//    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
+//    APP_ERROR_CHECK(err_code);
+//		
+
+
+//		while(1)
+//		{
+//	  	    SX1276SetTxPacket(send,9);
+//					SX1276LoRaProcess();
+//			    nrf_delay_ms(500);
+//		}	
+		
 		
     for (;;)
     {   
