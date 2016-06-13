@@ -87,3 +87,5 @@
 .\_build\main.o: .\config\config.h
 .\_build\main.o: .\components\libraries\scheduler\app_scheduler.h
 .\_build\main.o: .\components\libraries\timer\app_timer_appsh.h
+.\_build\main.o: .\User\datatype.h
+.\_build\main.o: .\bsp\PacketEncode.h

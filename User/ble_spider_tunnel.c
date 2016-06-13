@@ -143,7 +143,7 @@ void ble_hrs_on_ble_evt(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt)
 }
 
 
-//   APP --> NRF -->RF send
+//  
 static uint32_t pass_mode_char_add(ble_hrs_t            * p_hrs,
                             const ble_hrs_init_t * p_hrs_init)
 {
@@ -174,7 +174,7 @@ static uint32_t pass_mode_char_add(ble_hrs_t            * p_hrs,
 
  
 	 
-	  BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_PASS_MODE_CHARACTERISTIC);  //0xFFE2
+	BLE_UUID_BLE_ASSIGN(ble_uuid, BLE_UUID_PASS_MODE_CHARACTERISTIC);  //0xFFE2
 
     memset(&attr_md, 0, sizeof(attr_md));
 
@@ -202,7 +202,7 @@ static uint32_t pass_mode_char_add(ble_hrs_t            * p_hrs,
 }
 
 
-//char   NRF -> APP
+//
 static uint32_t spider_tunnel_char_add(ble_hrs_t            * p_hrs,
                             const ble_hrs_init_t * p_hrs_init)
 {
@@ -419,7 +419,7 @@ uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t len
 
     memset(&hvx_params, 0, sizeof(hvx_params));
 
-    hvx_params.handle = p_nus->pass_mode_handles.value_handle;
+    hvx_params.handle = p_nus->tunnel_handles.value_handle;
     hvx_params.p_data = p_string;
     hvx_params.p_len  = &length;
     hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;

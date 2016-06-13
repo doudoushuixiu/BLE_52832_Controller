@@ -40,7 +40,8 @@
 #include "config.h"
 #include "app_scheduler.h"
 #include "app_timer_appsh.h"
-
+#include "datatype.h"
+#include "PacketEncode.h"
 
 
 //#define LEDS_CONFIGURE(leds_mask) do { uint32_t pin;                  \
@@ -84,7 +85,13 @@ uint32_t  RadioChannelFrequencies[] = {
   884000000,
   886000000,
 };
-uint32_t time_ticks;
+
+uint8_t   repeaterTTLMax[7] = {0}; // Mark the Max repeater TTL
+uint8_t   repeaterValidTimeout[7] = {0}; // Mark Valid Time Tick;
+uint8_t   passValidTimeout[12] = {0};
+uint8_t   referenceValidTimeout = 0;
+//extern    static double RxPacketRssiValue;
+
 
 static uint16_t      m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 static ble_hrs_t     m_hrs;                                     /**< Structure used to identify the heart rate service. */
@@ -104,8 +111,10 @@ static uint8_t device_name_with_addr[32] = {0};
 static uint8_t BLE_ADDR[32] = {0};
 static uint8_t SW_VERSION[64] = {0};																	 
 																	 
-static uint8_t tra_data[20];																	 
-																	 
+static    uint8_t tra_data[20];																	 
+uint32_t  time_ticks;
+
+
 #ifdef BLE_DFU_APP_SUPPORT
 static ble_dfu_t  m_dfus;                                    /**< Structure used to identify the DFU service. */
 #endif // BLE_DFU_APP_SUPPORT
@@ -147,7 +156,9 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 	  tra_data[1]++;
     cnt++;
 	
-	   ble_nus_string_send(&m_hrs, tra_data,10);
+	
+	
+	 //  ble_nus_string_send(&m_hrs, tra_data,10);
 	
    // err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, tra_data,10);
 	
@@ -196,12 +207,8 @@ static void timers_init(void)
 	  //Init Timer 1 for 1ms tick
     err_code = nrf_drv_timer_init(&TIMER_ONEMS, NULL, one_ms_timeout_handler);
     APP_ERROR_CHECK(err_code);
-	 
   	time_ticks = nrf_drv_timer_ms_to_ticks(&TIMER_ONEMS,1);
-
-  	nrf_drv_timer_extended_compare(
-         &TIMER_ONEMS, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
-    
+  	nrf_drv_timer_extended_compare(&TIMER_ONEMS, NRF_TIMER_CC_CHANNEL0, time_ticks, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, true);
     nrf_drv_timer_enable(&TIMER_ONEMS);
 	
 }
@@ -857,11 +864,142 @@ void SX1276_Rx_IT(void)
     SX1276LoRaProcess();
   }
 }
+	
+void ProcessRadioPacket(uint8_t* buf, uint32_t len)
+{
+	LocationStatus  locationStatus;
+	Dispatch        dispatch;
+	
+  uint8_t   encodeBuf[128] = {0};
+  uint32_t  encodeLen = 0;
+  uint16_t  crc16_local = 0;
+  uint8_t   id_read;
+  Dispatch  dispatchRepeater;
+  uint8_t   repeaterID = 0;
+  uint8_t   repeaterTTL[7] = {0};
+  uint8_t   repeaterValid[7] = {0};
+  uint8_t   repeaterBattery[7] = {0};
+  uint32_t  radioStrength_once = 0;
+	extern 	  double   RxPacketRssiValue;
+		
+	
+	
+	if(len > 4)
+	{
+		switch(buf[0])
+		{
+			case LocationStatusType:     //sx1276 -->  52832
+				if (len == sizeof(LocationStatus))
+        {
+          memcpy(&locationStatus, buf, sizeof(LocationStatus));
+          crc16_local = CRC16(buf, 0, len-2);
+          if (crc16_local == locationStatus.CRC16)
+          {
+            id_read = locationStatus.Head & 0x00FF;
+            {
+              if (locationStatus.Timestamp == preDataTimestamp[id_read])
+              {
+              }
+              else
+              {
+                //locationStatus.Head = id;
+                locationStatus.CRC16 = CRC16((uint8_t*)&locationStatus, 0, sizeof(LocationStatus)-2);
+                encodeLen = EncodePacket((uint8_t*)&locationStatus, encodeBuf, sizeof(LocationStatus));
+								//opt
+								ble_nus_string_send(&m_hrs, encodeBuf,sizeof(encodeBuf));
+								
+								if (id_read>=1 && id_read<=12)
+                {
+                  // Update the PASS timeout count for dispatch status
+                  passValidTimeout[id_read-1] = 0;
+                }
+                preDataTimestamp[id_read] = locationStatus.Timestamp;
+								
+							}
+						}
+						if (RxPacketRssiValue > -22.0f)
+            {
+              radioStrength_once = 99;
+            }
+            else if (RxPacketRssiValue < -121.0f)
+            {
+              radioStrength_once = 0;
+            }
+            else
+            {
+              radioStrength_once = RxPacketRssiValue + 121.0f;
+            }
+           // sprintf(encodeBuf, "%u ID: %u LocationStatus RSSI:%u\r\n", currentTick-startTick, id_read, radioStrength_once);
+           // UART4_Transmit(encodeBuf, strlen(encodeBuf));
+						
+					}
+				}
+			case	DispatchType:
+				if(len == sizeof(Dispatch))
+				{
+				  memcpy(&dispatchRepeater, buf, sizeof(Dispatch));
+          crc16_local = CRC16(buf, 0, len-2);
+          if (crc16_local == dispatchRepeater.CRC16)
+          {
+            encodeLen = EncodePacket((uint8_t*)&dispatchRepeater, encodeBuf, sizeof(Dispatch));
+            //UART1_Transmit(encodeBuf, encodeLen);
+						
+						ble_nus_string_send(&m_hrs, encodeBuf,10);
+						
+            for(int i= 0;i < 7;i++)
+            {
+              repeaterValid[i] = (dispatchRepeater.RepeaterEchoValid &  (2 << i)) >> (i + 1);
+              repeaterTTL[i]   = (dispatchRepeater.RepeaterTTL & (0x0F << (i * 4))) >> (4 * i);
+              repeaterBattery[i] = (dispatchRepeater.Battery & (0xF0 << (i * 4))) >> (4 * (i + 1));
+            }            
+            repeaterID = (dispatchRepeater.Head & 0xF00) >> 8;
+            if (repeaterID != 0)
+            {
+              for (int i=0; i<7; i++)
+              {
+                if (repeaterValid[i] && (repeaterTTL[i] > repeaterTTLMax[i]))
+                {
+                  repeaterTTLMax[i] = repeaterTTL[i];
+                  repeaterValidTimeout[i] = 0;
+                  dispatch.RepeaterEchoValid |= ((0x02)<<i);
+                  dispatch.RepeaterTTL &= (~(0x0F<<(4*i)));
+                  dispatch.RepeaterTTL |= ((repeaterTTL[i])<<(4*i));
+                  dispatch.Battery &= (~(0xF0<<(4*i)));
+                  dispatch.Battery |= (repeaterBattery[i]<<(4*(i+1)));
+                }
+              }
+            }
+          }
+          if (RxPacketRssiValue > -22.0f)
+          {
+            radioStrength_once = 99;
+          }
+          else if (RxPacketRssiValue < -121.0f)
+          {
+            radioStrength_once = 0;
+          }
+          else
+          {
+            radioStrength_once = RxPacketRssiValue + 121.0f;
+          }
+					
+//          sprintf(encodeBuf, "%u ID: %u Dispatch TTL:%u 0x%02X 0x%04X RSSI:%u\r\n", currentTick-startTick, repeaterID,
+//                  (dispatchRepeater.Head&0xC0)>>6, dispatchRepeater.Status, dispatchRepeater.RepeaterTTL, radioStrength_once);
+//          UART4_Transmit(encodeBuf, strlen(encodeBuf));
+				}
+				
+				
+		}
+		
+	}
+
+}
+
 
 /**@brief Function for application main entry.
  */
 int main(void)
- {
+{
     uint32_t  err_code;
     bool      erase_bonds;
 	  uint8_t   rfLoRaState = RFLR_STATE_IDLE;
@@ -891,10 +1029,10 @@ int main(void)
     radioReady = 1;
 	
     // Start execution. 
-//    application_timers_start();
-//    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
-//    APP_ERROR_CHECK(err_code);
-//		
+    application_timers_start();
+    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
+    APP_ERROR_CHECK(err_code);
+		
 
 
 //		while(1)
@@ -907,29 +1045,31 @@ int main(void)
 		
     for (;;)
     {   
-			  app_sched_execute();
+	  	  app_sched_execute();
         power_manage();
 			   					
+			
 			  if(nrf_gpio_pin_read(SX1276_DIO0) == 1)
 				{
-					rfLoRaState = SX1276LoRaGetRFState();
-					if(rfLoRaState == RFLR_STATE_RX_RUNNING )
-					{
-						SX1276LoRaProcess();
-						SX1276LoRaProcess();
 						rfLoRaState = SX1276LoRaGetRFState();
-						if (RFLR_STATE_RX_RUNNING == rfLoRaState)
-						{
-						//  rxDoneTick = osKernelSysTick();
- 							SX1276LoRaGetRxPacket(rx_buf, &rx_len);
-					 //   ProcessRadioPacket(rx_buf, rx_len, 100);
-						}
-						else if (RFLR_STATE_RX_INIT == rfLoRaState) // RX TimeOut
+						if(rfLoRaState == RFLR_STATE_RX_RUNNING )
 						{
 							SX1276LoRaProcess();
-						}
-					}				
-			}
+							SX1276LoRaProcess();
+							rfLoRaState = SX1276LoRaGetRFState();
+							if (RFLR_STATE_RX_RUNNING == rfLoRaState)
+							{
+							//  rxDoneTick = osKernelSysTick();
+								SX1276LoRaGetRxPacket(rx_buf, &rx_len);		
+								
+								ProcessRadioPacket(rx_buf, rx_len);
+							}
+							else if (RFLR_STATE_RX_INIT == rfLoRaState) // RX TimeOut
+							{
+								SX1276LoRaProcess();
+							}
+						}				
+			  }
 
     }
 }

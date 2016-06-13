@@ -95,11 +95,11 @@ static bool PreambleDetected = false;
 static bool SyncWordDetected = false;
 static bool PacketDetected = false;
 static uint16_t RxPacketSize = 0;
-static uint8_t RxBytesRead = 0;
-static uint8_t TxBytesSent = 0;
-static double RxPacketRssiValue;
+static uint8_t  RxBytesRead = 0;
+static uint8_t  TxBytesSent = 0;
+static  double   RxPacketRssiValue;
 static uint32_t RxPacketAfcValue;
-static uint8_t RxGain = 1;
+static uint8_t  RxGain = 1;
 static uint32_t RxTimeoutTimer = 0;
 static uint32_t Preamble2SyncTimer = 0;
 
