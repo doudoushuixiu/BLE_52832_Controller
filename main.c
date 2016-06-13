@@ -115,6 +115,21 @@ static uint8_t SW_VERSION[64] = {0};
 static    uint8_t tra_data[20];																	 
 uint32_t  time_ticks;
 static    ble_spider_tunnel_t   m_spider_tunnel;
+static    app_fifo_t ble_rx_fifo;
+static    uint8_t ble_rx_buff [256];
+uint8_t   ble_rx_buff_group[5][128] = {0};
+uint8_t   ble_rx_index = 0;
+
+typedef struct
+{
+  uint16_t len;
+  uint8_t* buff;
+} transmit_rx_data;
+
+transmit_rx_data   ble_rx_array[5] = {0};
+
+
+
 
 #ifdef BLE_DFU_APP_SUPPORT
 static ble_dfu_t  m_dfus;                                    /**< Structure used to identify the DFU service. */
@@ -160,29 +175,29 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
  */
 static void heart_rate_meas_timeout_handler(void * p_context)
 {
-    static uint32_t cnt = 0;
-    uint32_t        err_code;
-	
-    UNUSED_PARAMETER(p_context);
+//    static uint32_t cnt = 0;
+//    uint32_t        err_code;
+//	
+//    UNUSED_PARAMETER(p_context);
 
-    tra_data[0]++;
-	  tra_data[1]++;
-    cnt++;
-	
-	
-	
-	 //  ble_nus_string_send(&m_hrs, tra_data,10);
-	
-   // err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, tra_data,10);
-	
-    if ((err_code != NRF_SUCCESS) &&
-        (err_code != NRF_ERROR_INVALID_STATE) &&
-        (err_code != BLE_ERROR_NO_TX_PACKETS) &&
-        (err_code != BLE_ERROR_GATTS_SYS_ATTR_MISSING)
-        )
-    {
-        APP_ERROR_HANDLER(err_code);
-    }
+//    tra_data[0]++;
+//	  tra_data[1]++;
+//    cnt++;
+//	
+//	
+//	
+//	 //  ble_nus_string_send(&m_hrs, tra_data,10);
+//	
+//   // err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, tra_data,10);
+//	
+//    if ((err_code != NRF_SUCCESS) &&
+//        (err_code != NRF_ERROR_INVALID_STATE) &&
+//        (err_code != BLE_ERROR_NO_TX_PACKETS) &&
+//        (err_code != BLE_ERROR_GATTS_SYS_ATTR_MISSING)
+//        )
+//    {
+//        APP_ERROR_HANDLER(err_code);
+//    }
 
 }
 
@@ -360,14 +375,78 @@ static void reset_prepare(void)
 
 
 
+void ble_packet_handler(void * p_event_data, uint16_t event_size)
+{
+  uint8_t  decode_buff[128],encode_buff[128];
+  uint8_t  packet_type;
+  uint16_t crc_local;
+  static uint32_t decode_len,encode_len,crc_len;
+  transmit_rx_data* ble_recv_once = (transmit_rx_data*)p_event_data;
+
+  decode_len = DecodePacket(ble_recv_once->buff, decode_buff, ble_recv_once->len);
+  __nop();
+  packet_type = decode_buff[0];
+	
+}
+
+
+
+
+void spider_tunnel_data_handler(ble_spider_tunnel_t * p_spider_tunnel, uint8_t * p_data, uint16_t length)
+{
+  uint8_t*  head_pointer;
+  uint8_t   ch;
+  uint32_t  fifo_len;
+  uint8_t   buff[256] = {0};
+  uint32_t  err_code;
+	
+  for(uint32_t i = 0; i < length; i++)  
+  {
+    ch = p_data[i];
+    if (ch == 0xB6)
+    {
+      app_fifo_flush(&ble_rx_fifo);
+    }
+    
+    app_fifo_put(&ble_rx_fifo, ch);
+    
+    if (ch == 0xDB)
+    {
+      ble_rx_array[ble_rx_index].len = fifo_length(&ble_rx_fifo);
+      for(uint32_t i = 0; i < ble_rx_array[ble_rx_index].len;i++)
+      {
+        app_fifo_get(&ble_rx_fifo, &ble_rx_buff_group[ble_rx_index][i]);
+      }
+      ble_rx_array[ble_rx_index].buff = ble_rx_buff_group[ble_rx_index];
+      err_code = app_sched_event_put(&(ble_rx_array[ble_rx_index]), sizeof(transmit_rx_data), ble_packet_handler);
+      
+			
+			APP_ERROR_CHECK(err_code);
+//			if(err_code!=NRF_SUCCESS )
+//			{
+//			   __nop();
+//			}
+				
+			
+      ble_rx_index = (ble_rx_index + 1) % 5;
+			
+      app_fifo_flush(&ble_rx_fifo);
+    }
+  }
+}
 
 static void nus_data_handler(ble_spider_tunnel_t * p_nus, uint8_t * p_data, uint16_t length)
 {
-	  uint8_t dis_data[20];
+	  uint8_t dis_data[120] = {0};
     for (uint32_t i = 0; i < length; i++)
     {
          dis_data[i] = p_data[i];
     }  
+		
+		spider_tunnel_data_handler(p_nus,dis_data,length);
+		
+		
+//		__nop();
 }
 
 
@@ -915,8 +994,6 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
   uint8_t   repeaterBattery[7] = {0};
   uint32_t  radioStrength_once = 0;
 	extern 	  double   RxPacketRssiValue;
-		
-	
 	
 	if(len > 4)
 	{
@@ -978,7 +1055,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
             encodeLen = EncodePacket((uint8_t*)&dispatchRepeater, encodeBuf, sizeof(Dispatch));
             //UART1_Transmit(encodeBuf, encodeLen);
 						
-						ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
+					//	ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
 						
             for(int i= 0;i < 7;i++)
             {
@@ -1040,6 +1117,8 @@ int main(void)
     uint8_t   rx_buf[128] = {0};
     uint16_t  rx_len = 0;
 	  uint8_t   send[10] = {1,2,3,4,5,6,7,8,9,0};
+		
+		app_fifo_init(&ble_rx_fifo, ble_rx_buff, 256);
 		
     // Initialize.
     ctrl_gpio_pin_init(&erase_bonds);			

@@ -280,8 +280,6 @@ uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_hrs_init_
     
 	app_fifo_init(&ble_tx_fifo,ble_tx_buff,256);
 	
-	
-	
     // Initialize service structure
 	p_hrs->evt_handler                 = p_hrs_init->evt_handler; 
 	p_hrs->data_handler                = p_hrs_init->data_handler;  
@@ -376,8 +374,6 @@ uint32_t ble_nus_string_send(ble_spider_tunnel_t * p_nus, uint8_t * p_string, ui
     {
         return NRF_ERROR_INVALID_STATE;
     }
-	
-	
 	for(int i =0;i < length; i++)
 	{
 		app_fifo_put(&ble_tx_fifo,p_string[i]);
