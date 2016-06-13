@@ -10,7 +10,6 @@
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
 #include "ble_advertising.h"
-#include "ble_spider_tunnel.h"
 #include "ble_dis.h"
 #ifdef BLE_DFU_APP_SUPPORT
 #include "ble_dfu.h"
@@ -42,6 +41,8 @@
 #include "app_timer_appsh.h"
 #include "datatype.h"
 #include "PacketEncode.h"
+#include "app_fifo.h"
+#include "ble_spider_tunnel.h"
 
 
 //#define LEDS_CONFIGURE(leds_mask) do { uint32_t pin;                  \
@@ -94,7 +95,7 @@ uint8_t   referenceValidTimeout = 0;
 
 
 static uint16_t      m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
-static ble_hrs_t     m_hrs;                                     /**< Structure used to identify the heart rate service. */
+static ble_spider_tunnel_t     m_hrs;                                     /**< Structure used to identify the heart rate service. */
 
 APP_TIMER_DEF(m_heart_rate_timer_id);                                               /**< Heart rate measurement timer. */
 
@@ -113,11 +114,23 @@ static uint8_t SW_VERSION[64] = {0};
 																	 
 static    uint8_t tra_data[20];																	 
 uint32_t  time_ticks;
-
+static    ble_spider_tunnel_t   m_spider_tunnel;
 
 #ifdef BLE_DFU_APP_SUPPORT
 static ble_dfu_t  m_dfus;                                    /**< Structure used to identify the DFU service. */
 #endif // BLE_DFU_APP_SUPPORT
+
+
+static __INLINE uint32_t fifo_length(app_fifo_t * p_fifo)
+{
+  uint32_t read_pos = p_fifo->read_pos & p_fifo->buf_size_mask;
+  uint32_t write_pos = p_fifo->write_pos & p_fifo->buf_size_mask;
+  if (write_pos < read_pos) 
+  {
+    write_pos += (p_fifo->buf_size_mask + 1);
+  }
+  return write_pos - read_pos;
+}
 
 
 /**@brief Callback function for asserts in the SoftDevice.
@@ -348,7 +361,7 @@ static void reset_prepare(void)
 
 
 
-static void nus_data_handler(ble_hrs_t * p_nus, uint8_t * p_data, uint16_t length)
+static void nus_data_handler(ble_spider_tunnel_t * p_nus, uint8_t * p_data, uint16_t length)
 {
 	  uint8_t dis_data[20];
     for (uint32_t i = 0; i < length; i++)
@@ -439,7 +452,7 @@ static void application_timers_start(void)
 {
     uint32_t err_code;
 
-    err_code = app_timer_start(m_heart_rate_timer_id, HEART_RATE_MEAS_INTERVAL, NULL);  //timerÊ±¼äÉèÖÃ
+    err_code = app_timer_start(m_heart_rate_timer_id, HEART_RATE_MEAS_INTERVAL, NULL);  
     APP_ERROR_CHECK(err_code);
 
 }
@@ -546,11 +559,29 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 }
 
 
+void spider_tunnel_on_tx_complete(ble_spider_tunnel_t * p_spider_tunnel)
+{
+  uint32_t len;
+  uint8_t send_buff[20];
+	extern  app_fifo_t  ble_tx_fifo;
+	extern  bool        ble_tx_ready;
+  len = fifo_length(&ble_tx_fifo);
+  if(len == 0)
+  {
+    ble_tx_ready = true;
+  }
+  else
+  {
+    spider_tunnel_ble_tx(p_spider_tunnel);
+  }
+
+
+}
 /**@brief Function for handling the Application's BLE Stack events.
  *
  * @param[in] p_ble_evt  Bluetooth stack event.
  */
-static void on_ble_evt(ble_evt_t * p_ble_evt)
+void ble_spider_tunnel_on_ble_evt(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt)
 {
     uint32_t err_code;
 
@@ -565,6 +596,9 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
         case BLE_GAP_EVT_DISCONNECTED:
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             break;
+			  case BLE_EVT_TX_COMPLETE:
+						spider_tunnel_on_tx_complete(p_spider_tunnel);
+						break; 
 
         default:
             // No implementation needed.
@@ -594,7 +628,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     ble_dfu_on_ble_evt(&m_dfus, p_ble_evt);
     /** @snippet [Propagating BLE Stack events to DFU Service] */
 #endif // BLE_DFU_APP_SUPPORT
-    on_ble_evt(p_ble_evt);
+    ble_spider_tunnel_on_ble_evt(&m_spider_tunnel,p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
 }
 
@@ -906,7 +940,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
                 locationStatus.CRC16 = CRC16((uint8_t*)&locationStatus, 0, sizeof(LocationStatus)-2);
                 encodeLen = EncodePacket((uint8_t*)&locationStatus, encodeBuf, sizeof(LocationStatus));
 								//opt
-								ble_nus_string_send(&m_hrs, encodeBuf,sizeof(encodeBuf));
+								ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
 								
 								if (id_read>=1 && id_read<=12)
                 {
@@ -944,7 +978,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
             encodeLen = EncodePacket((uint8_t*)&dispatchRepeater, encodeBuf, sizeof(Dispatch));
             //UART1_Transmit(encodeBuf, encodeLen);
 						
-						ble_nus_string_send(&m_hrs, encodeBuf,10);
+						ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
 						
             for(int i= 0;i < 7;i++)
             {

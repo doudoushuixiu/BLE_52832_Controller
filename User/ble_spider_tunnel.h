@@ -70,15 +70,15 @@ typedef struct
     ble_hrs_evt_type_t evt_type;                        /**< Type of event. */
 } ble_hrs_evt_t;
 
-// Forward declaration of the ble_hrs_t type. 
-typedef struct ble_hrs_s ble_hrs_t;
+// Forward declaration of the ble_spider_tunnel_t type. 
+typedef struct ble_spider_tunnel_s ble_spider_tunnel_t;
 
 /**@brief Heart Rate Service event handler type. */
-typedef void (*ble_hrs_evt_handler_t) (ble_hrs_t * p_hrs, ble_hrs_evt_t * p_evt);
+typedef void (*ble_hrs_evt_handler_t) (ble_spider_tunnel_t * p_hrs, ble_hrs_evt_t * p_evt);
 
 
 //UART
-typedef void (*ble_nus_data_handler_t) (ble_hrs_t * p_hrs, uint8_t * p_data, uint16_t length);
+typedef void (*ble_nus_data_handler_t) (ble_spider_tunnel_t * p_hrs, uint8_t * p_data, uint16_t length);
 
 
 
@@ -95,19 +95,22 @@ typedef struct
 } ble_hrs_init_t;
 
 /**@brief Heart Rate Service structure. This contains various status information for the service. */
-struct ble_hrs_s
+struct ble_spider_tunnel_s
 {
     ble_hrs_evt_handler_t        evt_handler;                                          /**< Event handler to be called for handling events in the Heart Rate Service. */
     ble_nus_data_handler_t       data_handler;
   	
     uint16_t                     service_handle;                                       /**< Handle of Heart Rate Service (as provided by the BLE stack). */
-//    ble_gatts_char_handles_t     hrm_handles;                                          /**< Handles related to the Heart Rate Measurement characteristic. */
     ble_gatts_char_handles_t     tunnel_handles;
     ble_gatts_char_handles_t     pass_mode_handles;
-	  bool                         is_notification_enabled; /**< Variable to indicate if the peer has enabled notification of the RX characteristic.*/
+	bool                         is_notification_enabled; /**< Variable to indicate if the peer has enabled notification of the RX characteristic.*/
    
    	uint16_t                     conn_handle;                                          /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
 };
+
+
+void spider_tunnel_on_tx_complete(ble_spider_tunnel_t * p_spider_tunnel);
+
 
 /**@brief Function for initializing the Heart Rate Service.
  *
@@ -118,7 +121,7 @@ struct ble_hrs_s
  *
  * @return      NRF_SUCCESS on successful initialization of service, otherwise an error code.
  */
-uint32_t ble_spider_tunnel_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_init);
+uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_hrs_init_t * p_hrs_init);
 
 /**@brief Function for handling the Application's BLE Stack events.
  *
@@ -127,7 +130,7 @@ uint32_t ble_spider_tunnel_init(ble_hrs_t * p_hrs, const ble_hrs_init_t * p_hrs_
  * @param[in]   p_hrs      Heart Rate Service structure.
  * @param[in]   p_ble_evt  Event received from the BLE stack.
  */
-void ble_hrs_on_ble_evt(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt);
+void ble_hrs_on_ble_evt(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt);
 
 /**@brief Function for sending heart rate measurement if notification has been enabled.
  *
@@ -140,7 +143,7 @@ void ble_hrs_on_ble_evt(ble_hrs_t * p_hrs, ble_evt_t * p_ble_evt);
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-uint32_t ble_hrs_heart_rate_measurement_send(ble_hrs_t * p_hrs, uint8_t * p_string, uint16_t length);
+uint32_t ble_hrs_heart_rate_measurement_send(ble_spider_tunnel_t * p_hrs, uint8_t * p_string, uint16_t length);
 
 /**@brief Function for adding a RR Interval measurement to the RR Interval buffer.
  *
@@ -152,7 +155,7 @@ uint32_t ble_hrs_heart_rate_measurement_send(ble_hrs_t * p_hrs, uint8_t * p_stri
  * @param[in]   rr_interval  New RR Interval measurement (will be buffered until the next
  *                           transmission of Heart Rate Measurement).
  */
-//void ble_hrs_rr_interval_add(ble_hrs_t * p_hrs, uint16_t rr_interval);
+//void ble_hrs_rr_interval_add(ble_spider_tunnel_t * p_hrs, uint16_t rr_interval);
 
 /**@brief Function for checking if RR Interval buffer is full.
  *
@@ -160,9 +163,9 @@ uint32_t ble_hrs_heart_rate_measurement_send(ble_hrs_t * p_hrs, uint8_t * p_stri
  *
  * @return      true if RR Interval buffer is full, false otherwise.
  */
-//bool ble_hrs_rr_interval_buffer_is_full(ble_hrs_t * p_hrs);
+//bool ble_hrs_rr_interval_buffer_is_full(ble_spider_tunnel_t * p_hrs);
 
-uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t length);
+uint32_t ble_nus_string_send(ble_spider_tunnel_t * p_nus, uint8_t * p_string, uint16_t length);
 
 
 /**@brief Function for setting the state of the Sensor Contact Supported bit.
@@ -172,14 +175,14 @@ uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t len
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-//uint32_t ble_hrs_sensor_contact_supported_set(ble_hrs_t * p_hrs, bool is_sensor_contact_supported);
+//uint32_t ble_hrs_sensor_contact_supported_set(ble_spider_tunnel_t * p_hrs, bool is_sensor_contact_supported);
 
 /**@brief Function for setting the state of the Sensor Contact Detected bit.
  *
  * @param[in]   p_hrs                        Heart Rate Service structure.
  * @param[in]   is_sensor_contact_detected   TRUE if sensor contact is detected, FALSE otherwise.
  */
-//void ble_hrs_sensor_contact_detected_update(ble_hrs_t * p_hrs, bool is_sensor_contact_detected);
+//void ble_hrs_sensor_contact_detected_update(ble_spider_tunnel_t * p_hrs, bool is_sensor_contact_detected);
 
 /**@brief Function for setting the Body Sensor Location.
  *
@@ -191,7 +194,7 @@ uint32_t ble_nus_string_send(ble_hrs_t * p_nus, uint8_t * p_string, uint16_t len
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-//uint32_t ble_hrs_body_sensor_location_set(ble_hrs_t * p_hrs, uint8_t body_sensor_location);
+//uint32_t ble_hrs_body_sensor_location_set(ble_spider_tunnel_t * p_hrs, uint8_t body_sensor_location);
 
 #endif // BLE_HRS_H__
 

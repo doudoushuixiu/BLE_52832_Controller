@@ -35,3 +35,5 @@
 .\_build\ble_spider_tunnel.o: .\components\libraries\util\sdk_common.h
 .\_build\ble_spider_tunnel.o: .\components\libraries\util\sdk_os.h
 .\_build\ble_spider_tunnel.o: .\components\libraries\util\sdk_errors.h
+.\_build\ble_spider_tunnel.o: .\components\libraries\fifo\app_fifo.h
+.\_build\ble_spider_tunnel.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

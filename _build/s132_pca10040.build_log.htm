@@ -27,40 +27,7 @@ Project File Date:  06/12/2016
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 2 (build 183)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 's132_pca10040'
-compiling main.c...
-main.c(353): warning:  #550-D: variable "dis_data" was set but never used
-  	  uint8_t dis_data[20];
-main.c(389): warning:  #167-D: argument of type "const volatile uint32_t *" is incompatible with parameter of type "const void *restrict"
-      memcpy(FICR_CONFIG_ID, 
-RF_FICR->DEVICEID, 8);
-main.c(390): warning:  #167-D: argument of type "const volatile uint32_t *" is incompatible with parameter of type "const void *restrict"
-      memcpy(addr, 
-RF_FICR->DEVICEADDR, 8);
-main.c(392): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-      sprintf(HWID_Str, "%04X%04X %uK %uK %u", FICR_CONFIG_ID[1], FICR_CONFIG_ID[0],
-RF_FICR->INFO.RAM,
-RF_FICR->INFO.FLASH,
-RF_FICR->INFO.VARIANT);
-main.c(393): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-      sprintf(FWID_Str, "%02X%02X", FICR_CONFIG_ID[3], FICR_CONFIG_ID[2]);
-main.c(394): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-      sprintf(BLE_ADDR, "%02X:%02X:%02X:%02X:%02X:%02X", addr[5], addr[4], addr[3], addr[2], addr[1], addr[0]);
-main.c(395): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-  	  sprintf(SW_VERSION, "%s", 
-IT_VERSION);
-main.c(874): warning:  #550-D: variable "encodeLen" was set but never used
-    uint32_t  encodeLen = 0;
-main.c(882): warning:  #550-D: variable "radioStrength_once" was set but never used
-    uint32_t  radioStrength_once = 0;
-main.c(1008): warning:  #177-D: variable "send" was declared but never referenced
-  	  uint8_t   send[10] = {1,2,3,4,5,6,7,8,9,0};
-main.c(110): warning:  #177-D: variable "device_name_with_addr" was declared but never referenced
-  static uint8_t device_name_with_addr[32] = {0};
-main.c: 11 warnings, 0 errors
-linking...
-Program Size: Code=28724 RO-data=1488 RW-data=1088 ZI-data=11640  
-FromELF: creating hex file...
-".\_build\s132_pca10040.axf" - 0 Error(s), 11 Warning(s).
+".\_build\s132_pca10040.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -90,7 +57,7 @@ Package Vendor: NordicSemiconductor
       Source file:   Device\Source\arm\arm_startup_nrf52.s
       Source file:   Device\Source\system_nrf52.c
       Include file:  Device\Include\system_nrf52.h
-Build Time Elapsed:  00:00:07
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
