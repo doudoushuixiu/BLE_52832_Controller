@@ -431,6 +431,21 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>ble_spider_tunnel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\ble_spider_tunnel.c</FilePath>
+            </File>
+            <File>
+              <FileName>PacketEncode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\PacketEncode.c</FilePath>
+            </File>
+            <File>
+              <FileName>DataStruct.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\DataStruct.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -926,11 +941,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>ble_spider_tunnel.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\ble_spider_tunnel.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2331,16 +2341,6 @@
               <FileName>sx1272-FskMisc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SX12xx_Driver\radio\sx1272-FskMisc.c</FilePath>
-            </File>
-            <File>
-              <FileName>sx1272-LoRa.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRa.c</FilePath>
-            </File>
-            <File>
-              <FileName>sx1272-LoRaMisc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRaMisc.c</FilePath>
             </File>
             <File>
               <FileName>sx1276.c</FileName>
@@ -2801,6 +2801,21 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>ble_spider_tunnel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\ble_spider_tunnel.c</FilePath>
+            </File>
+            <File>
+              <FileName>PacketEncode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\PacketEncode.c</FilePath>
+            </File>
+            <File>
+              <FileName>DataStruct.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\DataStruct.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3296,11 +3311,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>ble_spider_tunnel.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\ble_spider_tunnel.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4701,16 +4711,6 @@
               <FileName>sx1272-FskMisc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SX12xx_Driver\radio\sx1272-FskMisc.c</FilePath>
-            </File>
-            <File>
-              <FileName>sx1272-LoRa.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRa.c</FilePath>
-            </File>
-            <File>
-              <FileName>sx1272-LoRaMisc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SX12xx_Driver\radio\sx1272-LoRaMisc.c</FilePath>
             </File>
             <File>
               <FileName>sx1276.c</FileName>
