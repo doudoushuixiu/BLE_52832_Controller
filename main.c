@@ -1225,7 +1225,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
             encodeLen = EncodePacket((uint8_t*)&dispatchRepeater, encodeBuf, sizeof(Dispatch));
             //UART1_Transmit(encodeBuf, encodeLen);
 						
-					//	ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
+						ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
 						
             for(int i= 0;i < 7;i++)
             {
