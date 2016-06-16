@@ -40,9 +40,9 @@
 #define HRM_FLAG_MASK_RR_INTERVAL_INCLUDED     (0x01 << 4)                 /**< RR-Interval bit. */
 
 
-bool        ble_tx_ready = true;
+bool               ble_tx_ready = true;
 static uint8_t     ble_tx_buff[256];
-app_fifo_t  ble_tx_fifo;
+ app_fifo_t  ble_tx_fifo;
 
 static __INLINE uint32_t fifo_length(app_fifo_t * p_fifo)
 {
@@ -112,15 +112,15 @@ static void on_hrm_cccd_write(ble_spider_tunnel_t * p_hrs, ble_gatts_evt_write_t
  * @param[in]   p_hrs       Heart Rate Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_write(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt) //
+static void on_write(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt) 
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 
     if (p_evt_write->handle == p_hrs->tunnel_handles.value_handle)   //0x50 == 
     {
 
-			  LEDS_INVERT(BSP_LED_2_MASK);
-			  p_hrs->data_handler(p_hrs, p_evt_write->data, p_evt_write->len);
+//			  LEDS_INVERT(BSP_LED_2_MASK);
+			  p_hrs->tunnel_data_handler(p_hrs, p_evt_write->data, p_evt_write->len);
 			
 			  if (ble_srv_is_notification_enabled(p_evt_write->data))
         {
@@ -135,6 +135,36 @@ static void on_write(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt) //
 	
 
 }
+//static void on_write(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt)
+//{
+//  ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+//  if ((p_evt_write->handle == p_spider_tunnel->tunnel_handles.cccd_handle)
+//      && (p_evt_write->len == 2))
+//  {
+//    if (ble_srv_is_notification_enabled(p_evt_write->data))
+//    {
+//        p_spider_tunnel->is_notification_enabled = true;
+//      //  app_trace_log("Enable Notify \r\n");
+////        enable_notify_callback(p_spider_tunnel);
+//    }
+//    else
+//    {
+//        p_spider_tunnel->is_notification_enabled = false;
+//    }
+//  }
+//  else if ((p_evt_write->handle == p_spider_tunnel->tunnel_handles.value_handle)
+//           && (p_spider_tunnel->tunnel_data_handler != NULL))
+//  {
+//    
+//    p_spider_tunnel->tunnel_data_handler(p_spider_tunnel, p_evt_write->data, p_evt_write->len);
+//  }
+//  else if ((p_evt_write->handle == p_spider_tunnel->pass_mode_handles.value_handle)
+//           && (p_spider_tunnel->pass_mode_data_handler != NULL))
+//  {
+//    p_spider_tunnel->pass_mode_data_handler(p_spider_tunnel, p_evt_write->data, p_evt_write->len);
+//  }
+//}
+
 
 
 void ble_hrs_on_ble_evt(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt)
@@ -162,7 +192,7 @@ void ble_hrs_on_ble_evt(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt)
 
 //  
 static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_hrs,
-                            const ble_hrs_init_t * p_hrs_init)
+                            const ble_spider_tunnel_init_t * p_hrs_init)
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
     ble_gatts_char_md_t char_md;
@@ -170,7 +200,8 @@ static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_hrs,
     ble_gatts_attr_t    attr_char_value;
     ble_uuid_t          ble_uuid;
     ble_gatts_attr_md_t attr_md;
-
+    uint8_t init_value = 0;
+	
     memset(&cccd_md, 0, sizeof(cccd_md));
 
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
@@ -180,8 +211,7 @@ static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_hrs,
 
     memset(&char_md, 0, sizeof(char_md));
     char_md.char_props.read   = 1;
-    char_md.char_props.notify = 1;
-	  char_md.char_props.write         = 1;
+
     char_md.char_props.write_wo_resp = 1;
     char_md.p_char_user_desc  = NULL;
     char_md.p_char_pf         = NULL;
@@ -210,7 +240,8 @@ static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_hrs,
     attr_char_value.init_len  = sizeof(uint8_t);
     attr_char_value.init_offs = 0;
     attr_char_value.max_len   = 20;
-
+    attr_char_value.p_value   = &init_value;
+		
     return sd_ble_gatts_characteristic_add(p_hrs->service_handle, 
                                            &char_md,
                                            &attr_char_value,
@@ -221,7 +252,7 @@ static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_hrs,
 
 //
 static uint32_t spider_tunnel_char_add(ble_spider_tunnel_t            * p_hrs,
-                            const ble_hrs_init_t * p_hrs_init)
+                            const ble_spider_tunnel_init_t * p_hrs_init)
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
     ble_gatts_char_md_t char_md;
@@ -229,12 +260,12 @@ static uint32_t spider_tunnel_char_add(ble_spider_tunnel_t            * p_hrs,
     ble_gatts_attr_t    attr_char_value;
     ble_uuid_t          ble_uuid;
     ble_gatts_attr_md_t attr_md;
-
+    uint8_t init_value = 0;
+	
     memset(&char_md, 0, sizeof(char_md));
 	
     char_md.char_props.notify = 1;
     char_md.char_props.read   = 1;  
-	char_md.char_props.write         = 1;
     char_md.char_props.write_wo_resp = 1;
 	
     char_md.p_char_user_desc  = NULL;
@@ -262,6 +293,8 @@ static uint32_t spider_tunnel_char_add(ble_spider_tunnel_t            * p_hrs,
     attr_char_value.init_len  = sizeof(uint8_t);
     attr_char_value.init_offs = 0;
     attr_char_value.max_len   = 20;  //define
+		attr_char_value.p_value   = &init_value;
+		
 
    return sd_ble_gatts_characteristic_add(p_hrs->service_handle,
                                            &char_md,
@@ -273,16 +306,16 @@ static uint32_t spider_tunnel_char_add(ble_spider_tunnel_t            * p_hrs,
 
 
 
-uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_hrs_init_t * p_hrs_init)
+uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_spider_tunnel_init_t * p_hrs_init)
 {
     uint32_t   err_code;
     ble_uuid_t ble_uuid;
     
-	app_fifo_init(&ble_tx_fifo,ble_tx_buff,256);
+	  app_fifo_init(&ble_tx_fifo,ble_tx_buff,256);
 	
     // Initialize service structure
-	p_hrs->evt_handler                 = p_hrs_init->evt_handler; 
-	p_hrs->data_handler                = p_hrs_init->data_handler;  
+	  p_hrs->evt_handler                 = p_hrs_init->evt_handler; 
+	  p_hrs->tunnel_data_handler                = p_hrs_init->tunnel_data_handler;  
     p_hrs->conn_handle                 = BLE_CONN_HANDLE_INVALID;
 
     // Add service
@@ -315,9 +348,10 @@ uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_hrs_init_
 
 uint32_t spider_tunnel_ble_tx(ble_spider_tunnel_t * p_nus)
 {   
- 	uint32_t err_code;
-    uint32_t len;
-    uint8_t send_buff[20];	
+   	uint32_t   err_code;
+    uint32_t   len;
+    uint8_t    send_buff[20];	
+  	uint16_t   hvx_len;
     ble_gatts_hvx_params_t hvx_params;
 		
     len = fifo_length(&ble_tx_fifo);
@@ -337,8 +371,6 @@ uint32_t spider_tunnel_ble_tx(ble_spider_tunnel_t * p_nus)
       }
       len = 20;
     }
-	
-	uint16_t   hvx_len;
     hvx_len =  len;
 	
 	
@@ -348,10 +380,11 @@ uint32_t spider_tunnel_ble_tx(ble_spider_tunnel_t * p_nus)
     hvx_params.p_data = send_buff;
     hvx_params.p_len  = &hvx_len;
     hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
-
+    
+		hvx_params.offset = 0; //new
     err_code = sd_ble_gatts_hvx(p_nus->conn_handle, &hvx_params);
 	
-	if(err_code!=NRF_SUCCESS)
+	  if(err_code!=NRF_SUCCESS)
     {
      // app_trace_log("sd_ble_gatts_hvx err_code: 0x%02X\r\n", err_code);
       app_fifo_flush(&ble_tx_fifo);
@@ -366,7 +399,7 @@ uint32_t spider_tunnel_ble_tx(ble_spider_tunnel_t * p_nus)
 }
 
 
-uint32_t ble_nus_string_send(ble_spider_tunnel_t * p_nus, uint8_t * p_string, uint16_t length)
+uint32_t spider_tunnel_put(ble_spider_tunnel_t * p_nus, uint8_t * p_string, uint16_t length)
 {
     VERIFY_PARAM_NOT_NULL(p_nus);
 
@@ -374,10 +407,10 @@ uint32_t ble_nus_string_send(ble_spider_tunnel_t * p_nus, uint8_t * p_string, ui
     {
         return NRF_ERROR_INVALID_STATE;
     }
-	for(int i =0;i < length; i++)
-	{
-		app_fifo_put(&ble_tx_fifo,p_string[i]);
-	}
+		for(int i =0;i < length; i++)
+		{
+			app_fifo_put(&ble_tx_fifo,p_string[i]);
+		}
 	  
     if(ble_tx_ready)
     spider_tunnel_ble_tx(p_nus);

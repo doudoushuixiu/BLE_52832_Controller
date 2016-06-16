@@ -56,7 +56,10 @@ static  volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instan
 //Init Timer tick
 __IO uint32_t     uwTick;
 nrf_drv_timer_t   TIMER_ONEMS = NRF_DRV_TIMER_INSTANCE(1);  //Selcet Timer1
-
+APP_TIMER_DEF(m_heart_rate_timer_id);                                              
+uint8_t           one_ms_task_flag = 0;
+uint8_t           one_sec_task_flag = 0;
+uint32_t          thund_ms = 0;
 
 uint8_t   radioReady                  = 0;
 uint8_t   channel                     = 1;      //set channel of freq
@@ -72,7 +75,11 @@ static    pstorage_handle_t	        block_ptsorage_handle;
 static    pstorage_handle_t         pstorage_handle;
 static    pstorage_module_param_t   pstorage_param;
 
-
+LocationStatus locationStatus;
+GpsPressure    gpsPressure;
+Dispatch       dispatch;
+Request        request;
+Response       response;
 
 uint32_t  timeSlot 								= 33;
 uint32_t  preDataTimestamp[16] 		= {0};
@@ -105,11 +112,10 @@ uint8_t   passValidTimeout[12] 		= {0};
 uint8_t   referenceValidTimeout 	= 0;
 //extern    static double RxPacketRssiValue;
 
-APP_TIMER_DEF(m_heart_rate_timer_id);                                               /**< Heart rate measurement timer. */
 
 static dm_application_instance_t    m_app_handle;                              /**< Application identifier allocated by device manager */
 static ble_spider_tunnel_t          m_hrs;    
-static uint16_t     m_conn_handle = BLE_CONN_HANDLE_INVALID; 
+static uint16_t                     m_conn_handle = BLE_CONN_HANDLE_INVALID; 
 
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_HEART_RATE_SERVICE,         BLE_UUID_TYPE_BLE},        
                                    {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}}; /**< Universally unique service identifiers. */
@@ -145,7 +151,7 @@ transmit_rx_data   ble_rx_array[5] = {0};
 static ble_dfu_t  m_dfus;                                    /**< Structure used to identify the DFU service. */
 #endif // BLE_DFU_APP_SUPPORT
 
-
+ 
 static __INLINE uint32_t fifo_length(app_fifo_t * p_fifo)
 {
   uint32_t read_pos = p_fifo->read_pos & p_fifo->buf_size_mask;
@@ -203,7 +209,7 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 //	
 //	
 //	
-//	 //  ble_nus_string_send(&m_hrs, tra_data,10);
+//	 //  spider_tunnel_put(&m_hrs, tra_data,10);
 //	
 //   // err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, tra_data,10);
 //	
@@ -226,6 +232,14 @@ void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
 	{
 			case NRF_TIMER_EVENT_COMPARE0:
 					uwTick++;
+			    thund_ms++;
+			    if(thund_ms == 999)
+					{
+						one_sec_task_flag = 1;
+						thund_ms = 0;
+					}
+			    one_ms_task_flag = 1;
+			
 					break;
 			default:
 					//Do nothing.
@@ -390,6 +404,104 @@ static void reset_prepare(void)
 #endif // BLE_DFU_APP_SUPPORT
 
 
+/****************  FLASH  START  ****************/
+static void flash_store_channel(void)
+{
+    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag   = 1;      
+	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&channel_local, 4, 0);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
+}
+
+static void flash_store_total_number()
+{
+
+    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag = 1;      
+	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&total_number_local, 4, 4);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
+}
+static void flash_store_voltage()
+{
+
+    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag = 1;      
+	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&pa_gain_voltage, 4, 8);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
+}
+static void flash_store_voltage_first_read_flag()
+{
+
+    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag = 1;      
+	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&voltage_first_read_flag, 4, 12);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
+}
+static void example_cb_handler(pstorage_handle_t  * handle,
+															 uint8_t              op_code,
+                               uint32_t             result,
+                               uint8_t            * p_data,
+                               uint32_t             data_len)
+{
+		if(handle->block_id == pstorage_wait_handle) { pstorage_wait_flag = 0; }  //If we are waiting for this callback, clear the wait flag.
+			
+}
+
+static void flash_init()
+{	
+    uint32_t                   err_code;
+		pstorage_param.block_size  = 16;                    //Select block size of 8 bytes
+		pstorage_param.block_count = 1;                     //Select 1 blocks, total of 8 bytes
+		pstorage_param.cb          = example_cb_handler;    //Set the pstorage callback handler
+		err_code = pstorage_register(&pstorage_param, &pstorage_handle);
+    APP_ERROR_CHECK(err_code);
+	
+	//Get block identifiers
+		err_code = pstorage_block_identifier_get(&pstorage_handle, 0, &block_ptsorage_handle);
+    APP_ERROR_CHECK(err_code);
+   
+    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag = 1;      
+	  pstorage_load((uint8_t *)&channel_local,&block_ptsorage_handle,  4, 0);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   	
+
+		pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag = 1;      
+	  pstorage_load((uint8_t *)&total_number_local,&block_ptsorage_handle,  4, 4);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   	
+    
+    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag = 1;      
+	  pstorage_load((uint8_t *)&pa_gain_voltage,&block_ptsorage_handle,  4, 8);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
+    
+    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
+		pstorage_wait_flag = 1;      
+	  pstorage_load((uint8_t *)&voltage_first_read_flag,&block_ptsorage_handle,  4, 12);     //Write to flash, only one block is allowed for each pstorage_store command
+    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
+    
+    if(channel_local > 10)
+    {
+      channel_local = 1;
+      app_sched_event_put(NULL, 0, flash_store_channel);
+    }
+    if(total_number_local > 12 )
+    {
+      total_number_local = 6;
+      app_sched_event_put(NULL, 0, flash_store_total_number);
+    }
+    if(pa_gain_voltage > 3300 || pa_gain_voltage < 1 || voltage_first_read_flag != 123456)
+    {
+      pa_gain_voltage = 2800;
+      app_sched_event_put(NULL, 0, flash_store_voltage);
+      voltage_first_read_flag = 123456;
+      app_sched_event_put(NULL, 0, flash_store_voltage_first_read_flag);
+    }
+}
+
+/*******************  FLASH END  ***********************/
+
+
 
 void ble_packet_handler(void * p_event_data, uint16_t event_size)
 {
@@ -397,7 +509,11 @@ void ble_packet_handler(void * p_event_data, uint16_t event_size)
   uint8_t  packet_type;
   uint16_t crc_local;
   uint32_t decode_len,encode_len,crc_len;
-  transmit_rx_data* ble_recv_once = (transmit_rx_data*)p_event_data;
+  transmit_rx_data* ble_recv_once = (transmit_rx_data*)p_event_data;\
+	
+	uint32_t  parameter = 0.0f;
+	uint8_t   responseFlag = 0;
+	Request   requestRx;
 
   decode_len = DecodePacket(ble_recv_once->buff, decode_buff, ble_recv_once->len);
  // __nop();
@@ -414,20 +530,97 @@ void ble_packet_handler(void * p_event_data, uint16_t event_size)
         crc_local = CRC16(decode_buff,0,sizeof(Request)-2);
         if(crc_local == request.CRC16)
         {
-          if(request.Cmd == CMD_CHANNEL)
+					if(request.Cmd == CMD_RESET_ALGORITHM)
+					{
+							dispatchCmdCount = 3;
+
+							dispatch.Cmd = (1 << CMD_BIT_RESET_ALGORITHM);
+							dispatch.Head = requestRx.Parameter &0x0F; // Copy ID from parameter
+							dispatch.Head |= 0x7000;  // Mark TTL to 7;
+							response.Parameter = requestRx.Parameter;
+							responseFlag = 1;
+							break;
+					}
+					else if(request.Cmd == CMD_STOP_TRACKING)
+					{
+							dispatchCmdCount = 3;
+							dispatch.Cmd = (1 << CMD_BIT_STOP);
+							dispatch.Head = requestRx.Parameter &0x0F; // Copy ID from parameter
+							dispatch.Head |= 0x7000;  // Mark TTL to 7;
+							response.Parameter = requestRx.Parameter;
+							responseFlag = 1;
+							break;
+					}						
+					else if(request.Cmd == CMD_RETREAT)
+					{               
+							dispatchCmdCount = 3;
+							dispatch.Cmd = (1 << CMD_BIT_RETREAT);
+							dispatch.Head = requestRx.Parameter & 0x0F; // Copy ID from parameter
+							dispatch.Head |= 0x7000;  // Mark TTL to 7;
+							response.Parameter = requestRx.Parameter;
+							responseFlag = 1;
+							break;
+					}			
+					else if(request.Cmd == CMD_UPDATE_PRESSURE)
+					{
+							// Align the data to 4 byte address
+							parameter = requestRx.Parameter;
+							memcpy(&pressure, &parameter, 4);
+							response.Parameter = requestRx.Parameter;
+							responseFlag = 0;
+							// Update reference timeout for dispatch status
+							gpsPressure.Head &= (~0x08);
+							gpsPressure.Head |= 0x08;
+							referenceValidTimeout = 0;
+							break;						
+					}
+				  else if(request.Cmd == CMD_UPDATE_TEMPERATURE)
+					{
+							// Align the data to 4 byte address
+							parameter = requestRx.Parameter;
+							memcpy(&temperature, &parameter, 4);
+							response.Parameter = requestRx.Parameter;
+							responseFlag = 0;
+							gpsPressure.Head &= (~0x04);
+							gpsPressure.Head |= 0x04;
+							break;
+					}
+				  else if(request.Cmd == CMD_UPDATE_TEMPERATURE)
+					{
+							if (requestRx.Parameter <= 10)
+							{
+								dispatch.Battery &= (~0x0F);
+								dispatch.Battery |=  (requestRx.Parameter & 0x0F);
+							}
+							responseFlag = 0;
+							break;
+					}
+//				  if(request.Cmd == CMD_GET_REVISION_NUMBER)
+//					{
+//						
+//					}
+
+
+					
+					
+          else if(request.Cmd == CMD_CHANNEL)
           {
             if(channel_local != request.Parameter)
             {
               channel_local = request.Parameter;
-             // app_sched_event_put(NULL, 0, flash_store_channel);//
+							changeChannelFlag = true;  //new
+              app_sched_event_put(NULL, 0, flash_store_channel);  //update local data
             }
           }
+					
           else if(request.Cmd == CMD_TOTAL_NUMBER)
           {
             if(total_number_local != request.Parameter)
             {
               total_number_local = request.Parameter;
-       //       app_sched_event_put(NULL, 0, flash_store_total_number);//
+							dispatch.TotalNumber = requestRx.Parameter;   //new
+							
+              app_sched_event_put(NULL, 0, flash_store_total_number);
             }
           }
           else if(request.Cmd == CMD_PA_GAIN_VOLTAGE)
@@ -435,12 +628,13 @@ void ble_packet_handler(void * p_event_data, uint16_t event_size)
             if(request.Parameter > 0 && request.Parameter <= 3300 )
             {
               pa_gain_voltage = request.Parameter;
-             // app_sched_event_put(NULL, 0, flash_store_voltage);
+              app_sched_event_put(NULL, 0, flash_store_voltage);
             }
           }
+					
           //app_uart_putsend(ble_recv_once->buff,ble_recv_once->len);
-					SX1276SetTxPacket(ble_recv_once->buff,ble_recv_once->len);
-	        SX1276LoRaProcess();					
+				//	SX1276SetTxPacket(ble_recv_once->buff,ble_recv_once->len);
+	      //  SX1276LoRaProcess();					
 					
 					
         }
@@ -461,7 +655,7 @@ void ble_packet_handler(void * p_event_data, uint16_t event_size)
             if(channel_local != response.Parameter)
             {
               channel_local = response.Parameter;
-              //app_sched_event_put(NULL, 0, flash_store_channel);//
+              app_sched_event_put(NULL, 0, flash_store_channel);//
             }
             channel_confirmed = true;
           }
@@ -470,13 +664,13 @@ void ble_packet_handler(void * p_event_data, uint16_t event_size)
             if(total_number_local != response.Parameter)
             {
               total_number_local = response.Parameter;
-           //   app_sched_event_put(NULL, 0, flash_store_total_number);//
+              app_sched_event_put(NULL, 0, flash_store_total_number);//
             }
             total_number_confirmed = true;
           }
           //app_uart_putsend(ble_recv_once->buff,ble_recv_once->len);
-					SX1276SetTxPacket(ble_recv_once->buff,ble_recv_once->len);
-	        SX1276LoRaProcess();
+				//	SX1276SetTxPacket(ble_recv_once->buff,ble_recv_once->len);
+	      //  SX1276LoRaProcess();
 					
         }
       }        
@@ -548,22 +742,23 @@ static void nus_data_handler(ble_spider_tunnel_t * p_nus, uint8_t * p_data, uint
 static void services_init(void)
 {
     uint32_t       err_code;
-	  ble_hrs_init_t hrs_init;   //心跳服务
-	  ble_dis_init_t dis_init;	 //系统信息服务
 	  uint8_t        addr[8] = {0};
-
-    memset(&hrs_init, 0, sizeof(hrs_init));
+  	ble_dis_init_t             dis_init;	           //系统信息服务
+	  ble_spider_tunnel_init_t   spider_tunnel_init;   //心跳服务
+	  
+	 
+    memset(&spider_tunnel_init, 0, sizeof(spider_tunnel_init));
 		
-    hrs_init.evt_handler  = NULL;
-    hrs_init.data_handler = nus_data_handler;
+    spider_tunnel_init.evt_handler  = NULL;
+    spider_tunnel_init.tunnel_data_handler = nus_data_handler;
 		
 
     // Here the sec level for the Heart Rate Service can be changed/increased.
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&hrs_init.hrs_hrm_attr_md.cccd_write_perm);
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&hrs_init.hrs_hrm_attr_md.read_perm);
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&hrs_init.hrs_hrm_attr_md.write_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&spider_tunnel_init.hrs_hrm_attr_md.cccd_write_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&spider_tunnel_init.hrs_hrm_attr_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&spider_tunnel_init.hrs_hrm_attr_md.write_perm);
 
-    err_code = ble_spider_tunnel_init(&m_hrs, &hrs_init);
+    err_code = ble_spider_tunnel_init(&m_hrs, &spider_tunnel_init);
     APP_ERROR_CHECK(err_code);
 
     // Initialize Device Information Service.
@@ -588,7 +783,8 @@ static void services_init(void)
 		
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&dis_init.dis_attr_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&dis_init.dis_attr_md.write_perm);
-
+ 
+    dis_init.sw_rev_str.p_str = GIT_VERSION;	
     err_code = ble_dis_init(&dis_init);
     APP_ERROR_CHECK(err_code);
 
@@ -735,6 +931,7 @@ void spider_tunnel_on_tx_complete(ble_spider_tunnel_t * p_spider_tunnel)
   uint8_t send_buff[20];
 	extern  app_fifo_t  ble_tx_fifo;
 	extern  bool        ble_tx_ready;
+	
   len = fifo_length(&ble_tx_fifo);
   if(len == 0)
   {
@@ -1023,108 +1220,6 @@ static void ctrl_gpio_pin_init(bool * p_erase_bonds)
     APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler));
 }
 
-/****************  FLASH  START  ****************/
-static void flash_store_channel(void)
-{
-    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag   = 1;      
-	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&channel_local, 4, 0);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
-}
-
-static void flash_store_total_number()
-{
-
-    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag = 1;      
-	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&total_number_local, 4, 4);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
-}
-static void flash_store_voltage()
-{
-
-    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag = 1;      
-	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&pa_gain_voltage, 4, 8);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
-}
-static void flash_store_voltage_first_read_flag()
-{
-
-    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag = 1;      
-	  pstorage_update(&block_ptsorage_handle, (uint8_t *)&voltage_first_read_flag, 4, 12);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
-}
-
-
-
-
-
-static void example_cb_handler(pstorage_handle_t  * handle,
-															 uint8_t              op_code,
-                               uint32_t             result,
-                               uint8_t            * p_data,
-                               uint32_t             data_len)
-{
-		if(handle->block_id == pstorage_wait_handle) { pstorage_wait_flag = 0; }  //If we are waiting for this callback, clear the wait flag.
-			
-}
-
-static void flash_init()
-{	
-    uint32_t                   err_code;
-		pstorage_param.block_size  = 16;                    //Select block size of 8 bytes
-		pstorage_param.block_count = 1;                     //Select 1 blocks, total of 8 bytes
-		pstorage_param.cb          = example_cb_handler;    //Set the pstorage callback handler
-		err_code = pstorage_register(&pstorage_param, &pstorage_handle);
-    APP_ERROR_CHECK(err_code);
-	
-	//Get block identifiers
-		err_code = pstorage_block_identifier_get(&pstorage_handle, 0, &block_ptsorage_handle);
-    APP_ERROR_CHECK(err_code);
-   
-    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag = 1;      
-	  pstorage_load((uint8_t *)&channel_local,&block_ptsorage_handle,  4, 0);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   	
-
-		pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag = 1;      
-	  pstorage_load((uint8_t *)&total_number_local,&block_ptsorage_handle,  4, 4);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   	
-    
-    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag = 1;      
-	  pstorage_load((uint8_t *)&pa_gain_voltage,&block_ptsorage_handle,  4, 8);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
-    
-    pstorage_wait_handle = block_ptsorage_handle.block_id;            //Specify which pstorage handle to wait for
-		pstorage_wait_flag = 1;      
-	  pstorage_load((uint8_t *)&voltage_first_read_flag,&block_ptsorage_handle,  4, 12);     //Write to flash, only one block is allowed for each pstorage_store command
-    while(pstorage_wait_flag) { power_manage(); }   		//Clear 16 bytes
-    
-    if(channel_local > 10)
-    {
-      channel_local = 1;
-      app_sched_event_put(NULL, 0, flash_store_channel);
-    }
-    if(total_number_local > 12 )
-    {
-      total_number_local = 6;
-      app_sched_event_put(NULL, 0, flash_store_total_number);
-    }
-    if(pa_gain_voltage > 3300 || pa_gain_voltage < 1 || voltage_first_read_flag != 123456)
-    {
-      pa_gain_voltage = 2800;
-      app_sched_event_put(NULL, 0, flash_store_voltage);
-      voltage_first_read_flag = 123456;
-      app_sched_event_put(NULL, 0, flash_store_voltage_first_read_flag);
-    }
-}
-
-/*******************  FLASH END  ***********************/
-
 
 void SetRadioChannel(uint8_t ch)
 {
@@ -1151,7 +1246,7 @@ void SX1276_Rx_IT(void)
 void ProcessRadioPacket(uint8_t* buf, uint32_t len)
 {
 	LocationStatus  locationStatus;
-	Dispatch        dispatch;
+	Dispatch        dispatch;  
 	
   uint8_t   encodeBuf[128] = {0};
   uint32_t  encodeLen = 0;
@@ -1187,7 +1282,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
                 locationStatus.CRC16 = CRC16((uint8_t*)&locationStatus, 0, sizeof(LocationStatus)-2);
                 encodeLen = EncodePacket((uint8_t*)&locationStatus, encodeBuf, sizeof(LocationStatus));
 								//opt
-								ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
+								spider_tunnel_put(&m_hrs, encodeBuf,encodeLen);
 								
 								if (id_read>=1 && id_read<=12)
                 {
@@ -1225,7 +1320,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
             encodeLen = EncodePacket((uint8_t*)&dispatchRepeater, encodeBuf, sizeof(Dispatch));
             //UART1_Transmit(encodeBuf, encodeLen);
 						
-						ble_nus_string_send(&m_hrs, encodeBuf,encodeLen);
+				//		spider_tunnel_put(&m_hrs, encodeBuf,encodeLen);
 						
             for(int i= 0;i < 7;i++)
             {
@@ -1273,6 +1368,110 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
 }
 
 
+//void confirme_data(void)
+//{
+//	  uint32_t  encodeLen = 0;
+//	  uint8_t   encodeBuf[128] = {0};
+//		
+//		if(!channel_confirmed)
+//		{
+//			request.Type = RequestType;
+//			request.Cmd = CMD_CHANNEL;
+//			request.Parameter = 0;
+//			request.CRC16 = CRC16((uint8_t*)&request, 0, sizeof(Request)-2);
+//			encodeLen = EncodePacket((uint8_t*)&request, encodeBuf, sizeof(Request));
+//		//	UART1_Transmit(encodeBuf, encodeLen);
+//		}
+//		if(!total_number_confirmed)
+//		{
+//			request.Type = RequestType;
+//			request.Cmd = CMD_TOTAL_NUMBER;
+//			request.Parameter = 0;
+//			request.CRC16 = CRC16((uint8_t*)&request, 0, sizeof(Request)-2);
+//			encodeLen = EncodePacket((uint8_t*)&request, encodeBuf, sizeof(Request));
+//			//UART1_Transmit(encodeBuf, encodeLen);
+//		}
+//}
+
+void dispatch_task(void)
+{
+	    uint8_t   id = 0;
+	    uint32_t  encodeLen = 0;
+	    uint8_t   encodeBuf[128] = {0};
+      uint8_t   SX1276Buf[128] = {0};
+	
+	
+	    memset(repeaterTTLMax, 0, sizeof(repeaterTTLMax));
+      if (dispatchCmdCount)
+      {
+        dispatchCmdCount--;
+      }
+      else
+      {
+        dispatch.Cmd = 0;
+        dispatch.Head = 0x7000;
+      }
+    //  dispatch.Timestamp = time(0);
+      dispatch.Status = 0x00;
+      for (id=0; id<7; id++)
+      {
+        if ( repeaterValidTimeout[id] > 2)
+        {
+          // Mark repeater Valid to 0                                                                      
+          dispatch.RepeaterEchoValid &= (~(0x02<<id));
+          dispatch.RepeaterTTL &= (~(0x0F<<(4*id)));
+        }
+        else
+        {
+          dispatch.RepeaterEchoValid |= (0x02<<id);
+        }
+        
+        if (repeaterValidTimeout[id] < 255)
+        {
+          repeaterValidTimeout[id]++;
+        }
+      }
+      if (referenceValidTimeout > 2)
+      {
+        dispatch.Status &= (~0x01);
+        gpsPressure.Head &= (~0x0c);
+      }
+      else
+      {
+        dispatch.Status |= 0x01;
+      }
+			
+      if (referenceValidTimeout < 255)
+      {
+        referenceValidTimeout++;
+      }
+			
+      for (id=0; id<12; id++)
+      {
+        if (passValidTimeout[id] > 2)
+        {
+          dispatch.Status &= (~(1<<(1+id)));
+        }
+        else
+        {
+          dispatch.Status |= (1<<(1+id));
+        }
+        if (passValidTimeout[id] < 255)
+        {
+          passValidTimeout[id]++;
+        }
+      }
+      dispatch.ReferencePressure = pressure;
+      dispatch.ReferenceTemperature = (temperature + 0.5f);
+      dispatch.CRC16 = CRC16((uint8_t*)&dispatch, 0, sizeof(Dispatch)-2);
+      memcpy(SX1276Buf,(uint8_t *)&dispatch, sizeof(Dispatch));
+      encodeLen = EncodePacket((uint8_t*)&dispatch, encodeBuf, sizeof(Dispatch));
+    	
+			SX1276SetTxPacket(encodeBuf,encodeLen);
+	    SX1276LoRaProcess();
+}
+
+
 /**@brief Function for application main entry.
  */
 int main(void)
@@ -1280,6 +1479,7 @@ int main(void)
     uint32_t  err_code;
     bool      erase_bonds;
 	  uint8_t   rfLoRaState = RFLR_STATE_IDLE;
+	  uint8_t   compare_receive_flag = 0;
     uint8_t   rx_buf[128] = {0};
     uint16_t  rx_len = 0;
 	 // uint8_t   send[10] = {1,2,3,4,5,6,7,8,9,0};
@@ -1314,22 +1514,44 @@ int main(void)
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 		
-//		while(1)
-//		{
-//	  	    SX1276SetTxPacket(send,9);
-//					SX1276LoRaProcess();
-//			    nrf_delay_ms(500);
-//		}	
+
+
+		dispatch.Type = DispatchType;
+		response.Type = ResponseType;
+		dispatch.Head = 0x7000;
+		dispatch.TotalNumber = deviceCount;
+		dispatch.TimeGroup = 0; // Time Group is always 0 if sent from controller
+		dispatch.Cmd = 0x00;
+		
+		
+		
 		
 		
     for (;;)
     {   
 	  	  app_sched_execute();
-        power_manage();
+//        power_manage();
 			   					
-			
-			  if(nrf_gpio_pin_read(SX1276_DIO0) == 1)
+			  if(one_ms_task_flag == 1)
 				{
+					one_ms_task_flag = 0;
+					if(nrf_gpio_pin_read(SX1276_DIO0) == 1)
+					{
+						compare_receive_flag = 1;
+					}
+				}
+				
+				if(one_sec_task_flag == 1)
+				{
+					one_sec_task_flag = 0;
+					//dispatch_task();
+				}
+				
+
+			
+			  if(compare_receive_flag == 1)
+				{
+					  compare_receive_flag = 0;
 						rfLoRaState = SX1276LoRaGetRFState();
 						if(rfLoRaState == RFLR_STATE_RX_RUNNING )
 						{
@@ -1349,6 +1571,7 @@ int main(void)
 							}
 						}				
 			  }
+				
 
     }
 }
