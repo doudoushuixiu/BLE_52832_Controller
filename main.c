@@ -145,8 +145,6 @@ typedef struct
 transmit_rx_data   ble_rx_array[5] = {0};
 
 
-
-
 #ifdef BLE_DFU_APP_SUPPORT
 static ble_dfu_t  m_dfus;                                    /**< Structure used to identify the DFU service. */
 #endif // BLE_DFU_APP_SUPPORT
@@ -233,7 +231,7 @@ void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
 			case NRF_TIMER_EVENT_COMPARE0:
 					uwTick++;
 			    thund_ms++;
-			    if(thund_ms == 999)
+			    if(thund_ms == 1999)
 					{
 						one_sec_task_flag = 1;
 						thund_ms = 0;
@@ -741,8 +739,8 @@ static void nus_data_handler(ble_spider_tunnel_t * p_nus, uint8_t * p_data, uint
  */
 static void services_init(void)
 {
-    uint32_t       err_code;
-	  uint8_t        addr[8] = {0};
+    uint32_t                   err_code;
+	  uint8_t                    addr[8] = {0};
   	ble_dis_init_t             dis_init;	           //系统信息服务
 	  ble_spider_tunnel_init_t   spider_tunnel_init;   //心跳服务
 	  
@@ -1469,10 +1467,11 @@ void dispatch_task(void)
       memcpy(SX1276Buf,(uint8_t *)&dispatch, sizeof(Dispatch));
       encodeLen = EncodePacket((uint8_t*)&dispatch, encodeBuf, sizeof(Dispatch));
     	
-			SX1276SetTxPacket(encodeBuf,encodeLen);
+			SX1276SetTxPacket(SX1276Buf, sizeof(Dispatch));
 	    SX1276LoRaProcess();
-			
-			SX1276_Rx_IT();
+			nrf_delay_ms(40);
+			SX1276_Rx_IT();						
+
 }
 
 
@@ -1519,9 +1518,9 @@ int main(void)
     APP_ERROR_CHECK(err_code);
 		
 
-
+    // Init dispatch
 		dispatch.Type = DispatchType;
-		response.Type = ResponseType;
+		//response.Type = ResponseType;
 		dispatch.Head = 0x7000;
 		dispatch.TotalNumber = deviceCount;
 		dispatch.TimeGroup = 0; // Time Group is always 0 if sent from controller
@@ -1534,7 +1533,7 @@ int main(void)
     for (;;)
     {   
 	  	  app_sched_execute();
-//        power_manage();
+        power_manage();
 			   					
 			  if(one_ms_task_flag == 1)
 				{
@@ -1548,7 +1547,7 @@ int main(void)
 				if(one_sec_task_flag == 1)
 				{
 					one_sec_task_flag = 0;
-					//dispatch_task();
+					dispatch_task();
 				}
 				
 
@@ -1565,9 +1564,9 @@ int main(void)
 							if (RFLR_STATE_RX_RUNNING == rfLoRaState)
 							{
 							//  rxDoneTick = osKernelSysTick();
-								SX1276LoRaGetRxPacket(rx_buf, &rx_len);		
+								SX1276LoRaGetRxPacket(rx_buf, &rx_len);	
+								ProcessRadioPacket(rx_buf, rx_len);								
 								
-								ProcessRadioPacket(rx_buf, rx_len);
 							}
 							else if (RFLR_STATE_RX_INIT == rfLoRaState) // RX TimeOut
 							{
