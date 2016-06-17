@@ -114,7 +114,7 @@ uint8_t   referenceValidTimeout 	= 0;
 
 
 static dm_application_instance_t    m_app_handle;                              /**< Application identifier allocated by device manager */
-static ble_spider_tunnel_t          m_hrs;    
+static ble_spider_tunnel_t          m_spider_tunnel;    
 static uint16_t                     m_conn_handle = BLE_CONN_HANDLE_INVALID; 
 
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_HEART_RATE_SERVICE,         BLE_UUID_TYPE_BLE},        
@@ -209,9 +209,9 @@ static void heart_rate_meas_timeout_handler(void * p_context)
 //	
 //	
 //	
-//	 //  spider_tunnel_put(&m_hrs, tra_data,10);
+//	 //  spider_tunnel_put(&m_spider_tunnel, tra_data,10);
 //	
-//   // err_code = ble_hrs_heart_rate_measurement_send(&m_hrs, tra_data,10);
+//   // err_code = ble_hrs_heart_rate_measurement_send(&m_spider_tunnel, tra_data,10);
 //	
 //    if ((err_code != NRF_SUCCESS) &&
 //        (err_code != NRF_ERROR_INVALID_STATE) &&
@@ -758,7 +758,7 @@ static void services_init(void)
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&spider_tunnel_init.hrs_hrm_attr_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&spider_tunnel_init.hrs_hrm_attr_md.write_perm);
 
-    err_code = ble_spider_tunnel_init(&m_hrs, &spider_tunnel_init);
+    err_code = ble_spider_tunnel_init(&m_spider_tunnel, &spider_tunnel_init);
     APP_ERROR_CHECK(err_code);
 
     // Initialize Device Information Service.
@@ -869,8 +869,8 @@ static void conn_params_init(void)
     cp_init.first_conn_params_update_delay = FIRST_CONN_PARAMS_UPDATE_DELAY;
     cp_init.next_conn_params_update_delay  = NEXT_CONN_PARAMS_UPDATE_DELAY;
     cp_init.max_conn_params_update_count   = MAX_CONN_PARAMS_UPDATE_COUNT;
-  //  cp_init.start_on_notify_cccd_handle    = m_hrs.hrm_handles.cccd_handle;
-	  cp_init.start_on_notify_cccd_handle    = m_hrs.tunnel_handles.cccd_handle;
+  //  cp_init.start_on_notify_cccd_handle    = m_spider_tunnel.hrm_handles.cccd_handle;
+	  cp_init.start_on_notify_cccd_handle    = m_spider_tunnel.tunnel_handles.cccd_handle;
 	
     cp_init.disconnect_on_fail             = false;
     cp_init.evt_handler                    = on_conn_params_evt;
@@ -948,7 +948,7 @@ void spider_tunnel_on_tx_complete(ble_spider_tunnel_t * p_spider_tunnel)
  *
  * @param[in] p_ble_evt  Bluetooth stack event.
  */
-void ble_spider_tunnel_on_ble_evt(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt)
+void ble_on_ble_evt( ble_evt_t * p_ble_evt)
 {
     uint32_t err_code;
 
@@ -963,9 +963,7 @@ void ble_spider_tunnel_on_ble_evt(ble_spider_tunnel_t * p_spider_tunnel, ble_evt
         case BLE_GAP_EVT_DISCONNECTED:
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             break;
-			  case BLE_EVT_TX_COMPLETE:
-						spider_tunnel_on_tx_complete(p_spider_tunnel);
-						break; 
+
 
         default:
             // No implementation needed.
@@ -984,19 +982,23 @@ void ble_spider_tunnel_on_ble_evt(ble_spider_tunnel_t * p_spider_tunnel, ble_evt
 static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
     dm_ble_evt_handler(p_ble_evt);
-    ble_hrs_on_ble_evt(&m_hrs, p_ble_evt);  //ble event
+    ble_conn_params_on_ble_evt(p_ble_evt);	
+    ble_advertising_on_ble_evt(p_ble_evt);
 
-    ble_conn_params_on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);      //button event
 	
+
+//    bsp_btn_ble_on_ble_evt(p_ble_evt);      //button event
+
 	
 #ifdef BLE_DFU_APP_SUPPORT
     /** @snippet [Propagating BLE Stack events to DFU Service] */
     ble_dfu_on_ble_evt(&m_dfus, p_ble_evt);
     /** @snippet [Propagating BLE Stack events to DFU Service] */
 #endif // BLE_DFU_APP_SUPPORT
-    ble_spider_tunnel_on_ble_evt(&m_spider_tunnel,p_ble_evt);
-    ble_advertising_on_ble_evt(p_ble_evt);
+  
+    ble_on_ble_evt(p_ble_evt);	
+    ble_spider_tunnel_on_ble_evt(&m_spider_tunnel, p_ble_evt);  //ble event
+	
 }
 
 
@@ -1282,7 +1284,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
                 locationStatus.CRC16 = CRC16((uint8_t*)&locationStatus, 0, sizeof(LocationStatus)-2);
                 encodeLen = EncodePacket((uint8_t*)&locationStatus, encodeBuf, sizeof(LocationStatus));
 								//opt
-								spider_tunnel_put(&m_hrs, encodeBuf,encodeLen);
+								spider_tunnel_put(&m_spider_tunnel, encodeBuf,encodeLen);
 								
 								if (id_read>=1 && id_read<=12)
                 {
@@ -1320,7 +1322,7 @@ void ProcessRadioPacket(uint8_t* buf, uint32_t len)
             encodeLen = EncodePacket((uint8_t*)&dispatchRepeater, encodeBuf, sizeof(Dispatch));
             //UART1_Transmit(encodeBuf, encodeLen);
 						
-				//		spider_tunnel_put(&m_hrs, encodeBuf,encodeLen);
+				//		spider_tunnel_put(&m_spider_tunnel, encodeBuf,encodeLen);
 						
             for(int i= 0;i < 7;i++)
             {
@@ -1469,6 +1471,8 @@ void dispatch_task(void)
     	
 			SX1276SetTxPacket(encodeBuf,encodeLen);
 	    SX1276LoRaProcess();
+			
+			SX1276_Rx_IT();
 }
 
 

@@ -57,38 +57,38 @@ static __INLINE uint32_t fifo_length(app_fifo_t * p_fifo)
 
 /**@brief Function for handling the Connect event.
  *
- * @param[in]   p_hrs       Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel       Heart Rate Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_connect(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt)
+static void on_connect(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt)
 {
-    p_hrs->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+    p_spider_tunnel->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
 }
 
 
 /**@brief Function for handling the Disconnect event.
  *
- * @param[in]   p_hrs       Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel       Heart Rate Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_disconnect(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt)
+static void on_disconnect(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt)
 {
     UNUSED_PARAMETER(p_ble_evt);
-    p_hrs->conn_handle = BLE_CONN_HANDLE_INVALID;
+    p_spider_tunnel->conn_handle = BLE_CONN_HANDLE_INVALID;
 }
 
 
 /**@brief Function for handling write events to the Heart Rate Measurement characteristic.
  *
- * @param[in]   p_hrs         Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel         Heart Rate Service structure.
  * @param[in]   p_evt_write   Write event received from the BLE stack.
  */
-static void on_hrm_cccd_write(ble_spider_tunnel_t * p_hrs, ble_gatts_evt_write_t * p_evt_write)
+static void on_hrm_cccd_write(ble_spider_tunnel_t * p_spider_tunnel, ble_gatts_evt_write_t * p_evt_write)
 {
     if (p_evt_write->len == 2)
     {
         // CCCD written, update notification state
-        if (p_hrs->evt_handler != NULL)
+        if (p_spider_tunnel->evt_handler != NULL)
         {
             ble_hrs_evt_t evt;
 
@@ -101,7 +101,7 @@ static void on_hrm_cccd_write(ble_spider_tunnel_t * p_hrs, ble_gatts_evt_write_t
                 evt.evt_type = BLE_HRS_EVT_NOTIFICATION_DISABLED;
             }
 
-            p_hrs->evt_handler(p_hrs, &evt);
+            p_spider_tunnel->evt_handler(p_spider_tunnel, &evt);
         }
     }
 }
@@ -109,26 +109,26 @@ static void on_hrm_cccd_write(ble_spider_tunnel_t * p_hrs, ble_gatts_evt_write_t
 
 /**@brief Function for handling the Write event.
  *
- * @param[in]   p_hrs       Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel       Heart Rate Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_write(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt) 
+static void on_write(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt) 
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 
-    if (p_evt_write->handle == p_hrs->tunnel_handles.value_handle)   //0x50 == 
+    if (p_evt_write->handle == p_spider_tunnel->tunnel_handles.value_handle)   //0x50 == 
     {
 
 //			  LEDS_INVERT(BSP_LED_2_MASK);
-			  p_hrs->tunnel_data_handler(p_hrs, p_evt_write->data, p_evt_write->len);
+			  p_spider_tunnel->tunnel_data_handler(p_spider_tunnel, p_evt_write->data, p_evt_write->len);
 			
 			  if (ble_srv_is_notification_enabled(p_evt_write->data))
         {
-            p_hrs->is_notification_enabled = true;
+            p_spider_tunnel->is_notification_enabled = true;
         }
         else
         {
-            p_hrs->is_notification_enabled = false;
+            p_spider_tunnel->is_notification_enabled = false;
         }
 			
     }
@@ -167,21 +167,24 @@ static void on_write(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt)
 
 
 
-void ble_hrs_on_ble_evt(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt)
+void ble_spider_tunnel_on_ble_evt(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt)
 {
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
-            on_connect(p_hrs, p_ble_evt);
+            on_connect(p_spider_tunnel, p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            on_disconnect(p_hrs, p_ble_evt);
+            on_disconnect(p_spider_tunnel, p_ble_evt);
             break;
 
         case BLE_GATTS_EVT_WRITE:
-            on_write(p_hrs, p_ble_evt);
+            on_write(p_spider_tunnel, p_ble_evt);
             break;
+				case BLE_EVT_TX_COMPLETE:
+						spider_tunnel_on_tx_complete(p_spider_tunnel);
+						break; 
 
         default:
             // No implementation needed.
@@ -191,7 +194,7 @@ void ble_hrs_on_ble_evt(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt)
 
 
 //  
-static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_hrs,
+static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_spider_tunnel,
                             const ble_spider_tunnel_init_t * p_hrs_init)
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
@@ -242,16 +245,16 @@ static uint32_t pass_mode_char_add(ble_spider_tunnel_t            * p_hrs,
     attr_char_value.max_len   = 20;
     attr_char_value.p_value   = &init_value;
 		
-    return sd_ble_gatts_characteristic_add(p_hrs->service_handle, 
+    return sd_ble_gatts_characteristic_add(p_spider_tunnel->service_handle, 
                                            &char_md,
                                            &attr_char_value,
-                                           &p_hrs->pass_mode_handles);
+                                           &p_spider_tunnel->pass_mode_handles);
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
 }
 
 
 //
-static uint32_t spider_tunnel_char_add(ble_spider_tunnel_t            * p_hrs,
+static uint32_t spider_tunnel_char_add(ble_spider_tunnel_t            * p_spider_tunnel,
                             const ble_spider_tunnel_init_t * p_hrs_init)
 {
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
@@ -296,17 +299,17 @@ static uint32_t spider_tunnel_char_add(ble_spider_tunnel_t            * p_hrs,
 		attr_char_value.p_value   = &init_value;
 		
 
-   return sd_ble_gatts_characteristic_add(p_hrs->service_handle,
+   return sd_ble_gatts_characteristic_add(p_spider_tunnel->service_handle,
                                            &char_md,
                                            &attr_char_value,
-                                           &p_hrs->tunnel_handles);
+                                           &p_spider_tunnel->tunnel_handles);
 																					 
     /**@snippet [Adding proprietary characteristic to S110 SoftDevice] */
 }
 
 
 
-uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_spider_tunnel_init_t * p_hrs_init)
+uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_spider_tunnel, const ble_spider_tunnel_init_t * p_hrs_init)
 {
     uint32_t   err_code;
     ble_uuid_t ble_uuid;
@@ -314,29 +317,29 @@ uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_spider_tu
 	  app_fifo_init(&ble_tx_fifo,ble_tx_buff,256);
 	
     // Initialize service structure
-	  p_hrs->evt_handler                 = p_hrs_init->evt_handler; 
-	  p_hrs->tunnel_data_handler                = p_hrs_init->tunnel_data_handler;  
-    p_hrs->conn_handle                 = BLE_CONN_HANDLE_INVALID;
+	  p_spider_tunnel->evt_handler                 = p_hrs_init->evt_handler; 
+	  p_spider_tunnel->tunnel_data_handler                = p_hrs_init->tunnel_data_handler;  
+    p_spider_tunnel->conn_handle                 = BLE_CONN_HANDLE_INVALID;
 
     // Add service
     BLE_UUID_BLE_ASSIGN(ble_uuid, 0xFFE0);  //server id            //uuid 0x180D
 
     err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,  //servers
                                         &ble_uuid,
-                                        &p_hrs->service_handle);
+                                        &p_spider_tunnel->service_handle);
 
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
     }
 
-    err_code = spider_tunnel_char_add(p_hrs, p_hrs_init);
+    err_code = spider_tunnel_char_add(p_spider_tunnel, p_hrs_init);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
     }		
 		
-    err_code = pass_mode_char_add(p_hrs, p_hrs_init);
+    err_code = pass_mode_char_add(p_spider_tunnel, p_hrs_init);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;

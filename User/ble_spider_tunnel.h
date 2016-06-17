@@ -74,11 +74,11 @@ typedef struct
 typedef struct ble_spider_tunnel_s ble_spider_tunnel_t;
 
 /**@brief Heart Rate Service event handler type. */
-typedef void (*ble_hrs_evt_handler_t) (ble_spider_tunnel_t * p_hrs, ble_hrs_evt_t * p_evt);
+typedef void (*ble_hrs_evt_handler_t) (ble_spider_tunnel_t * p_spider_tunnel, ble_hrs_evt_t * p_evt);
 
 
 //UART
-typedef void (*ble_spider_tunnel_data_handler_t) (ble_spider_tunnel_t * p_hrs, uint8_t * p_data, uint16_t length);
+typedef void (*ble_spider_tunnel_data_handler_t) (ble_spider_tunnel_t * p_spider_tunnel, uint8_t * p_data, uint16_t length);
 
 
 
@@ -115,23 +115,23 @@ void spider_tunnel_on_tx_complete(ble_spider_tunnel_t * p_spider_tunnel);
 
 /**@brief Function for initializing the Heart Rate Service.
  *
- * @param[out]  p_hrs       Heart Rate Service structure. This structure will have to be supplied by
+ * @param[out]  p_spider_tunnel       Heart Rate Service structure. This structure will have to be supplied by
  *                          the application. It will be initialized by this function, and will later
  *                          be used to identify this particular service instance.
  * @param[in]   p_hrs_init  Information needed to initialize the service.
  *
  * @return      NRF_SUCCESS on successful initialization of service, otherwise an error code.
  */
-uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_hrs, const ble_spider_tunnel_init_t * p_hrs_init);
+uint32_t ble_spider_tunnel_init(ble_spider_tunnel_t * p_spider_tunnel, const ble_spider_tunnel_init_t * p_hrs_init);
 
 /**@brief Function for handling the Application's BLE Stack events.
  *
  * @details Handles all events from the BLE stack of interest to the Heart Rate Service.
  *
- * @param[in]   p_hrs      Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel      Heart Rate Service structure.
  * @param[in]   p_ble_evt  Event received from the BLE stack.
  */
-void ble_hrs_on_ble_evt(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt);
+void ble_spider_tunnel_on_ble_evt(ble_spider_tunnel_t * p_spider_tunnel, ble_evt_t * p_ble_evt);
 
 /**@brief Function for sending heart rate measurement if notification has been enabled.
  *
@@ -139,12 +139,12 @@ void ble_hrs_on_ble_evt(ble_spider_tunnel_t * p_hrs, ble_evt_t * p_ble_evt);
  *          If notification has been enabled, the heart rate measurement data is encoded and sent to
  *          the client.
  *
- * @param[in]   p_hrs                    Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel                    Heart Rate Service structure.
  * @param[in]   heart_rate               New heart rate measurement.
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-uint32_t ble_hrs_heart_rate_measurement_send(ble_spider_tunnel_t * p_hrs, uint8_t * p_string, uint16_t length);
+uint32_t ble_hrs_heart_rate_measurement_send(ble_spider_tunnel_t * p_spider_tunnel, uint8_t * p_string, uint16_t length);
 
 /**@brief Function for adding a RR Interval measurement to the RR Interval buffer.
  *
@@ -152,50 +152,50 @@ uint32_t ble_hrs_heart_rate_measurement_send(ble_spider_tunnel_t * p_hrs, uint8_
  *          measurement message, up to the maximum number of measurements that will fit into the
  *          message. If the buffer is full, the oldest measurement in the buffer will be deleted.
  *
- * @param[in]   p_hrs        Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel        Heart Rate Service structure.
  * @param[in]   rr_interval  New RR Interval measurement (will be buffered until the next
  *                           transmission of Heart Rate Measurement).
  */
-//void ble_hrs_rr_interval_add(ble_spider_tunnel_t * p_hrs, uint16_t rr_interval);
+//void ble_hrs_rr_interval_add(ble_spider_tunnel_t * p_spider_tunnel, uint16_t rr_interval);
 
 /**@brief Function for checking if RR Interval buffer is full.
  *
- * @param[in]   p_hrs        Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel        Heart Rate Service structure.
  *
  * @return      true if RR Interval buffer is full, false otherwise.
  */
-//bool ble_hrs_rr_interval_buffer_is_full(ble_spider_tunnel_t * p_hrs);
+//bool ble_hrs_rr_interval_buffer_is_full(ble_spider_tunnel_t * p_spider_tunnel);
 
 uint32_t spider_tunnel_put(ble_spider_tunnel_t * p_nus, uint8_t * p_string, uint16_t length);
 
 
 /**@brief Function for setting the state of the Sensor Contact Supported bit.
  *
- * @param[in]   p_hrs                        Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel                        Heart Rate Service structure.
  * @param[in]   is_sensor_contact_supported  New state of the Sensor Contact Supported bit.
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-//uint32_t ble_hrs_sensor_contact_supported_set(ble_spider_tunnel_t * p_hrs, bool is_sensor_contact_supported);
+//uint32_t ble_hrs_sensor_contact_supported_set(ble_spider_tunnel_t * p_spider_tunnel, bool is_sensor_contact_supported);
 
 /**@brief Function for setting the state of the Sensor Contact Detected bit.
  *
- * @param[in]   p_hrs                        Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel                        Heart Rate Service structure.
  * @param[in]   is_sensor_contact_detected   TRUE if sensor contact is detected, FALSE otherwise.
  */
-//void ble_hrs_sensor_contact_detected_update(ble_spider_tunnel_t * p_hrs, bool is_sensor_contact_detected);
+//void ble_hrs_sensor_contact_detected_update(ble_spider_tunnel_t * p_spider_tunnel, bool is_sensor_contact_detected);
 
 /**@brief Function for setting the Body Sensor Location.
  *
  * @details Sets a new value of the Body Sensor Location characteristic. The new value will be sent
  *          to the client the next time the client reads the Body Sensor Location characteristic.
  *
- * @param[in]   p_hrs                 Heart Rate Service structure.
+ * @param[in]   p_spider_tunnel                 Heart Rate Service structure.
  * @param[in]   body_sensor_location  New Body Sensor Location.
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-//uint32_t ble_hrs_body_sensor_location_set(ble_spider_tunnel_t * p_hrs, uint8_t body_sensor_location);
+//uint32_t ble_hrs_body_sensor_location_set(ble_spider_tunnel_t * p_spider_tunnel, uint8_t body_sensor_location);
 
 #endif // BLE_HRS_H__
 
