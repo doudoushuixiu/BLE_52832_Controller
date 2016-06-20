@@ -60,7 +60,9 @@ APP_TIMER_DEF(m_heart_rate_timer_id);
 uint8_t           one_ms_task_flag = 0;
 uint8_t           one_sec_task_flag = 0;
 uint32_t          thund_ms = 0;
-
+  
+	
+uint8_t   id = 0;
 uint8_t   radioReady                  = 0;
 uint8_t   channel                     = 1;      //set channel of freq
 uint32_t  deviceCount                 = 6;
@@ -231,7 +233,7 @@ void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
 			case NRF_TIMER_EVENT_COMPARE0:
 					uwTick++;
 			    thund_ms++;
-			    if(thund_ms == 1999)
+			    if(thund_ms == 2999)
 					{
 						one_sec_task_flag = 1;
 						thund_ms = 0;
@@ -1474,6 +1476,38 @@ void dispatch_task(void)
 
 }
 
+void  local_set(void)
+{
+	   //init sx1276	
+	  SX1276Init();
+    SX1276LoRaSetPreambleLength(6);
+    SX1276LoRaSetLowDatarateOptimize(false);
+    SetRadioChannel(channel);  
+    SX1276_Rx_IT();
+    radioReady = 1;
+	
+	
+    // Init dispatch
+		dispatch.Type = DispatchType;
+		//response.Type = ResponseType;
+		dispatch.Head = 0x7000;
+		dispatch.TotalNumber = deviceCount;
+		dispatch.TimeGroup = 0; // Time Group is always 0 if sent from controller
+		dispatch.Cmd = 0x00;
+	
+	
+		referenceValidTimeout = 255;
+		for (id=0; id<12; id++)
+		{
+			passValidTimeout[id] = 255;
+		}                                                  
+		for (id=0; id<7; id++)
+		{
+			repeaterValidTimeout[id] = 255;
+		}
+
+}
+
 
 /**@brief Function for application main entry.
  */
@@ -1485,7 +1519,6 @@ int main(void)
 	  uint8_t   compare_receive_flag = 0;
     uint8_t   rx_buf[128] = {0};
     uint16_t  rx_len = 0;
-	 // uint8_t   send[10] = {1,2,3,4,5,6,7,8,9,0};
 		
 		app_fifo_init(&ble_rx_fifo, ble_rx_buff, 256);
 		
@@ -1504,30 +1537,12 @@ int main(void)
 	
 		APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 		
-   //init sx1276	
-	  SX1276Init();
-    SX1276LoRaSetPreambleLength(6);
-    SX1276LoRaSetLowDatarateOptimize(false);
-    SetRadioChannel(channel);  
-    SX1276_Rx_IT();
-    radioReady = 1;
-	
+	  local_set();
+	   
     // Start execution. 
     application_timers_start();
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
-		
-
-    // Init dispatch
-		dispatch.Type = DispatchType;
-		//response.Type = ResponseType;
-		dispatch.Head = 0x7000;
-		dispatch.TotalNumber = deviceCount;
-		dispatch.TimeGroup = 0; // Time Group is always 0 if sent from controller
-		dispatch.Cmd = 0x00;
-		
-		
-		
 		
 		
     for (;;)
