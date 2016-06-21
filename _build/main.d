@@ -90,3 +90,5 @@
 .\_build\main.o: .\bsp\PacketEncode.h
 .\_build\main.o: .\components\libraries\fifo\app_fifo.h
 .\_build\main.o: .\User\ble_spider_tunnel.h
+.\_build\main.o: .\bsp\bmp280.h
+.\_build\main.o: .\bsp\twi_master.h

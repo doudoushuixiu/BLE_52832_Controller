@@ -43,6 +43,9 @@
 #include "PacketEncode.h"
 #include "app_fifo.h"
 #include "ble_spider_tunnel.h"
+#include "bmp280.h"
+#include "twi_master.h"
+
 
 
 //#define LEDS_CONFIGURE(leds_mask) do { uint32_t pin;                  \
@@ -57,10 +60,11 @@ static  volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instan
 __IO uint32_t     uwTick;
 nrf_drv_timer_t   TIMER_ONEMS = NRF_DRV_TIMER_INSTANCE(1);  //Selcet Timer1
 APP_TIMER_DEF(m_heart_rate_timer_id);                                              
-uint8_t           one_ms_task_flag = 0;
+uint8_t           one_ms_task_flag  = 0;
 uint8_t           one_sec_task_flag = 0;
-uint32_t          thund_ms = 0;
-  
+uint32_t          thund_ms          = 0;
+uint8_t           get_bmp280_ms     = 0;
+uint8_t           get_bmp280_flag   = 0;
 	
 uint8_t   id = 0;
 uint8_t   radioReady                  = 0;
@@ -69,6 +73,9 @@ uint32_t  deviceCount                 = 6;
 static    uint32_t channel_local      = 1;
 static    uint32_t total_number_local = 6;
 static    uint32_t pa_gain_voltage    = 0;
+//static    float press_local = 1000.0f;
+//static    float temp_local  = 25.0f;
+
 
 static    pstorage_block_t          pstorage_wait_handle 			= 0;
 static    uint8_t                   pstorage_wait_flag   			= 0;
@@ -198,30 +205,6 @@ static void power_manage(void)
  */
 static void heart_rate_meas_timeout_handler(void * p_context)
 {
-//    static uint32_t cnt = 0;
-//    uint32_t        err_code;
-//	
-//    UNUSED_PARAMETER(p_context);
-
-//    tra_data[0]++;
-//	  tra_data[1]++;
-//    cnt++;
-//	
-//	
-//	
-//	 //  spider_tunnel_put(&m_spider_tunnel, tra_data,10);
-//	
-//   // err_code = ble_hrs_heart_rate_measurement_send(&m_spider_tunnel, tra_data,10);
-//	
-//    if ((err_code != NRF_SUCCESS) &&
-//        (err_code != NRF_ERROR_INVALID_STATE) &&
-//        (err_code != BLE_ERROR_NO_TX_PACKETS) &&
-//        (err_code != BLE_ERROR_GATTS_SYS_ATTR_MISSING)
-//        )
-//    {
-//        APP_ERROR_HANDLER(err_code);
-//    }
-
 }
 
 
@@ -233,11 +216,18 @@ void one_ms_timeout_handler(nrf_timer_event_t event_type, void* p_context)
 			case NRF_TIMER_EVENT_COMPARE0:
 					uwTick++;
 			    thund_ms++;
+			    get_bmp280_ms++;
+			   
 			    if(thund_ms == 2999)
 					{
 						one_sec_task_flag = 1;
 						thund_ms = 0;
 					}
+					if(get_bmp280_ms > 38)
+					{
+					  get_bmp280_flag = 1;
+					}
+					
 			    one_ms_task_flag = 1;
 			
 					break;
@@ -1214,6 +1204,7 @@ static void ctrl_gpio_pin_init(bool * p_erase_bonds)
 	  nrf_gpio_pin_set(24);
 		nrf_gpio_cfg_output(6);
 	  nrf_gpio_pin_set(6);
+		
 	  
 	  nrf_delay_ms(50);
 	
@@ -1402,7 +1393,6 @@ void dispatch_task(void)
 	    uint8_t   encodeBuf[128] = {0};
       uint8_t   SX1276Buf[128] = {0};
 	
-	
 	    memset(repeaterTTLMax, 0, sizeof(repeaterTTLMax));
       if (dispatchCmdCount)
       {
@@ -1472,9 +1462,10 @@ void dispatch_task(void)
 			SX1276SetTxPacket(SX1276Buf, sizeof(Dispatch));
 	    SX1276LoRaProcess();
 			nrf_delay_ms(40);
-			SX1276_Rx_IT();						
-
+			SX1276_Rx_IT();		
+		
 }
+
 
 void  local_set(void)
 {
@@ -1505,8 +1496,50 @@ void  local_set(void)
 		{
 			repeaterValidTimeout[id] = 255;
 		}
-
 }
+
+static bool sensor_init(void)
+{
+  twi_master_init();
+  if (bmp280_init(BMP280_ADDRESS))
+  {
+    bmp280_readCalibration();
+    bmp280_config();
+    return true;
+  }
+  return false;
+}
+void get_bmp280_data(void)
+{
+  static float smoothedP = 100000.0;
+  static float smoothedT = 100000.0;
+  static uint8_t Press_firstValue = 1;
+  static float sea_press = 1050.0f;
+  static int32_t T, P = 0.0;
+  static int32_t adc_T, adc_P = 0;
+  static int32_t celciusX100;
+  float alpha = 0.03;
+
+  bmp280_getUnPT(&adc_P, &adc_T);
+  T = bmp280_compensate_T_int32(adc_T);
+  P = bmp280_compensate_P_int64(adc_P);
+
+  if (Press_firstValue)
+  {
+    smoothedP = 0.01*P/256.0;
+    smoothedT = 0.01*T;
+    Press_firstValue = 0;
+  }
+  else
+  {
+    smoothedT = smoothedT*(1-alpha) +0.01f*alpha*T;
+    smoothedP = smoothedP*(1-alpha) + 0.01f*alpha*P/256.0;
+  }
+  pressure     = smoothedP;
+  temperature  = smoothedT;
+}
+	
+
 
 
 /**@brief Function for application main entry.
@@ -1534,11 +1567,14 @@ int main(void)
     advertising_init();
     services_init();
     conn_params_init();
-	
+	 
+		sensor_init();	
+		
+		
 		APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 		
 	  local_set();
-	   
+
     // Start execution. 
     application_timers_start();
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
@@ -1564,7 +1600,12 @@ int main(void)
 					one_sec_task_flag = 0;
 					dispatch_task();
 				}
-				
+				if(get_bmp280_flag == 1)
+				{
+					get_bmp280_flag = 0;
+					get_bmp280_data();
+				}
+					
 
 			
 			  if(compare_receive_flag == 1)
